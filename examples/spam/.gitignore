@@ -7,7 +7,6 @@ rel/mqtt/*
 *.plt
 .rebar/*
 erl_crash.dump
-api_docs/*
 
 Mnesia.nonode@nohost/*
 
