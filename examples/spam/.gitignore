@@ -1,0 +1,14 @@
+deps/*
+ebin/*
+.qc/*
+dev/*
+.eunit/*
+rel/mqtt/*
+*.plt
+.rebar/*
+erl_crash.dump
+api_docs/*
+
+Mnesia.nonode@nohost/*
+
+*.pyc

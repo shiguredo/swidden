@@ -1,0 +1,11 @@
+ansible/.vagrant*
+deps/*
+ebin/*
+.qc/*
+dev/*
+.eunit/*
+*.plt
+.rebar/*
+erl_crash.dump
+
+*.pyc
