@@ -1,0 +1,19 @@
+# {{ service }}
+
+{% for version, operations in versions %}
+
+## {{ version }}
+
+{% for operation, description, properties in operations %}
+
+### {{ operation }}
+
+{{ description }}
+
+```json
+{{ properties }}
+```
+
+{% endfor %}
+
+{% endfor %}
