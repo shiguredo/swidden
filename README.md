@@ -446,6 +446,9 @@ Docs successfully generated.
 - JSON Schema draft 3 での Schema 設定
 - Request に対する JSON Schema でのバリデーション
 - ドキュメントの自動生成
+- テストクライアントの用意
+
+  - この API を気軽にテスト出来るようにする
 
 ### フェーズ 1.1.0
 
