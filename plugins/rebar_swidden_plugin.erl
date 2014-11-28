@@ -1,11 +1,29 @@
 -module(rebar_swidden_plugin).
 
+-export([swidden_init/2]).
 -export([swidden_doc/2]).
 
 -define(DOCS_DIR, "api_docs").
 -define(TEMPLATE, "template.dtl").
 -define(TEMPLATE_MODULE, swidden_doc_template).
 
+swidden_init(Config, _AppFile) ->
+    BaseDir = rebar_config:get_xconf(Config, base_dir),
+    %% TODO: use code:priv_dir
+    SwiddenDir = filename:join([BaseDir, "priv", "swidden"]),
+    SchemasDir = filename:join([SwiddenDir, "schemas"]),
+    ok = filelib:ensure_dir(SchemasDir),
+    ConfPath = filename:join(SwiddenDir, "dispatch.conf"),
+    case filelib:is_file(ConfPath) of
+        true ->
+            exit(already_initialized);
+        false ->
+            Service = rebar_config:get_global(Config, service, "Spam"),
+            Body = "{<<\"" ++ Service ++ "\">>,\n  [{<<\"19700101\">>,\n    [{<<\"GetUser\">>, spam_user}]}]}.\n",
+            io:format("Writing ~s~n", [ConfPath]),
+            file:write_file(ConfPath, Body)
+    end,
+    ok.
 
 swidden_doc(Config, _AppFile) ->
     BaseDir = rebar_config:get_xconf(Config, base_dir),
