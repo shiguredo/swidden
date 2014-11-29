@@ -77,13 +77,8 @@ failure() ->
     ok.
 
 
-request(Service, Verision, Operation, JSON) ->
-    URL = <<"http://127.0.0.1:40000/">>,
-    Headers = [{<<"x-swd-target">>, list_to_binary([Service, $_, Verision, $., Operation])}],
-    Payload = jsonx:encode(JSON),
-    Options = [],
-    {ok, StatusCode, _RespHeaders, ClientRef} = hackney:post(URL, Headers, Payload, Options),
-    hackney:close(ClientRef),
+request(Service, Version, Operation, JSON) ->
+    {ok, StatusCode, _Body} = swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation, JSON),
     StatusCode.
 
 
