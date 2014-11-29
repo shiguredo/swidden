@@ -8,23 +8,17 @@
 
 
 -spec request(inet:port_number(), binary(), binary(), binary(), binary(), [{atom(), binary()}]) -> {ok, [{binary(), binary()}]} | {error, term()}.
-request(Port, Target, Service, Version, Action, JSON) when is_integer(Port) ->
-    request(integer_to_binary(Port), Target, Service, Version, Action, JSON);
-request(RawPort, Target, Service, Version, Action, JSON) ->
+request(Port, Target, Service, Version, Operation, JSON) when is_integer(Port) ->
+    request(integer_to_binary(Port), Target, Service, Version, Operation, JSON);
+request(RawPort, Target, Service, Version, Operation, JSON) ->
     URL = <<"http://127.0.0.1", $:, RawPort/binary, $/>>,
-    Headers = [{Target, list_to_binary([Service, $_, Version, $., Action])}],
+    Headers = [{Target, list_to_binary([Service, $_, Version, $., Operation])}],
     RawJSON = jsonx:encode(JSON),
     Options = [],
     case hackney:post(URL, Headers, RawJSON, Options) of
-        {ok, 200, _RespHeaders, ClientRef} ->
+        {ok, StatusCode, _RespHeaders, ClientRef} when StatusCode =:= 200 orelse StatusCode =:= 400 ->
             {ok, Body} = hackney:body(ClientRef),
-            ok = hackney:close(ClientRef),
-            {ok, jsonx:decode(Body)};
-        {ok, 400, _RespHeaders, ClientRef} ->
-            {ok, Body} = hackney:body(ClientRef),
-            ok = hackney:close(ClientRef),
-            {ok, jsonx:decode(Body)};
-        {ok, StatusCode, _RespHeaders, ClientRef} ->
-            ok = hackney:close(ClientRef),
+            {ok, StatusCode, jsonx:decode(Body)};
+        {ok, StatusCode, _RespHeaders, _ClientRef} ->
             {error, {status_code, StatusCode}}
     end.
