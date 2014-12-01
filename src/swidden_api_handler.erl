@@ -41,8 +41,9 @@ handle(<<"POST">>, HeaderName, Req) ->
                             RawJSON = jsonx:encode(JSON),
                             cowboy_req:reply(Status, ?DEFAULT_HEADERS, RawJSON, Req2);
                         false ->
-                            %% TODO(nakai): BODY が存在しないので期待したメッセージではない
-                            cowboy_req:reply(400, ?DEFAULT_HEADERS, [], Req)
+                            {Status, JSON} = dispatch_request(Service, Version, Operation),
+                            RawJSON = jsonx:encode(JSON),
+                            cowboy_req:reply(Status, ?DEFAULT_HEADERS, RawJSON, Req)
                     end;
                 nomatch ->
                     %% TODO(nakai): ヘッダーが期待したメッセージではない
@@ -74,5 +75,21 @@ validate_schema(Service, Version, Operation, RawJSON) ->
         {error, Reason} ->
             ?debugVal2(Reason),
             %% TODO(nakai): エラー処理
+            {400, {[]}}
+    end.
+
+
+dispatch_request(Service, Version, Operation) ->
+    case swidden_dispatch:lookup(Service, Version, Operation) of
+        {Module, Function} ->
+            case Module:Function() of
+                ok ->
+                    {200, {[]}};
+                {ok, RespJSON} ->
+                    {200, RespJSON};
+                {error, Type} ->
+                    {400, [{type, Type}]}
+            end;
+        not_found ->
             {400, {[]}}
     end.
