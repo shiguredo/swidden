@@ -1,6 +1,7 @@
 -module(rebar_swidden_plugin).
 
 -export([swidden_init/2]).
+-export([swidden_gen_schemas/2]).
 -export([swidden_doc/2]).
 
 -define(DOCS_DIR, "api_docs").
@@ -24,6 +25,51 @@ swidden_init(Config, _AppFile) ->
             file:write_file(ConfPath, Body)
     end,
     ok.
+
+
+swidden_gen_schemas(Config, _AppFile) ->
+    BaseDir = rebar_config:get_xconf(Config, base_dir),
+    %% TODO: use code:priv_dir
+    SwiddenDir = filename:join([BaseDir, "priv", "swidden"]),
+    SchemasDir = filename:join([SwiddenDir, "schemas"]),
+    ConfPath = filename:join(SwiddenDir, "dispatch.conf"),
+    case filelib:is_file(ConfPath) of
+        true ->
+            gen_schemas(ConfPath, SchemasDir);
+        false ->
+            exit(missing_conf)
+    end,
+    ok.
+
+
+gen_schemas(ConfPath, SchemasDir) ->
+    {ok, Dispatch} = file:consult(ConfPath),
+    lists:foreach(fun({Service, Versions}) ->
+                  Versions2 = lists:foreach(fun({Version, Operations}) ->
+                                            Operations2 = lists:foreach(fun({Operation, _}) ->
+                                                                        FileName = list_to_binary([swidden_misc:pascal2snake(Operation), ".json"]), 
+                                                                        SchemaPath = filename:join([SchemasDir,
+                                                                                                    swidden_misc:pascal2snake(Service),
+                                                                                                    Version,
+                                                                                                    FileName]),
+                                                                        filelib:ensure_dir(SchemaPath),
+                                                                        case filelib:is_file(SchemaPath) of
+                                                                            true ->
+                                                                              ok;
+                                                                            false ->
+                                                                              Body = "{\n    \"description\": \"\",\n    \"properties\": {\n    }\n}",
+                                                                              RelativePath = filename:join(["priv", "swidden", "schemas",
+                                                                                                            swidden_misc:pascal2snake(Service),
+                                                                                                            Version, FileName]),
+                                                                              io:format("Writing ~s~n",[RelativePath]),
+                                                                              file:write_file(SchemaPath, Body)
+                                                                        end
+                                                                    end, Operations),
+                                            {Version, Operations2}
+                                        end, Versions),
+                  {Service, Versions2}
+    end, Dispatch).
+
 
 swidden_doc(Config, _AppFile) ->
     BaseDir = rebar_config:get_xconf(Config, base_dir),
