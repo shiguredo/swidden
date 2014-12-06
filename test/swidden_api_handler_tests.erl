@@ -73,6 +73,9 @@ failure() ->
     ?assertEqual(400, no_header_request([{username, <<"yakihata">>}])),
     %% x-swd-target ヘッダーの値がおかしい
     ?assertEqual(400, bad_header_request([{username, <<"yakihata">>}])),
+    %% Body が空を期待しているのに Body を送った場合
+    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, all}])),
+
 
     ?assertEqual(ok, swidden:stop()),
     ok.
