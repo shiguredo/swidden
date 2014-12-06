@@ -48,7 +48,6 @@ start(Name) when is_atom(Name) ->
 
 %% INTERNAL
 
-
 load_dispatch_conf(Name) ->
     case code:priv_dir(Name) of
         {error, Reason} ->
