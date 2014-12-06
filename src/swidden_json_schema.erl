@@ -65,6 +65,8 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
             case add_schema(Service, Version, Operation, Binary) of
                 ok ->
                     load_schemas(Path, Rest);
+                [{[],[],[]}] ->
+                    load_schemas(Path, Rest);
                 [{_, _, {error, invalid_json, LineNumber}}] ->
                     {error, {invalid_json, FileName, LineNumber}}
             end;
