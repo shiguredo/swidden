@@ -49,6 +49,7 @@ success() ->
                               [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"DeleteUser">>,
                               [{username, <<"yakihata">>}])),
+    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
 
     ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
                               [{username, <<"yakihata">>}, {password, <<"nogyo">>}, {group, <<"amazon">>}])),
@@ -79,6 +80,11 @@ failure() ->
 
 request(Service, Version, Operation, JSON) ->
     {ok, StatusCode, _Body} = swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation, JSON),
+    StatusCode.
+
+
+request(Service, Version, Operation) ->
+    {ok, StatusCode, _Body} = swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation),
     StatusCode.
 
 

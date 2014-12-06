@@ -1,6 +1,6 @@
 -module(spam_user_handler).
 
--export([get_user/1, create_user/1, update_user/1, delete_user/1]).
+-export([get_user/1, create_user/1, update_user/1, delete_user/1, list_users/0]).
 
 
 get_user(JSON) ->
@@ -25,3 +25,5 @@ delete_user(JSON) ->
     swidden:success().
 
 
+list_users() ->
+    swidden:success([[{username, <<"username">>}, {password, <<"password">>}]]).

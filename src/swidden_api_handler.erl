@@ -33,20 +33,19 @@ handle(<<"POST">>, HeaderName, Req) ->
             %% Service_Version.Operation として分解する
             case re:run(Value, ?REGEXP, [{capture, all_but_first, binary}]) of
                 {match, [Service, Version, Operation]} ->
+                    %% TODO(nakai): リファクタリング
                     case cowboy_req:has_body(Req) of
                         true ->
                             {ok, Body, Req2} = cowboy_req:body(Req),
-                            %% TODO(nakai): validate_schema はおかしいので名前を変える
-                            {Status, JSON} = validate_schema(Service, Version, Operation, Body),
-                            RawJSON = jsonx:encode(JSON),
-                            cowboy_req:reply(Status, ?DEFAULT_HEADERS, RawJSON, Req2);
+                            {StatusCode, RawJSON} = validate_json(Service, Version, Operation, Body),
+                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2);
                         false ->
-                            %% TODO(nakai): BODY が存在しないので期待したメッセージではない
-                            cowboy_req:reply(400, ?DEFAULT_HEADERS, [], Req)
+                            {StatusCode, RawJSON} = dispatch(Service, Version, Operation),
+                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
                     end;
                 nomatch ->
                     %% TODO(nakai): ヘッダーが期待したメッセージではない
-                    cowboy_req:reply(400, ?DEFAULT_HEADERS, [], Req)
+                    cowboy_req:reply(400, ?DEFAULT_HEADERS, jsonx:encode([{error_type, <<"InvalidTarget">>}]), Req)
             end
     end;
 handle(_Method, _HeaderName, Req) ->
@@ -59,20 +58,36 @@ terminate(normal, _Req, _State) ->
     ok.
 
 
-validate_schema(Service, Version, Operation, RawJSON) ->
+dispatch(Service, Version, Operation) ->
+    case swidden_dispatch:lookup(Service, Version, Operation) of
+        not_found ->
+            {400, jsonx:encode([{error_type, <<"MissingTarget">>}])};
+        {Module, Function} ->   
+            case Module:Function() of
+                ok ->
+                    {200, []};
+                {ok, RespJSON} ->
+                    {200, jsonx:encode(RespJSON)};
+                {error, Type} ->
+                    {400, jsonx:encode([{error_type, Type}])}
+            end
+    end.
+
+
+validate_json(Service, Version, Operation, RawJSON) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
             case Module:Function(JSON) of
                 ok ->
-                    {200, {[]}};
+                    {200, []};
                 {ok, RespJSON} ->
-                    {200, RespJSON};
+                    {200, jsonx:encode(RespJSON)};
                 {error, Type} ->
-                    {400, [{type, Type}]}
+                    {400, jsonx:encode([{error_type, Type}])}
             end;
         {error, Reason} ->
             ?debugVal2(Reason),
             %% TODO(nakai): エラー処理
-            {400, {[]}}
+            {400, jsonx:encode([{error_type, <<"MissingTarget">>}])}
     end.
