@@ -24,7 +24,7 @@ get_dispatches() ->
     ets:tab2list(?TABLE).
 
 
--spec lookup(service(), version(), operation()) -> not_found | module().
+-spec lookup(service(), version(), operation()) -> not_found | {module(), function()}.
 lookup(Service, Version, Operation) ->
     case ets:lookup(?TABLE, {Service, Version, Operation}) of
         [] ->
