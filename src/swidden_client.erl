@@ -27,5 +27,7 @@ request0(RawPort, Target, Service, Version, Operation, RawJSON) ->
             {ok, Body} = hackney:body(ClientRef),
             {ok, StatusCode, jsonx:decode(Body)};
         {ok, StatusCode, _RespHeaders, _ClientRef} ->
-            {error, {status_code, StatusCode}}
+            {error, {status_code, StatusCode}};
+        {error, Reason} ->
+            {error, Reason}
     end.
