@@ -65,7 +65,7 @@ dispatch(Service, Version, Operation) ->
         {Module, Function} ->   
             case Module:Function() of
                 ok ->
-                    {200, []};
+                    {200, <<"[]">>};
                 {ok, RespJSON} ->
                     {200, jsonx:encode(RespJSON)};
                 {error, Type} ->
