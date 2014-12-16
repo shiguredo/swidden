@@ -24,8 +24,12 @@ request0(RawPort, Target, Service, Version, Operation, RawJSON) ->
     Options = [],
     case hackney:post(URL, Headers, RawJSON, Options) of
         {ok, StatusCode, _RespHeaders, ClientRef} when StatusCode =:= 200 orelse StatusCode =:= 400 ->
-            {ok, Body} = hackney:body(ClientRef),
-            {ok, StatusCode, jsonx:decode(Body, [{format, proplist}])};
+            case hackney:body(ClientRef) of
+                {ok, <<>>} ->
+                    {ok, StatusCode};
+                {ok, Body} ->
+                    {ok, StatusCode, jsonx:decode(Body, [{format, proplist}])}
+            end;
         {ok, StatusCode, _RespHeaders, _ClientRef} ->
             {error, {status_code, StatusCode}};
         {error, Reason} ->
