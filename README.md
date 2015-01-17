@@ -15,7 +15,7 @@ AWS DynamoDB や Kinesis などの API の形式に影響を受けた HTTP API �
     - X-Swd-Target: Spam_20141101.CreateUser
     - X-Swd-Target: SpamAdmin_20141101.GetMetrics
 - 入り口と出口が JSON
-- 空 JSON は {} を使用する
+- 何も送らなければ Body は空になる
 
 ## サンプル
 
@@ -44,8 +44,6 @@ content-length: 2
 content-type: application/json
 date: Sun, 02 Nov 2014 18:53:09 GMT
 server: Cowboy
-
-{}
 ```
 
 ユーザ取得 API 例
@@ -333,6 +331,7 @@ delete_user(JSON) ->
 swidden:success/0,1 は処理が成功したときに使用します。
 
 - success/0 は特に返す値がない場合使用します
+    - Body が空で戻ります
 - success/1 は戻したい JSON (proplists) を引数に指定します
 
 #### swidden:failure/1
@@ -384,8 +383,6 @@ content-length: 2
 content-type: application/json
 date: Sun, 02 Nov 2014 18:53:09 GMT
 server: Cowboy
-
-{}
 ```
 
 ユーザを確認してみます
@@ -438,6 +435,23 @@ Writing api_docs/spam.md
 Writing api_docs/spam_admin.md
 Docs successfully generated.
 ```
+## 送信の時の Body が空の場合
+
+たとえば ListUsers などの一覧取得の場合はもしかすると Body を空で送信する場合が出てくるかもしれません。
+
+その場合は以下のようにしてください
+
+- JSON Schema は用意するが {} と設定する
+- 呼び出される関数は引数なしで実装する
+
+```
+list_users() ->
+    Users = [ [{username, Username},
+               {password, Password}] || {Username, Password} <- ets:tab2list(?TABLE) ],
+    swidden:success(Users).
+```
+
+
 
 ## ロードマップ
 
@@ -446,6 +460,11 @@ Docs successfully generated.
 - JSON Schema draft 3 での Schema 設定
 - Request に対する JSON Schema でのバリデーション
 - ドキュメントの自動生成
+- テストクライアントの用意
+
+  - この API を気軽にテスト出来るようにする
+- JSON なしの場合の処理を追加
+- Cowboy 2.0.0 が出たタイミングでリリース予定です
 
 ### フェーズ 1.1.0
 

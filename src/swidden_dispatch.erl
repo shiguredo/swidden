@@ -24,7 +24,7 @@ get_dispatches() ->
     ets:tab2list(?TABLE).
 
 
--spec lookup(service(), version(), operation()) -> not_found | module().
+-spec lookup(service(), version(), operation()) -> not_found | {module(), function()}.
 lookup(Service, Version, Operation) ->
     case ets:lookup(?TABLE, {Service, Version, Operation}) of
         [] ->
@@ -47,7 +47,6 @@ start(Name) when is_atom(Name) ->
 
 
 %% INTERNAL
-
 
 load_dispatch_conf(Name) ->
     case code:priv_dir(Name) of
