@@ -65,7 +65,7 @@ dispatch(Service, Version, Operation) ->
         {Module, Function} ->   
             case Module:Function() of
                 ok ->
-                    {200, []};
+                    {200, <<>>};
                 {ok, RespJSON} ->
                     {200, jsonx:encode(RespJSON)};
                 {error, Type} ->
@@ -80,7 +80,7 @@ validate_json(Service, Version, Operation, RawJSON) ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
             case Module:Function(JSON) of
                 ok ->
-                    {200, []};
+                    {200, <<>>};
                 {ok, RespJSON} ->
                     {200, jsonx:encode(RespJSON)};
                 {error, Type} ->

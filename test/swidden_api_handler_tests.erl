@@ -82,13 +82,21 @@ failure() ->
 
 
 request(Service, Version, Operation, JSON) ->
-    {ok, StatusCode, _Body} = swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation, JSON),
-    StatusCode.
+    case swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation, JSON) of
+        {ok, StatusCode} ->
+            StatusCode;
+        {ok, StatusCode, _Body} ->
+            StatusCode
+    end.
 
 
 request(Service, Version, Operation) ->
-    {ok, StatusCode, _Body} = swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation),
-    StatusCode.
+    case swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation) of
+        {ok, StatusCode} ->
+            StatusCode;
+        {ok, StatusCode, _Body} ->
+            StatusCode
+    end.
 
 
 %% TODO(nakai): これ以降のリクエスト関連、リファクタすること
