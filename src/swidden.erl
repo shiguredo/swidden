@@ -14,7 +14,6 @@ start(Name) when is_atom(Name) ->
     start(Name, []).
 
 start(Name, Opts) ->
-
     %% FIXME(nakai): error/1 で対応しているが本来は {error, Reason} で返すべき
     ok = swidden_dispatch:start(Name),
     ok = swidden_json_schema:start(Name),
@@ -27,8 +26,10 @@ start(Name, Opts) ->
 
     Port = proplists:get_value(port, Opts, 8000),
 
-    cowboy:start_http(?REF, 10, [{port, Port}],
-                      [{env, [{dispatch, Dispatch}]}]).
+    ProtoOpts = proplists:get_value(middlewares, Opts, []),
+    Env = {env, [{dispatch, Dispatch}]},
+
+    cowboy:start_http(?REF, 10, [{port, Port}], [Env|ProtoOpts]).
 
 
 -spec stop() -> ok.
