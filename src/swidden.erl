@@ -3,6 +3,8 @@
 -export([start/1, start/2, stop/0]).
 -export([success/0, success/1, failure/1]).
 
+-include_lib("eunit/include/eunit.hrl").
+
 -define(DEFAULT_HEADER_NAME, <<"x-swd-target">>).
 
 -define(REF, swidden_http_api).
@@ -26,8 +28,15 @@ start(Name, Opts) ->
 
     Port = proplists:get_value(port, Opts, 8000),
 
-    ProtoOpts = proplists:get_value(middlewares, Opts, []),
+    ProtoOpts = case proplists:get_value(middlewares, Opts, not_found) of
+                    not_found ->
+                        [];
+                    Middlewares ->
+                        [{middlewares, Middlewares}]
+                end,
     Env = {env, [{dispatch, Dispatch}]},
+    ?debugVal(ProtoOpts),
+    ?debugVal(Env),
 
     cowboy:start_http(?REF, 10, [{port, Port}], [Env|ProtoOpts]).
 
