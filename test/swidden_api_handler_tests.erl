@@ -33,7 +33,8 @@ all_test_() ->
      end,
      [
       fun success/0,
-      fun failure/0
+      fun failure/0,
+      fun middlewares/0
      ]
     }.
 
@@ -76,6 +77,18 @@ failure() ->
     %% Body が空を期待しているのに Body を送った場合
     ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, all}])),
 
+
+    ?assertEqual(ok, swidden:stop()),
+    ok.
+
+
+middlewares() ->
+    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{middlewares, [sample_middleware,
+                                                                    cowboy_router,
+                                                                    cowboy_handler]},
+                                                     {port, 40000}])),
+
+    ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
 
     ?assertEqual(ok, swidden:stop()),
     ok.
