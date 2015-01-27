@@ -75,7 +75,7 @@ failure() ->
     %% x-swd-target ヘッダーの値がおかしい
     ?assertEqual(400, bad_header_request([{username, <<"yakihata">>}])),
     %% Body が空を期待しているのに Body を送った場合
-    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, all}])),
+    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, <<"all">>}])),
 
 
     ?assertEqual(ok, swidden:stop()),
@@ -127,7 +127,7 @@ no_body_request(Service, Verision, Operation) ->
 put_method_request(Service, Verision, Operation, JSON) ->
     URL = <<"http://127.0.0.1:40000/">>,
     Headers = [{<<"x-swd-target">>, list_to_binary([Service, $_, Verision, $., Operation])}],
-    Payload = jsonx:encode(JSON),
+    Payload = jsone:encode(JSON),
     Options = [],
     {ok, StatusCode, _RespHeaders, ClientRef} = hackney:put(URL, Headers, Payload, Options),
     hackney:close(ClientRef),
@@ -137,7 +137,7 @@ put_method_request(Service, Verision, Operation, JSON) ->
 no_header_request(JSON) ->
     URL = <<"http://127.0.0.1:40000/">>,
     Headers = [],
-    Payload = jsonx:encode(JSON),
+    Payload = jsone:encode(JSON),
     Options = [],
     {ok, StatusCode, _RespHeaders, ClientRef} = hackney:post(URL, Headers, Payload, Options),
     hackney:close(ClientRef),
@@ -147,7 +147,7 @@ no_header_request(JSON) ->
 bad_header_request(JSON) ->
     URL = <<"http://127.0.0.1:40000/">>,
     Headers = [{<<"x-swd-target">>, <<"spam.egg.ham">>}],
-    Payload = jsonx:encode(JSON),
+    Payload = jsone:encode(JSON),
     Options = [],
     {ok, StatusCode, _RespHeaders, ClientRef} = hackney:post(URL, Headers, Payload, Options),
     hackney:close(ClientRef),
