@@ -89,4 +89,4 @@ validate(Service, Version, Operation, RawJSON) ->
 
 -spec parse_fun() -> function().
 parse_fun() ->
-    fun(Binary) -> jsone:decode(Binary, [{format, proplist}]) end.
+    fun(Binary) -> jsx:decode(Binary) end.
