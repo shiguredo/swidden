@@ -12,7 +12,7 @@ request(Port, Target, Service, Version, Operation) ->
 
 
 request(Port, Target, Service, Version, Operation, JSON) ->
-    RawJSON = jsonx:encode(JSON),
+    RawJSON = jsone:encode(JSON),
     request0(Port, Target, Service, Version, Operation, RawJSON).
 
 
@@ -28,7 +28,7 @@ request0(RawPort, Target, Service, Version, Operation, RawJSON) ->
                 {ok, <<>>} ->
                     {ok, StatusCode};
                 {ok, Body} ->
-                    {ok, StatusCode, jsonx:decode(Body, [{format, proplist}])}
+                    {ok, StatusCode, jsone:decode(Body, [{format, proplist}])}
             end;
         {ok, StatusCode, _RespHeaders, _ClientRef} ->
             {error, {status_code, StatusCode}};

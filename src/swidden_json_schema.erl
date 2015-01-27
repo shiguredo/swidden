@@ -76,6 +76,8 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
 
 
 -spec add_schema(binary(), binary(), binary(), binary()) -> ok | {error, term()}.
+add_schema(_Service, _Version, _Operation, <<>>) ->
+    ok;
 add_schema(Service, Version, Operation, RawJSON) ->
     jesse:add_schema({Service, Version, Operation}, RawJSON, [{parser_fun, parse_fun()}]).
 
@@ -87,4 +89,4 @@ validate(Service, Version, Operation, RawJSON) ->
 
 -spec parse_fun() -> function().
 parse_fun() ->
-    fun(Binary) -> jsonx:decode(Binary, [{format, proplist}]) end.
+    fun(Binary) -> jsone:decode(Binary, [{format, proplist}]) end.

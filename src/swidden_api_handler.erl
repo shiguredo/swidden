@@ -27,7 +27,7 @@ handle(<<"POST">>, HeaderName, Req) ->
         undefined ->
             %% ヘッダーがみつからない
             %% XXX(nakai): 400 としたが 404 がいいか？
-            RawJSON = jsonx:encode([{type, <<"MissingHeaderName">>}]),
+            RawJSON = jsone:encode([{type, <<"MissingHeaderName">>}]),
             cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req);
         Value ->
             %% Service_Version.Operation として分解する
@@ -45,12 +45,12 @@ handle(<<"POST">>, HeaderName, Req) ->
                     end;
                 nomatch ->
                     %% TODO(nakai): ヘッダーが期待したメッセージではない
-                    cowboy_req:reply(400, ?DEFAULT_HEADERS, jsonx:encode([{error_type, <<"InvalidTarget">>}]), Req)
+                    cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req)
             end
     end;
 handle(_Method, _HeaderName, Req) ->
     %% POST 以外受け付けていないのでエラーメッセージ
-    RawJSON = jsonx:encode([{type, <<"UnexpectedMethod">>}]),
+    RawJSON = jsone:encode([{type, <<"UnexpectedMethod">>}]),
     cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req).
 
 
@@ -61,15 +61,15 @@ terminate(normal, _Req, _State) ->
 dispatch(Service, Version, Operation) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
-            {400, jsonx:encode([{error_type, <<"MissingTarget">>}])};
+            {400, jsone:encode([{error_type, <<"MissingTarget">>}])};
         {Module, Function} ->   
             case Module:Function() of
                 ok ->
                     {200, <<>>};
                 {ok, RespJSON} ->
-                    {200, jsonx:encode(RespJSON)};
+                    {200, jsone:encode(RespJSON)};
                 {error, Type} ->
-                    {400, jsonx:encode([{error_type, Type}])}
+                    {400, jsone:encode([{error_type, Type}])}
             end
     end.
 
@@ -82,12 +82,12 @@ validate_json(Service, Version, Operation, RawJSON) ->
                 ok ->
                     {200, <<>>};
                 {ok, RespJSON} ->
-                    {200, jsonx:encode(RespJSON)};
+                    {200, jsone:encode(RespJSON)};
                 {error, Type} ->
-                    {400, jsonx:encode([{error_type, Type}])}
+                    {400, jsone:encode([{error_type, Type}])}
             end;
         {error, Reason} ->
             ?debugVal2(Reason),
             %% TODO(nakai): エラー処理
-            {400, jsonx:encode([{error_type, <<"MissingTarget">>}])}
+            {400, jsone:encode([{error_type, <<"MissingTarget">>}])}
     end.

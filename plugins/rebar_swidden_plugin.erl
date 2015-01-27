@@ -132,7 +132,7 @@ load_schemas(Dispatch, SwiddenDir) ->
                                                                                                     FileName]),
                                                                         %% TODO: error handling
                                                                         {ok, Binary} = file:read_file(SchemaPath),
-                                                                        Schema = jsonx:decode(Binary, [{format, proplist}]),
+                                                                        Schema = jsone:decode(Binary, [{format, proplist}]),
                                                                         {Description, Properties} = analyze_schema(Schema),
                                                                         {Operation, Description, Properties}
                                                                     end, Operations),
@@ -150,7 +150,7 @@ analyze_schema(Schema) ->
 
 %% TODO: more cool format
 format_properties(Properties) ->
-    jsx:prettify(jsonx:encode(Properties)).
+    jsx:prettify(jsone:encode(Properties)).
 
 
 gen_md(Service, Versions) ->
