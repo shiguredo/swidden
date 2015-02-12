@@ -5,6 +5,9 @@ CHANGES
 1.x
 ===
 
+- 1.1.2
+  - [update] jsx から jsone に変更
+
 - 1.1.1
   - [update] jsone から jsx に変更
 
