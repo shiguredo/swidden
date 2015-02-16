@@ -5,6 +5,9 @@ CHANGES
 1.x
 ===
 
+- 1.1.3
+  - [update] jsone を v0.3.1 にアップデート
+
 - 1.1.2
   - [update] jsx から jsone に変更
 
