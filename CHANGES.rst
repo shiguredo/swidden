@@ -5,6 +5,10 @@ CHANGES
 1.x
 ===
 
+- 1.1.5
+  - [ADD] 存在しないモジュールの場合は 400 で MissingTargetModule を戻すようにする
+  - [UPDATE] 存在しない関数の場合は 400 で MissingTargetFunction を戻すようにする
+
 - 1.1.4
   - [UPDATE] jsone を v0.3.3 にアップデート
   - [ADD] 存在しない関数の場合は 400 で MissingTargetArgs を戻すようにする
