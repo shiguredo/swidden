@@ -127,7 +127,7 @@ no_body_request(Service, Verision, Operation) ->
 put_method_request(Service, Verision, Operation, JSON) ->
     URL = <<"http://127.0.0.1:40000/">>,
     Headers = [{<<"x-swd-target">>, list_to_binary([Service, $_, Verision, $., Operation])}],
-    Payload = jsx:encode(JSON),
+    Payload = jsone:encode(JSON),
     Options = [],
     {ok, StatusCode, _RespHeaders, ClientRef} = hackney:put(URL, Headers, Payload, Options),
     hackney:close(ClientRef),
@@ -137,7 +137,7 @@ put_method_request(Service, Verision, Operation, JSON) ->
 no_header_request(JSON) ->
     URL = <<"http://127.0.0.1:40000/">>,
     Headers = [],
-    Payload = jsx:encode(JSON),
+    Payload = jsone:encode(JSON),
     Options = [],
     {ok, StatusCode, _RespHeaders, ClientRef} = hackney:post(URL, Headers, Payload, Options),
     hackney:close(ClientRef),
@@ -147,7 +147,7 @@ no_header_request(JSON) ->
 bad_header_request(JSON) ->
     URL = <<"http://127.0.0.1:40000/">>,
     Headers = [{<<"x-swd-target">>, <<"spam.egg.ham">>}],
-    Payload = jsx:encode(JSON),
+    Payload = jsone:encode(JSON),
     Options = [],
     {ok, StatusCode, _RespHeaders, ClientRef} = hackney:post(URL, Headers, Payload, Options),
     hackney:close(ClientRef),

@@ -150,7 +150,7 @@ analyze_schema(Schema) ->
 
 %% TODO: more cool format
 format_properties(Properties) ->
-    jsx:prettify(jsone:encode(Properties)).
+    jsone:encode(Properties).
 
 
 gen_md(Service, Versions) ->
