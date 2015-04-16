@@ -63,13 +63,18 @@ dispatch(Service, Version, Operation) ->
         not_found ->
             {400, jsone:encode([{error_type, <<"MissingTarget">>}])};
         {Module, Function} ->   
-            case Module:Function() of
-                ok ->
-                    {200, <<>>};
-                {ok, RespJSON} ->
-                    {200, jsone:encode(RespJSON)};
-                {error, Type} ->
-                    {400, jsone:encode([{error_type, Type}])}
+            case lists:member({Function,0}, Module:module_info(exports)) of
+                true ->
+                    case Module:Function() of
+                        ok ->
+                            {200, <<>>};
+                        {ok, RespJSON} ->
+                            {200, jsone:encode(RespJSON)};
+                        {error, Type} ->
+                            {400, jsone:encode([{error_type, Type}])}
+                    end;
+                false ->
+                    {400, jsone:encode([{error_type, <<"MissingTargetArgs">>}])}
             end
     end.
 
@@ -78,13 +83,18 @@ validate_json(Service, Version, Operation, RawJSON) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
-            case Module:Function(JSON) of
-                ok ->
-                    {200, <<>>};
-                {ok, RespJSON} ->
-                    {200, jsone:encode(RespJSON)};
-                {error, Type} ->
-                    {400, jsone:encode([{error_type, Type}])}
+            case lists:member({Function,1}, Module:module_info(exports)) of
+                true ->
+                    case Module:Function(JSON) of
+                        ok ->
+                            {200, <<>>};
+                        {ok, RespJSON} ->
+                            {200, jsone:encode(RespJSON)};
+                        {error, Type} ->
+                            {400, jsone:encode([{error_type, Type}])}
+                    end;
+                false ->
+                    {400, jsone:encode([{error_type, <<"MissingTargetArgs">>}])}
             end;
         {error, Reason} ->
             ?debugVal2(Reason),
