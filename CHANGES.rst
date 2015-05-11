@@ -8,6 +8,11 @@ CHANGES
 1.1.5
 -----
 
+- [FIX] Body を空で返すとき <<>> ではなく [] で戻すようにする
+
+1.1.5
+-----
+
 - [ADD] 存在しないモジュールの場合は 400 で MissingTargetModule を戻すようにする
 - [UPDATE] 存在しない関数の場合は 400 で MissingTargetFunction を戻すようにする
 - [UPDATE] cowboy を 271869889587085494baaedc6b44e939252637f0 にアップデート
