@@ -4,6 +4,8 @@
 
 AWS DynamoDB や Kinesis などの API の形式に影響を受けた HTTP API ライブラリです。
 
+[DynamoDB や Route53 などの AWS API が独特な仕様なので紹介 - Qiita](http://qiita.com/voluntas/items/a3ee5b0e2843d589d45f)
+
 特徴は以下の通りの部分です
 
 - 指定したヘッダー名の値を使いディスパッチする
@@ -451,11 +453,21 @@ list_users() ->
     swidden:success(Users).
 ```
 
-
-
 ## ロードマップ
 
-### フェーズ 1.0.0
+### 2.0.0
+
+- 認証機能
+- JSON Schema draft 4.0 への対応
+    - ライブラリが対応していることを祈る
+- Response に対する JSON Schema によるバリデーション
+
+### 1.2.0
+
+- Erlang/OTP 18.0 と Cowboy 2.0.0 が出たタイミングでリリース予定
+- dispatch.conf の Map 化
+
+### 1.1.0
 
 - JSON Schema draft 3 での Schema 設定
 - Request に対する JSON Schema でのバリデーション
@@ -464,14 +476,7 @@ list_users() ->
 
   - この API を気軽にテスト出来るようにする
 - JSON なしの場合の処理を追加
-- Cowboy 2.0.0 が出たタイミングでリリース予定です
 
-### フェーズ 1.1.0
-
-- 認証機能
-- JSON Schema draft 4.0 への対応
-    - ライブラリが対応していることを祈る
-- Response に対する JSON Schema によるバリデーション
 
 ## 既知の問題
 
