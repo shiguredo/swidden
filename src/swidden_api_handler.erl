@@ -37,13 +37,21 @@ handle(<<"POST">>, HeaderName, Req) ->
                     case cowboy_req:has_body(Req) of
                         true ->
                             {ok, Body, Req2} = cowboy_req:body(Req),
-                            {StatusCode, JSON} = validate_json(Service, Version, Operation, Body),
-                            RawJSON = jsone:encode(JSON),
-                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2);
+                            case validate_json(Service, Version, Operation, Body) of
+                                200 ->
+                                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
+                                {StatusCode, JSON} ->
+                                    RawJSON = jsone:encode(JSON),
+                                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
+                            end;
                         false ->
-                            {StatusCode, JSON} = dispatch(Service, Version, Operation),
-                            RawJSON = jsone:encode(JSON),
-                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
+                            case dispatch(Service, Version, Operation) of
+                                200 ->
+                                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
+                                {StatusCode, JSON} ->
+                                    RawJSON = jsone:encode(JSON),
+                                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
+                            end
                     end;
                 nomatch ->
                     %% TODO(nakai): ヘッダーが期待したメッセージではない
@@ -73,7 +81,7 @@ dispatch(Service, Version, Operation) ->
                         true ->
                             case Module:Function() of
                                 ok ->
-                                    {200, <<>>};
+                                    200;
                                 {ok, RespJSON} ->
                                     {200, RespJSON};
                                 {error, Type} ->
@@ -98,7 +106,7 @@ validate_json(Service, Version, Operation, RawJSON) ->
                         true ->
                             case Module:Function(JSON) of
                                 ok ->
-                                    {200, <<>>};
+                                    200;
                                 {ok, RespJSON} ->
                                     {200, RespJSON};
                                 {error, Type} ->
