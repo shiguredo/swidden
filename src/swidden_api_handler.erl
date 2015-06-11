@@ -72,7 +72,7 @@ dispatch(Service, Version, Operation) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
             {400, [{error_type, <<"MissingTarget">>}]};
-        {Module, Function} ->   
+        {Module, Function} ->
             case code:which(Module) of
                 non_existing ->
                     {400, [{error_type, <<"MissingTargetModule">>}]};
