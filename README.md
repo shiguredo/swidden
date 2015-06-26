@@ -1,6 +1,6 @@
 # ヘッダーベース HTTP API フレームワーク
 
-![Build Status](https://circleci.com/gh/shiguredo/swidden.png)
+[![Build Status](https://circleci.com/gh/shiguredo/swidden.png)](https://circleci.com/gh/shiguredo/swidden)
 
 ## 概要
 
