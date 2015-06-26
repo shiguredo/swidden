@@ -1,12 +1,12 @@
 dependencies:
   pre:
-    - bash ./install-otp_src_17.5.sh
+    - bash ./install-otp_src_18.0.sh
   cache_directories:
-    - "~/otp-17.5"
+    - "~/otp-18.0"
 
 test:
   pre:
-    - ln -s ~/otp-17.5/bin/erl ~/bin/erl
+    - ln -s ~/otp-18.0/bin/erl ~/bin/erl
   override:
     - erl -version
     - make
