@@ -5,7 +5,14 @@ CHANGES
 1.x
 ===
 
-1.1.5
+1.1.7
+-----
+
+- [UPDATE] cowboy を最新版(https://github.com/ninenines/cowboy/commit/341f991d58fde702f68fa9d0076ad6dc2f942917) にアップデート
+- [CHANGE] OTP のバージョンを 18.0 に固定する
+- [CHANGE] rebar_swidden_plugin を一旦削除する
+
+1.1.6
 -----
 
 - [FIX] Body を空で返すとき <<>> ではなく [] で戻すようにする

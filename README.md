@@ -1,5 +1,7 @@
 # ヘッダーベース HTTP API フレームワーク
 
+[![Build Status](https://circleci.com/gh/shiguredo/swidden.png)](https://circleci.com/gh/shiguredo/swidden)
+
 ## 概要
 
 AWS DynamoDB や Kinesis などの API の形式に影響を受けた HTTP API ライブラリです。
@@ -419,24 +421,6 @@ server: Cowboy
 
 このライブラリを使えばコスト低く JSON Schema を使った HTTP API が作成できます。
 
-#### ドキュメント
-
-スキーマから Markdown のドキュメントを生成することができます。
-rebar plugin として実装されているので以下のように rebar.config に追記します。
-
-```
-{plugins, [rebar_swidden_plugin]}.
-```
-
-rebar swidden_doc を実行すると、サービス名ごとにドキュメントが生成されます。
-
-```
-$ rebar swidden_doc
-==> spam (swidden_doc)
-Writing api_docs/spam.md
-Writing api_docs/spam_admin.md
-Docs successfully generated.
-```
 ## 送信の時の Body が空の場合
 
 たとえば ListUsers などの一覧取得の場合はもしかすると Body を空で送信する場合が出てくるかもしれません。
