@@ -1,5 +1,7 @@
 # ヘッダーベース HTTP API フレームワーク
 
+![Build Status](https://circleci.com/gh/shiguredo/swidden.png)
+
 ## 概要
 
 AWS DynamoDB や Kinesis などの API の形式に影響を受けた HTTP API ライブラリです。
