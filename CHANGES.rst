@@ -5,6 +5,12 @@ CHANGES
 1.x
 ===
 
+1.1.8
+-----
+
+- [UPDATE] cowboy を最新版(https://github.com/ninenines/cowboy/commit/e25634cd9db82a4760087a2ba68d4c6a76353d66) にアップデート
+- [UPDATE] hackney を 1.2.0 にアップデート
+
 1.1.7
 -----
 
