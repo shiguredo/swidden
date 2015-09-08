@@ -9,7 +9,7 @@ CHANGES
 ------
 
 - [UPDATE] hackney を 1.3.2 にアップデート
-- [UPDATE] jsone を 1.1.0 にアップデート
+- [UPDATE] jsone を 1.2.0 にアップデート
 
 1.1.9
 -----
