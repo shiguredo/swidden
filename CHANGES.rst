@@ -9,6 +9,7 @@ CHANGES
 ------
 
 - [UPDATE] jsone を 1.2.1 にアップデート
+- [UPDATE] JSON Schema 読み込み時にエラーが起きた場合ファイルパスを表示する
 
 1.1.10
 ------
