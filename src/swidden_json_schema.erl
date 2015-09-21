@@ -71,7 +71,7 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
                     {error, {invalid_json, FileName, LineNumber}}
             end;
         {error, Reason} ->
-            {error, Reason}
+            {error, {FilePath, Reason}}
     end.
 
 
