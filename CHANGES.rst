@@ -5,6 +5,20 @@ CHANGES
 1.x
 ===
 
+1.1.10
+------
+
+- [UPDATE] hackney を 1.3.2 にアップデート
+- [UPDATE] jsone を 1.2.0 にアップデート
+- [UPDATE] jsone を 1.2.1 にアップデート
+- [UPDATE] JSON Schema 読み込み時にエラーが起きた場合ファイルパスを表示する
+- [UPDATE] Erlang 18.1 に対応する
+
+1.1.9
+-----
+
+- [UPDATE] jsone を 1.0.1 にアップデート
+
 1.1.8
 -----
 

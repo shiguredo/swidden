@@ -19,7 +19,7 @@ start(Name) ->
             %% FIXME(nakai): 手抜き
             error(Reason)
     end.
-    
+
 
 -spec validate_json(binary(), binary(), binary(), binary()) -> ok | {error, term()}.
 validate_json(Service, Version, Operation, RawJSON) ->
@@ -71,7 +71,7 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
                     {error, {invalid_json, FileName, LineNumber}}
             end;
         {error, Reason} ->
-            {error, Reason}
+            {error, {FilePath, Reason}}
     end.
 
 
