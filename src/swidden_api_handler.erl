@@ -81,7 +81,7 @@ dispatch(Service, Version, Operation, Opts) ->
                 non_existing ->
                     {400, [{error_type, <<"MissingTargetModule">>}]};
                 _ ->
-                    case lists:member({Function,0}, Module:module_info(exports)) of
+                    case lists:member({Function, 1}, Module:module_info(exports)) of
                         true ->
                             case Module:Function(Opts) of
                                 ok ->
@@ -106,7 +106,7 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                 non_existing ->
                     {400, [{error_type, <<"MissingTargetModule">>}]};
                 _ ->
-                    case lists:member({Function,1}, Module:module_info(exports)) of
+                    case lists:member({Function, 2}, Module:module_info(exports)) of
                         true ->
                             case Module:Function(JSON, Opts) of
                                 ok ->
