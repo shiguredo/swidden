@@ -29,7 +29,7 @@ init(Req, Opts) ->
                     %% Service_Version.Operation として分解する
                     case re:run(HeaderValue, ?REGEXP, [{capture, all_but_first, binary}]) of
                         {match, [Service, Version, Operation]} ->
-                            Req2 = handle(Service, Version, Operation, Req),
+                            Req2 = handle(Service, Version, Operation, Req, Opts),
                             {ok, Req2, Opts};
                         nomatch ->
                             %% TODO(nakai): ヘッダーが期待したメッセージではない
@@ -45,13 +45,12 @@ init(Req, Opts) ->
     end.
 
 
-handle(Service, Version, Operation, Req) ->
+handle(Service, Version, Operation, Req, Opts) ->
     %% TODO(nakai): リファクタリング
-    Meta = cowboy_req:get(meta, Req),
     case cowboy_req:has_body(Req) of
         true ->
             {ok, Body, Req2} = cowboy_req:body(Req),
-            case validate_json(Service, Version, Operation, Body, Meta) of
+            case validate_json(Service, Version, Operation, Body, Opts) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                 {StatusCode, JSON} ->
@@ -59,7 +58,7 @@ handle(Service, Version, Operation, Req) ->
                     cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
             end;
         false ->
-            case dispatch(Service, Version, Operation, Meta) of
+            case dispatch(Service, Version, Operation, Opts) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
                 {StatusCode, JSON} ->
@@ -73,7 +72,7 @@ terminate(normal, _Req, _State) ->
     ok.
 
 
-dispatch(Service, Version, Operation, Meta) ->
+dispatch(Service, Version, Operation, Opts) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
             {400, [{error_type, <<"MissingTarget">>}]};
@@ -84,20 +83,15 @@ dispatch(Service, Version, Operation, Meta) ->
                 _ ->
                     case lists:member({Function,0}, Module:module_info(exports)) of
                         true ->
-                            convert_return_value(Module:Function());
+                            convert_return_value(Module:Function(Opts));
                         false ->
-                            case lists:member({Function,1}, Module:module_info(exports)) of
-                                true ->
-                                    convert_return_value(Module:Function(Meta));
-                                false ->
-                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
-                            end
+                            {400, [{error_type, <<"MissingTargetFunction">>}]}
                     end
             end
     end.
 
 
-validate_json(Service, Version, Operation, RawJSON, Meta) ->
+validate_json(Service, Version, Operation, RawJSON, Opts) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
@@ -107,14 +101,9 @@ validate_json(Service, Version, Operation, RawJSON, Meta) ->
                 _ ->
                     case lists:member({Function,1}, Module:module_info(exports)) of
                         true ->
-                            convert_return_value(Module:Function(JSON));
+                            convert_return_value(Module:Function(JSON, Opts));
                         false ->
-                            case lists:member({Function,2}, Module:module_info(exports)) of
-                                true ->
-                                    convert_return_value(Module:Function(JSON, Meta));
-                                false ->
-                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
-                            end
+                            {400, [{error_type, <<"MissingTargetFunction">>}]}
                     end
             end;
         {error, Reason} ->
