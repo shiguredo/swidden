@@ -34,10 +34,11 @@ handle(<<"POST">>, HeaderName, Req) ->
             case re:run(Value, ?REGEXP, [{capture, all_but_first, binary}]) of
                 {match, [Service, Version, Operation]} ->
                     %% TODO(nakai): リファクタリング
+                    Meta = cowboy_req:get(meta, Req),
                     case cowboy_req:has_body(Req) of
                         true ->
                             {ok, Body, Req2} = cowboy_req:body(Req),
-                            case validate_json(Service, Version, Operation, Body) of
+                            case validate_json(Service, Version, Operation, Body, Meta) of
                                 200 ->
                                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                                 {StatusCode, JSON} ->
@@ -45,7 +46,7 @@ handle(<<"POST">>, HeaderName, Req) ->
                                     cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
                             end;
                         false ->
-                            case dispatch(Service, Version, Operation) of
+                            case dispatch(Service, Version, Operation, Meta) of
                                 200 ->
                                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
                                 {StatusCode, JSON} ->
@@ -68,7 +69,7 @@ terminate(normal, _Req, _State) ->
     ok.
 
 
-dispatch(Service, Version, Operation) ->
+dispatch(Service, Version, Operation, Meta) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
             {400, [{error_type, <<"MissingTarget">>}]};
@@ -88,13 +89,25 @@ dispatch(Service, Version, Operation) ->
                                     {400, [{error_type, Type}]}
                             end;
                         false ->
-                            {400, [{error_type, <<"MissingTargetFunction">>}]}
+                            case lists:member({Function,1}, Module:module_info(exports)) of
+                                true ->
+                                    case Module:Function(Meta) of
+                                        ok ->
+                                            200;
+                                        {ok, RespJSON} ->
+                                            {200, RespJSON};
+                                        {error, Type} ->
+                                            {400, [{error_type, Type}]}
+                                    end;
+                                false ->
+                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
+                            end
                     end
             end
     end.
 
 
-validate_json(Service, Version, Operation, RawJSON) ->
+validate_json(Service, Version, Operation, RawJSON, Meta) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
@@ -113,7 +126,19 @@ validate_json(Service, Version, Operation, RawJSON) ->
                                     {400, [{error_type, Type}]}
                             end;
                         false ->
-                            {400, [{error_type, <<"MissingTargetFunction">>}]}
+                            case lists:member({Function,2}, Module:module_info(exports)) of
+                                true ->
+                                    case Module:Function(JSON, Meta) of
+                                        ok ->
+                                            200;
+                                        {ok, RespJSON} ->
+                                            {200, RespJSON};
+                                        {error, Type} ->
+                                            {400, [{error_type, Type}]}
+                                    end;
+                                false ->
+                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
+                            end
                     end
             end;
         {error, Reason} ->
