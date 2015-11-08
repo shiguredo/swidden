@@ -83,7 +83,14 @@ dispatch(Service, Version, Operation, Opts) ->
                 _ ->
                     case lists:member({Function,0}, Module:module_info(exports)) of
                         true ->
-                            convert_return_value(Module:Function(Opts));
+                            case Module:Function(Opts) of
+                                ok ->
+                                    200;
+                                {ok, RespJSON} ->
+                                    {200, RespJSON};
+                                {error, Type} ->
+                                    {400, [{error_type, Type}]}
+                            end;
                         false ->
                             {400, [{error_type, <<"MissingTargetFunction">>}]}
                     end
@@ -101,7 +108,14 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                 _ ->
                     case lists:member({Function,1}, Module:module_info(exports)) of
                         true ->
-                            convert_return_value(Module:Function(JSON, Opts));
+                            case Module:Function(JSON, Opts) of
+                                ok ->
+                                    200;
+                                {ok, RespJSON} ->
+                                    {200, RespJSON};
+                                {error, Type} ->
+                                    {400, [{error_type, Type}]}
+                            end;
                         false ->
                             {400, [{error_type, <<"MissingTargetFunction">>}]}
                     end
@@ -110,17 +124,4 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
             ?debugVal2(Reason),
             %% TODO(nakai): エラー処理
             {400, [{error_type, <<"MissingTarget">>}]}
-    end.
-
-
--spec convert_return_value(ok | {ok, [{atom(), binary()}]} | {error, binary()})
-          -> 200 | {200, [{atom(), binary()}]} | {400, [{error_type, binary()}]}.
-convert_return_value(ReturnValue) ->
-    case ReturnValue of
-        ok ->
-            200;
-        {ok, RespJSON} ->
-            {200, RespJSON};
-        {error, Type} ->
-            {400, [{error_type, Type}]}
     end.
