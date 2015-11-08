@@ -3,7 +3,6 @@
 -behaviour(cowboy_handler).
 
 -export([init/2,
-         handle/3,
          terminate/3]).
 
 -include("swidden.hrl").
@@ -17,52 +16,57 @@
 
 init(Req, Opts) ->
     HeaderName = proplists:get_value(header_name, Opts),
-    Method = cowboy_req:method(Req),
-    Req2 = handle(Method, HeaderName, Req),
-    {ok, Req2, Opts}.
+    case cowboy_req:method(Req) of
+        <<"POST">> ->
+            case cowboy_req:header(HeaderName, Req) of
+                undefined ->
+                    %% ヘッダーがみつからない
+                    %% XXX(nakai): 400 としたが 404 がいいか？
+                    RawJSON = jsone:encode([{type, <<"MissingHeaderName">>}]),
+                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
+                    {ok, Req2, Opts};
+                HeaderValue ->
+                    %% Service_Version.Operation として分解する
+                    case re:run(HeaderValue, ?REGEXP, [{capture, all_but_first, binary}]) of
+                        {match, [Service, Version, Operation]} ->
+                            Req2 = handle(Service, Version, Operation, Req),
+                            {ok, Req2, Opts};
+                        nomatch ->
+                            %% TODO(nakai): ヘッダーが期待したメッセージではない
+                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req),
+                            {ok, Req2, Opts}
+                    end
+            end;
+        _Other ->
+            %% POST 以外受け付けていないのでエラーメッセージ
+            RawJSON = jsone:encode([{type, <<"UnexpectedMethod">>}]),
+            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
+            {ok, Req2, Opts}
+    end.
 
 
-handle(<<"POST">>, HeaderName, Req) ->
-    case cowboy_req:header(HeaderName, Req) of
-        undefined ->
-            %% ヘッダーがみつからない
-            %% XXX(nakai): 400 としたが 404 がいいか？
-            RawJSON = jsone:encode([{type, <<"MissingHeaderName">>}]),
-            cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req);
-        Value ->
-            %% Service_Version.Operation として分解する
-            case re:run(Value, ?REGEXP, [{capture, all_but_first, binary}]) of
-                {match, [Service, Version, Operation]} ->
-                    %% TODO(nakai): リファクタリング
-                    Meta = cowboy_req:get(meta, Req),
-                    case cowboy_req:has_body(Req) of
-                        true ->
-                            {ok, Body, Req2} = cowboy_req:body(Req),
-                            case validate_json(Service, Version, Operation, Body, Meta) of
-                                200 ->
-                                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
-                                {StatusCode, JSON} ->
-                                    RawJSON = jsone:encode(JSON),
-                                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
-                            end;
-                        false ->
-                            case dispatch(Service, Version, Operation, Meta) of
-                                200 ->
-                                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
-                                {StatusCode, JSON} ->
-                                    RawJSON = jsone:encode(JSON),
-                                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
-                            end
-                    end;
-                nomatch ->
-                    %% TODO(nakai): ヘッダーが期待したメッセージではない
-                    cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req)
+handle(Service, Version, Operation, Req) ->
+    %% TODO(nakai): リファクタリング
+    Meta = cowboy_req:get(meta, Req),
+    case cowboy_req:has_body(Req) of
+        true ->
+            {ok, Body, Req2} = cowboy_req:body(Req),
+            case validate_json(Service, Version, Operation, Body, Meta) of
+                200 ->
+                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
+                {StatusCode, JSON} ->
+                    RawJSON = jsone:encode(JSON),
+                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
+            end;
+        false ->
+            case dispatch(Service, Version, Operation, Meta) of
+                200 ->
+                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
+                {StatusCode, JSON} ->
+                    RawJSON = jsone:encode(JSON),
+                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
             end
-    end;
-handle(_Method, _HeaderName, Req) ->
-    %% POST 以外受け付けていないのでエラーメッセージ
-    RawJSON = jsone:encode([{type, <<"UnexpectedMethod">>}]),
-    cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req).
+    end.
 
 
 terminate(normal, _Req, _State) ->
