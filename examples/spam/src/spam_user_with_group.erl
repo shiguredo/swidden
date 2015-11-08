@@ -1,11 +1,11 @@
 -module(spam_user_with_group).
 
--export([create_user/1]).
+-export([create_user/2]).
 
 -define(TABLE, spam_user_with_group_table).
 
 
-create_user(JSON) ->
+create_user(JSON, _Opts) ->
     Username = proplists:get_value(<<"username">>, JSON),
     Password = proplists:get_value(<<"password">>, JSON),
     Group = proplists:get_value(<<"group">>, JSON),

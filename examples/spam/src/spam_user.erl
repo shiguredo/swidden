@@ -1,7 +1,7 @@
 -module(spam_user).
 
 -export([start/0]).
--export([get_user/1, create_user/1, update_user/1, delete_user/1]).
+-export([get_user/2, create_user/2, update_user/2, delete_user/2]).
 
 -define(TABLE, spam_user_table).
 
@@ -11,7 +11,7 @@ start() ->
     ok.
 
 
-get_user(JSON) ->
+get_user(JSON, _Opts) ->
     Username = proplists:get_value(<<"username">>, JSON),
     case ets:lookup(?TABLE, Username) of
         [] ->
@@ -25,7 +25,7 @@ get_user(JSON) ->
     end.
 
 
-create_user(JSON) ->
+create_user(JSON, _Opts) ->
     Username = proplists:get_value(<<"username">>, JSON),
     Password = proplists:get_value(<<"password">>, JSON),
     case ets:insert_new(?TABLE, {Username, Password}) of
@@ -36,7 +36,7 @@ create_user(JSON) ->
     end.
 
 
-update_user(JSON) ->
+update_user(JSON, _Opts) ->
     Username = proplists:get_value(<<"username">>, JSON),
     Password = proplists:get_value(<<"password">>, JSON),
     case ets:lookup(?TABLE, Username) of
@@ -52,7 +52,7 @@ update_user(JSON) ->
     end.
 
 
-delete_user(JSON) ->
+delete_user(JSON, _Opts) ->
     Username = proplists:get_value(<<"username">>, JSON),
     case ets:lookup(?TABLE, Username) of
         [] ->
