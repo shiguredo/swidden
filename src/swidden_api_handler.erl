@@ -83,25 +83,11 @@ dispatch(Service, Version, Operation, Opts) ->
                 _ ->
                     case lists:member({Function, 0}, Module:module_info(exports)) of
                         true ->
-                            case Module:Function() of
-                                ok ->
-                                    200;
-                                {ok, RespJSON} ->
-                                    {200, RespJSON};
-                                {error, Type} ->
-                                    {400, [{error_type, Type}]}
-                            end;
+                            apply0(Module, Function, []);
                         false ->
                             case lists:member({Function, 1}, Module:module_info(exports)) of
                                 true ->
-                                    case Module:Function(Opts) of
-                                        ok ->
-                                            200;
-                                        {ok, RespJSON} ->
-                                            {200, RespJSON};
-                                        {error, Type} ->
-                                            {400, [{error_type, Type}]}
-                                    end;
+                                    apply0(Module, Function, [Opts]);
                                 false ->
                                     {400, [{error_type, <<"MissingTargetFunction">>}]}
                             end
@@ -120,25 +106,11 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                 _ ->
                     case lists:member({Function, 1}, Module:module_info(exports)) of
                         true ->
-                            case Module:Function(JSON) of
-                                ok ->
-                                    200;
-                                {ok, RespJSON} ->
-                                    {200, RespJSON};
-                                {error, Type} ->
-                                    {400, [{error_type, Type}]}
-                            end;
+                            apply0(Module, Function, [JSON]);
                         false ->
                             case lists:member({Function, 2}, Module:module_info(exports)) of
                                 true ->
-                                    case Module:Function(JSON, Opts) of
-                                        ok ->
-                                            200;
-                                        {ok, RespJSON} ->
-                                            {200, RespJSON};
-                                        {error, Type} ->
-                                            {400, [{error_type, Type}]}
-                                    end;
+                                    apply0(Module, Function, [JSON, Opts]);
                                 false ->
                                     {400, [{error_type, <<"MissingTargetFunction">>}]}
                             end
@@ -148,4 +120,15 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
             ?debugVal2(Reason),
             %% TODO(nakai): エラー処理
             {400, [{error_type, <<"MissingTarget">>}]}
+    end.
+
+
+apply0(Module, Function, Args) ->
+    case apply(Module, Function, Args) of
+        ok ->
+            200;
+        {ok, RespJSON} ->
+            {200, RespJSON};
+        {error, Type} ->
+            {400, [{error_type, Type}]}
     end.
