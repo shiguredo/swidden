@@ -276,7 +276,7 @@ start() ->
     ok.
 
 
-get_user(JSON, _Opts) ->
+get_user(JSON) ->
     Username = proplists:get_value(<<"username">>, JSON),
     case ets:lookup(?TABLE, Username) of
         [] ->
@@ -290,7 +290,7 @@ get_user(JSON, _Opts) ->
     end.
 
 
-create_user(JSON, _Opts) ->
+create_user(JSON) ->
     Username = proplists:get_value(<<"username">>, JSON),
     Password = proplists:get_value(<<"password">>, JSON),
     case ets:insert_new(?TABLE, {Username, Password}) of
@@ -301,7 +301,7 @@ create_user(JSON, _Opts) ->
     end.
 
 
-update_user(JSON, _Opts) ->
+update_user(JSON) ->
     Username = proplists:get_value(<<"username">>, JSON),
     Password = proplists:get_value(<<"password">>, JSON),
     case ets:lookup(?TABLE, Username) of
@@ -317,7 +317,7 @@ update_user(JSON, _Opts) ->
     end.
 
 
-delete_user(JSON, _Opts) ->
+delete_user(JSON) ->
     Username = proplists:get_value(<<"username">>, JSON),
     case ets:lookup(?TABLE, Username) of
         [] ->
