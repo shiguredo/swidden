@@ -447,7 +447,9 @@ list_users() ->
 
 例は以下です。
 
-```spam_auth.erl
+spam_auth.erl
+
+```
 -behaviour(cowboy_middleware).
 
 execute(Req, Env) ->
@@ -458,7 +460,9 @@ execute(Req, Env) ->
     {ok, Req, Env2}.
 ```
 
-```spam_handler.erl
+spam_handler.erl
+
+```
 get_user(Opts) ->
     UserID = proplists:get_value(user_id, Opts),
     spam_db:get_user(UserID),
