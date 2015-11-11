@@ -32,9 +32,16 @@ start(Name, Opts) ->
                     Middlewares ->
                         [{middlewares, Middlewares}]
                 end,
+    ProtoOpts2 = case proplists:get_value(onresponse, Opts, not_found) of
+                     not_found ->
+                         ProtoOpts;
+                     OnResponse ->
+                         [{onresponse, OnResponse} | ProtoOpts]
+                 end,
+
     Env = {env, [{dispatch, Dispatch}]},
 
-    cowboy:start_http(?REF, 10, [{port, Port}], [Env|ProtoOpts]).
+    cowboy:start_http(?REF, 10, [{port, Port}], [Env|ProtoOpts2]).
 
 
 -spec stop() -> ok.
