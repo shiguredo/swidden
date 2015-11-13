@@ -5,6 +5,13 @@ CHANGES
 1.x
 ===
 
+1.2.0
+-----
+
+- [ADD] Function の引数を拡張し、middleware から handler_opts で引き回したデータを Opts として扱えるようにする
+- [ADD] swidden:start/2 で Opts として onresponse hook を受け取れるようにする
+
+
 1.1.12
 ------
 
