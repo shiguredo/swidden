@@ -83,12 +83,15 @@ failure() ->
 
 
 middlewares() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{middlewares, [sample_middleware,
-                                                                    cowboy_router,
+    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{middlewares, [cowboy_router,
+                                                                    sample_middleware,
                                                                     cowboy_handler]},
                                                      {port, 40000}])),
 
     ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+
+    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
+    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
 
     ?assertEqual(ok, swidden:stop()),
     ok.
