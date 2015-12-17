@@ -5,6 +5,15 @@ CHANGES
 1.x
 ===
 
+1.2.1
+-----
+
+- [UPDATE] 18.2 に対応する
+- [UPDATE] cowboy を最新 (b7d666cfc746f55b0a72ef8d37f703885099daf7) にアップデート
+- [UPDATE] hackney を 1.4.7 にアップデート
+- [UPDATE] eunit_formatters を v0.3.1 にアップデート
+- [UPDATE] rebar.config から erts のバージョン固定を外す
+
 1.2.0
 -----
 
