@@ -5,11 +5,32 @@ CHANGES
 1.x
 ===
 
+- [UPDATE] cowboy を最新 (b7d666cfc746f55b0a72ef8d37f703885099daf7) にアップデート
+- [UPDATE] hackney を 1.4.7 にアップデート
+- [UPDATE] eunit_formatters を v0.3.1 にアップデート
+
+1.2.0
+-----
+
+- [ADD] Function の引数を拡張し、middleware から handler_opts で引き回したデータを Opts として扱えるようにする
+- [ADD] swidden:start/2 で Opts として onresponse hook を受け取れるようにする
+
+
+1.1.12
+------
+
+- [UPDATE] hackney を 1.4.4 にアップデート
+
+
+1.1.11
+------
+
+- [UPDATE] rebar を 2.6.0 18 にアップデート
+
 1.1.10
 ------
 
 - [UPDATE] hackney を 1.3.2 にアップデート
-- [UPDATE] jsone を 1.2.0 にアップデート
 - [UPDATE] jsone を 1.2.1 にアップデート
 - [UPDATE] JSON Schema 読み込み時にエラーが起きた場合ファイルパスを表示する
 - [UPDATE] Erlang 18.1 に対応する
