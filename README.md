@@ -476,24 +476,8 @@ get_user(Opts) ->
 
 - 認証機能
 - JSON Schema draft 4.0 への対応
-    - ライブラリが対応していることを祈る
 - Response に対する JSON Schema によるバリデーション
-
-### 1.2.0
-
-- Erlang/OTP 18.0 と Cowboy 2.0.0 が出たタイミングでリリース予定
 - dispatch.conf の Map 化
-
-### 1.1.0
-
-- JSON Schema draft 3 での Schema 設定
-- Request に対する JSON Schema でのバリデーション
-- ドキュメントの自動生成
-- テストクライアントの用意
-
-  - この API を気軽にテスト出来るようにする
-- JSON なしの場合の処理を追加
-
 
 ## 既知の問題
 
