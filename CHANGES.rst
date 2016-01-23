@@ -5,6 +5,17 @@ CHANGES
 1.x
 ===
 
+1.3.0
+-----
+
+- [UPDATE] 18.2.1 に対応する
+- [UPDATE] cowboy を最新 (dbb636034f20736e16eb9d6c809217c9525b6cbd) にアップデート
+- [UPDATE] hackney を 1.4.9 にアップデート
+- [UPDATE] jesse のリポジトリを for-GET/jesse へ変更し 1.2.0 に更新
+
+  - 既存がすでにメンテナンスされなくなった
+  - このライブラリで draft 4 へ対応したので今後は draft 4 へ移行していきたい
+
 1.2.1
 -----
 
