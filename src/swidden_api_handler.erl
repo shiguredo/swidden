@@ -69,6 +69,9 @@ handle(Service, Version, Operation, Req, Opts) ->
 
 
 terminate(normal, _Req, _State) ->
+    ok;
+terminate(Reason, _Req, _State) ->
+    ?debugVal3(Reason),
     ok.
 
 
