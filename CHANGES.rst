@@ -5,6 +5,21 @@ CHANGES
 1.x
 ===
 
+develop
+-------
+
+- [UPDATE] rebar をアップデートする
+
+  - rebar 2.6.1 18 20160301_062936 git 2.6.1-39-g13a570e
+- [UPDATE] hackney を 1.4.10 に上げる
+
+1.3.1
+-----
+
+- [FIX] terminate 部分のパターンマッチを増やす
+
+  - Reason を出力するようにする
+
 1.3.0
 -----
 
