@@ -34,7 +34,8 @@ all_test_() ->
      [
       fun success/0,
       fun failure/0,
-      fun middlewares/0
+      fun middlewares/0,
+      fun crash/0
      ]
     }.
 
@@ -97,6 +98,15 @@ middlewares() ->
     ok.
 
 
+crash() ->
+    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
+
+    ?assertEqual(500, request(<<"Spam">>, <<"20141101">>, <<"Crash">>)),
+
+    ?assertEqual(ok, swidden:stop()),
+    ok.
+
+
 request(Service, Version, Operation, JSON) ->
     case swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation, JSON) of
         {ok, StatusCode} ->
@@ -111,6 +121,8 @@ request(Service, Version, Operation) ->
         {ok, StatusCode} ->
             StatusCode;
         {ok, StatusCode, _Body} ->
+            StatusCode;
+        {error, {status_code, StatusCode}} ->
             StatusCode
     end.
 
