@@ -8,6 +8,9 @@ CHANGES
 develop
 -------
 
+1.4.0
+-----
+
 - [UPDATE] rebar をアップデートする
 
   - rebar 2.6.1 18 20160301_062936 git 2.6.1-39-g13a570e
