@@ -22,9 +22,8 @@ compile:
 	@./rebar -C $(REBAR_CONFIG) xref skip_deps=true
 
 
-test: compile
-	rm -rf .eunit
-	@./rebar -C $(REBAR_CONFIG) eunit skip_deps=true
+test:
+	@./rebar3 as test eunit 
 
 clean:
 	@./rebar -C $(REBAR_CONFIG) clean skip_deps=true
