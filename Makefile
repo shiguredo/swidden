@@ -6,7 +6,7 @@ deps:
 	@./rebar3 update
 
 compile:
-	@./rebar3 compile
+	@./rebar3 xref
 
 test:
 	@./rebar3 as test eunit 
