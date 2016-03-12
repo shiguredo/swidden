@@ -9,3 +9,4 @@ dev/*
 erl_crash.dump
 
 *.pyc
+_build/*
