@@ -5,6 +5,17 @@ CHANGES
 2.x
 ===
 
+2.0.2
+-----
+
+- [UPDATE] rebar3 コマンドを整理する
+- [FIX] eunit_formatters は rebar3 に内蔵されているので削除する
+
+2.0.1
+-----
+
+- [FIX] Hackney を test profile から移動する
+
 2.0.0
 -----
 
