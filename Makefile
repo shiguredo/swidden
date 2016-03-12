@@ -1,15 +1,15 @@
-.PHONY: all deps compile test clean
+.PHONY: all upgrade compile test clean
 
-all: clean deps compile test
+all: clean upgrade compile test
 
-deps:
-	@./rebar3 update
+upgrade:
+	@./rebar3 upgrade
 
 compile:
 	@./rebar3 xref
 
 test:
-	@./rebar3 as test eunit 
+	@./rebar3 as test eunit -c all, cover
 
 clean:
 	@./rebar3 clean
