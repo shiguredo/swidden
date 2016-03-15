@@ -126,7 +126,6 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                                        version => Version,
                                        operation => Operation}}};
         {error, Reasons} ->
-            ?debugVal(Reasons),
             ErrorReasons = swidden_json_schema:to_json(Reasons),
             {400, #{error_type => <<"InvalidJSON">>,
                     error_reasons => ErrorReasons}}
