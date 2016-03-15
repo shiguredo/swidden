@@ -94,7 +94,6 @@ parse_fun() ->
 
 
 to_json(Reasons) ->
-    ?debugVal(Reasons),
     F = fun({data_invalid, Schema, {Error, _}, Data, Path}) ->
                 #{invalid => data,
                   schema => Schema,
