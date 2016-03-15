@@ -94,6 +94,8 @@ middlewares() ->
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
 
+    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
+
     ?assertEqual(ok, swidden:stop()),
     ok.
 
@@ -112,6 +114,8 @@ request(Service, Version, Operation, JSON) ->
         {ok, StatusCode} ->
             StatusCode;
         {ok, StatusCode, _Body} ->
+            StatusCode;
+        {error, {status_code, StatusCode}} ->
             StatusCode
     end.
 

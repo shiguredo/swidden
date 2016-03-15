@@ -2,6 +2,7 @@
 
 -export([start/1]).
 -export([validate_json/4]).
+-export([to_json/1]).
 
 -include("swidden.hrl").
 -include("swidden_dispatch.hrl").
@@ -90,3 +91,20 @@ validate(Service, Version, Operation, RawJSON) ->
 -spec parse_fun() -> function().
 parse_fun() ->
     fun(Binary) -> jsone:decode(Binary, [{object_format, proplist}]) end.
+
+
+to_json(Reasons) ->
+    F = fun({data_invalid, Schema, {Error, _}, Data, Path}) ->
+                #{invalid => data,
+                  schema => Schema,
+                  error => Error,
+                  data => Data,
+                  path => Path};
+           ({data_invalid, Schema, Error, Data, Path}) ->
+                #{invalid => data,
+                  schema => Schema,
+                  error => Error,
+                  data => Data,
+                  path => Path}
+        end,
+    lists:map(F, Reasons).
