@@ -5,6 +5,12 @@ CHANGES
 2.x
 ===
 
+2.1.0
+-----
+
+- [UPDATE] JSON Schema エラーじのエラーメッセージを JSON で返すようにする
+- [UPDATE] JSON Schema が見つからない時 JSON で Serfvice, Version, Operation を返すようにする
+
 2.0.2
 -----
 
