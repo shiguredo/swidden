@@ -31,7 +31,7 @@ init(Req, Opts) ->
                         {match, [Service, Version, Operation]} ->
                             Req2 = handle(Service, Version, Operation, Req, Opts),
                             {ok, Req2, Opts};
-                        nomatch ->
+                        _ ->
                             %% TODO(nakai): ヘッダーが期待したメッセージではない
                             Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req),
                             {ok, Req2, Opts}
@@ -119,10 +119,16 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                             end
                     end
             end;
-        {error, Reason} ->
-            ?debugVal2(Reason),
-            %% TODO(nakai): エラー処理
-            {400, [{error_type, <<"MissingTarget">>}]}
+        {error, {database_error, {Service, Version, Operation}, schema_not_found}} ->
+            %% TODO(nakai): この部分は外だしする
+            {400, #{error_type => <<"SchemaNotFound">>,
+                    error_reasons => #{service => Service,
+                                       version => Version,
+                                       operation => Operation}}};
+        {error, Reasons} ->
+            ErrorReasons = swidden_json_schema:to_json(Reasons),
+            {400, #{error_type => <<"InvalidJSON">>,
+                    error_reasons => ErrorReasons}}
     end.
 
 

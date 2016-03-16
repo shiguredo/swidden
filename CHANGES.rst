@@ -5,6 +5,28 @@ CHANGES
 2.x
 ===
 
+2.1.1
+-----
+
+- [FIX] 不要なデバッグログを削除する
+
+2.1.0
+-----
+
+- [UPDATE] JSON Schema エラーじのエラーメッセージを JSON で返すようにする
+- [UPDATE] JSON Schema が見つからない時 JSON で Serfvice, Version, Operation を返すようにする
+
+2.0.2
+-----
+
+- [UPDATE] rebar3 コマンドを整理する
+- [FIX] eunit_formatters は rebar3 に内蔵されているので削除する
+
+2.0.1
+-----
+
+- [FIX] Hackney を test profile から移動する
+
 2.0.0
 -----
 
