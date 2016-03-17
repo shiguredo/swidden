@@ -119,6 +119,9 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                             end
                     end
             end;
+        {error, {data_error, _Reason}} ->
+            ?debugVal(_Reason),
+            {400, #{error_type => <<"MalformedJSON">>}};
         {error, {database_error, {Service, Version, Operation}, schema_not_found}} ->
             %% TODO(nakai): この部分は外だしする
             {400, #{error_type => <<"SchemaNotFound">>,
