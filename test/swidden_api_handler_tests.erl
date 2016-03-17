@@ -77,7 +77,8 @@ failure() ->
     ?assertEqual(400, bad_header_request([{username, <<"yakihata">>}])),
     %% Body が空を期待しているのに Body を送った場合
     ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, <<"all">>}])),
-
+    %% JSON ですらない値を送った場合
+    ?assertEqual(400, raw_payload_request(<<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"abc">>)),
 
     ?assertEqual(ok, swidden:stop()),
     ok.
@@ -132,6 +133,15 @@ request(Service, Version, Operation) ->
 
 
 %% TODO(nakai): これ以降のリクエスト関連、リファクタすること
+
+
+raw_payload_request(Service, Verision, Operation, Payload) ->
+    URL = <<"http://127.0.0.1:40000/">>,
+    Headers = [{<<"x-swd-target">>, list_to_binary([Service, $_, Verision, $., Operation])}],
+    Options = [],
+    {ok, StatusCode, _RespHeaders, ClientRef} = hackney:post(URL, Headers, Payload, Options),
+    hackney:close(ClientRef),
+    StatusCode.
 
 
 no_body_request(Service, Verision, Operation) ->
