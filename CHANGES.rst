@@ -5,6 +5,13 @@ CHANGES
 2.x
 ===
 
+develop
+-------
+
+- [UPDATE] jsone を 1.2.3 にアップデートする
+- [UPDATE] jesse を 1.4.0 にアップデートする
+- [UPDATE] hackney を 1.6.0 にアップデートする
+
 2.1.2
 -----
 
