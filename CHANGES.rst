@@ -5,8 +5,8 @@ CHANGES
 2.x
 ===
 
-develop
--------
+2.2.0
+-----
 
 - [UPDATE] jsone を 1.2.3 にアップデートする
 - [UPDATE] jesse を 1.4.0 にアップデートする
