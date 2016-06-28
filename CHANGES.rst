@@ -5,6 +5,12 @@ CHANGES
 2.x
 ===
 
+2.2.1
+-----
+
+- [UPDATE] OTP 19 対応
+- [UPDATE] cowlib をアップデートする
+
 2.2.0
 -----
 
