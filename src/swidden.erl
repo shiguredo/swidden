@@ -2,11 +2,13 @@
 
 -export([start/1, start/2, stop/0]).
 -export([success/0, success/1, failure/1]).
+-export_type([json_object/0]).
 
 -define(DEFAULT_HEADER_NAME, <<"x-swd-target">>).
 
 -define(REF, swidden_http_api).
 
+-type json_object() :: jsone:json_object().
 
 %% TODO(nakai): Target も Opts に入れてしまうかどうか検討すること
 
@@ -55,7 +57,7 @@ success() ->
     ok.
 
 
--spec success([{atom(), binary()}]) -> {ok, [{atom(), binary()}]}.
+-spec success(json_object()) -> {ok, json_object()}.
 success(JSON) ->
     {ok, JSON}.
 
