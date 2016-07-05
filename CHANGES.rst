@@ -5,6 +5,11 @@ CHANGES
 2.x
 ===
 
+2.3.0
+-----
+
+- [CHANGE] swidden_client の戻り JSON を Map 形式にする
+
 2.2.2
 -----
 
