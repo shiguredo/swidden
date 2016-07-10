@@ -16,6 +16,7 @@
 
 init(Req, Opts) ->
     HeaderName = proplists:get_value(header_name, Opts),
+    Services = proplists:get_value(services, Opts),
     case cowboy_req:method(Req) of
         <<"POST">> ->
             case cowboy_req:header(HeaderName, Req) of
@@ -29,11 +30,20 @@ init(Req, Opts) ->
                     %% Service_Version.Operation として分解する
                     case re:run(HeaderValue, ?REGEXP, [{capture, all_but_first, binary}]) of
                         {match, [Service, Version, Operation]} ->
-                            Req2 = handle(Service, Version, Operation, Req, Opts),
-                            {ok, Req2, Opts};
+                            case lists:member(Service, Services) of
+                                true ->
+                                    Req2 = handle(Service, Version, Operation, Req, Opts),
+                                    {ok, Req2, Opts};
+                                false when Services == [] ->
+                                    Req2 = handle(Service, Version, Operation, Req, Opts),
+                                    {ok, Req2, Opts};
+                                false ->
+                                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req),
+                                    {ok, Req2, Opts}
+                            end;
                         _ ->
-                            %% TODO(nakai): ヘッダーが期待したメッセージではない
-                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req),
+                            %% サービスに対応してなかったよ
+                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"MissingService">>}]), Req),
                             {ok, Req2, Opts}
                     end
             end;

@@ -22,8 +22,15 @@ start(Name, Opts) ->
 
     HeaderName = proplists:get_value(header_name, Opts, ?DEFAULT_HEADER_NAME),
 
+    %% dispatch.conf には Spam, SpamAdmin, Egg, EggAdmin があるとする
+    %% Services に指定した文字列 [{services, [<<"Spam">>, <<"SpamAdmin">>]}]
+    %% これが有効になり他は有効にならない
+        %% バリデーション頑張ってないので要注意
+    %% [] は全部に対応するという意味にする
+    Services = proplists:get_value(services, Opts, []),
+
     Dispatch = cowboy_router:compile([
-        {'_', [{"/", swidden_api_handler, [{header_name, HeaderName}]}]}
+        {'_', [{"/", swidden_api_handler, [{header_name, HeaderName}, {services, Services}]}]}
     ]),
 
     Port = proplists:get_value(port, Opts, 8000),

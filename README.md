@@ -469,13 +469,9 @@ get_user(Opts) ->
     swidden:success(User).
 ```
 
-
-## ロードマップ
-
-### 2.0.0
+## TODO
 
 - 認証機能
-- JSON Schema draft 4.0 への対応
 - Response に対する JSON Schema によるバリデーション
 - dispatch.conf の Map 化
 
@@ -486,7 +482,7 @@ get_user(Opts) ->
 ## ライセンス
 
 ```
-Copyright 2014 Shiguredo Inc.
+Copyright 2016 Shiguredo Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
