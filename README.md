@@ -421,6 +421,17 @@ server: Cowboy
 
 このライブラリを使えばコスト低く JSON Schema を使った HTTP API が作成できます。
 
+## 利用したいサービスを指定したい場合
+
+そのポートで利用するサービスを固定したい場合は swidden:start する際の引数に [{services, [<<"Spam">>]}] とサービスを指定することで、そのサービスだけが有効になります。
+
+```
+{ok, _} = swidden:start(3000, spam, [{services, [<<"Spam">>]}]),
+{ok, _} = swidden:start(5000, spam, [{services, [<<"SpamAdmin">>]}]),
+```
+
+Spam は 3000 番ポートで、 SpamAdmin は 5000 番ポートで有効になります。
+
 ## 送信の時の Body が空の場合
 
 たとえば ListUsers などの一覧取得の場合はもしかすると Body を空で送信する場合が出てくるかもしれません。
