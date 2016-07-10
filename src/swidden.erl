@@ -1,6 +1,6 @@
 -module(swidden).
 
--export([start/1, start/2, stop/0]).
+-export([start/1, start/2, stop/1]).
 -export([success/0, success/1, failure/1]).
 -export_type([json_object/0]).
 
@@ -50,13 +50,13 @@ start(Name, Opts) ->
 
     Env = {env, [{dispatch, Dispatch}]},
 
-    cowboy:start_http(?REF, 10, [{port, Port}], [Env|ProtoOpts2]).
+    cowboy:start_http({?REF, Port}, 10, [{port, Port}], [Env|ProtoOpts2]).
 
 
--spec stop() -> ok.
-stop() ->
+-spec stop(inet:port_number()) -> ok.
+stop(Port) ->
     %% TODO(nakai): ets 周りも削除する
-    ok = cowboy:stop_listener(?REF). 
+    ok = cowboy:stop_listener({?REF, Port}). 
 
 
 -spec success() -> ok.

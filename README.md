@@ -426,8 +426,8 @@ server: Cowboy
 そのポートで利用するサービスを固定したい場合は swidden:start する際の引数に [{services, [<<"Spam">>]}] とサービスを指定することで、そのサービスだけが有効になります。
 
 ```
-{ok, _} = swidden:start(3000, spam, [{services, [<<"Spam">>]}]),
-{ok, _} = swidden:start(5000, spam, [{services, [<<"SpamAdmin">>]}]),
+{ok, _} = swidden:start(spam, [{port, 3000}, {services, [<<"Spam">>]}]),
+{ok, _} = swidden:start(spam, [{port, 5000}, {services, [<<"SpamAdmin">>]}]),
 ```
 
 Spam は 3000 番ポートで、 SpamAdmin は 5000 番ポートで有効になります。

@@ -33,6 +33,7 @@ all_test_() ->
      end,
      [
       fun success/0,
+      fun services_success/0,
       fun failure/0,
       fun middlewares/0,
       fun crash/0
@@ -59,8 +60,25 @@ success() ->
     ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>,
                               [{reset, false}])),
 
-    ?assertEqual(ok, swidden:stop()),
+    ?assertEqual(ok, swidden:stop(40000)),
     ok.
+
+
+services_success() ->
+    ?assertMatch({ok, _Pid1}, swidden:start(swidden, [{port, 40000}, {services, [<<"Spam">>]}])),
+    ?assertMatch({ok, _Pid2}, swidden:start(swidden, [{port, 50000}, {services, [<<"SpamAdmin">>]}])),
+
+    ?assertEqual(200, request(40000, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+    ?assertEqual(400, request(50000, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+
+    ?assertEqual(200, request(50000, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+    ?assertEqual(400, request(40000, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+
+
+    ?assertEqual(ok, swidden:stop(40000)),
+    ?assertEqual(ok, swidden:stop(50000)),
+    ok.
+
 
 failure() ->
     ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
@@ -80,7 +98,7 @@ failure() ->
     %% JSON ですらない値を送った場合
     ?assertEqual(400, raw_payload_request(<<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"abc">>)),
 
-    ?assertEqual(ok, swidden:stop()),
+    ?assertEqual(ok, swidden:stop(40000)),
     ok.
 
 
@@ -97,7 +115,7 @@ middlewares() ->
 
     ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
 
-    ?assertEqual(ok, swidden:stop()),
+    ?assertEqual(ok, swidden:stop(40000)),
     ok.
 
 
@@ -106,12 +124,15 @@ crash() ->
 
     ?assertEqual(500, request(<<"Spam">>, <<"20141101">>, <<"Crash">>)),
 
-    ?assertEqual(ok, swidden:stop()),
+    ?assertEqual(ok, swidden:stop(40000)),
     ok.
 
 
 request(Service, Version, Operation, JSON) ->
-    case swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation, JSON) of
+    request(40000, Service, Version, Operation, JSON).
+
+request(Port, Service, Version, Operation, JSON) ->
+    case swidden_client:request(Port, <<"x-swd-target">>, Service, Version, Operation, JSON) of
         {ok, StatusCode} ->
             StatusCode;
         {ok, StatusCode, _Body} ->
