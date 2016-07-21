@@ -9,7 +9,7 @@
   1},
  {<<"hackney">>,
   {git,"git://github.com/benoitc/hackney",
-       {ref,"66a53291d3fef4f46f7baa99016725c7659aa022"}},
+       {ref,"2e4c6e377d0ef913c24e8af783bed566c1251baa"}},
   0},
  {<<"idna">>,{pkg,<<"idna">>,<<"1.2.0">>},1},
  {<<"jesse">>,
