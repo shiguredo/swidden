@@ -1,7 +1,8 @@
 -module(swidden).
 
 -export([start/1, start/2, stop/0]).
--export([success/0, success/1, failure/1]).
+-export([success/0, success/1]).
+-export([failure/1, failure/2]).
 -export_type([json_object/0]).
 
 -define(DEFAULT_HEADER_NAME, <<"x-swd-target">>).
@@ -66,3 +67,8 @@ success(JSON) ->
 -spec failure(binary()) -> {error, binary()}.
 failure(Type) when is_binary(Type) ->
     {error, Type}.
+
+
+failure(Type, Map) when is_binary(Type) andalso is_map(Map) ->
+    {error, Type, Map}.
+
