@@ -421,6 +421,17 @@ server: Cowboy
 
 このライブラリを使えばコスト低く JSON Schema を使った HTTP API が作成できます。
 
+## 利用したいサービスを指定したい場合
+
+そのポートで利用するサービスを固定したい場合は swidden:start する際の引数に [{services, [<<"Spam">>]}] とサービスを指定することで、そのサービスだけが有効になります。
+
+```
+{ok, _} = swidden:start(spam, [{port, 3000}, {services, [<<"Spam">>]}]),
+{ok, _} = swidden:start(spam, [{port, 5000}, {services, [<<"SpamAdmin">>]}]),
+```
+
+Spam は 3000 番ポートで、 SpamAdmin は 5000 番ポートで有効になります。
+
 ## 送信の時の Body が空の場合
 
 たとえば ListUsers などの一覧取得の場合はもしかすると Body を空で送信する場合が出てくるかもしれません。
@@ -469,13 +480,9 @@ get_user(Opts) ->
     swidden:success(User).
 ```
 
-
-## ロードマップ
-
-### 2.0.0
+## TODO
 
 - 認証機能
-- JSON Schema draft 4.0 への対応
 - Response に対する JSON Schema によるバリデーション
 - dispatch.conf の Map 化
 
@@ -486,7 +493,7 @@ get_user(Opts) ->
 ## ライセンス
 
 ```
-Copyright 2014 Shiguredo Inc.
+Copyright 2016 Shiguredo Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

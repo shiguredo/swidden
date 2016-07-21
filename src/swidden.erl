@@ -1,6 +1,6 @@
 -module(swidden).
 
--export([start/1, start/2, stop/0]).
+-export([start/1, start/2, stop/1]).
 -export([success/0, success/1]).
 -export([failure/1, failure/2]).
 -export_type([json_object/0]).
@@ -23,8 +23,15 @@ start(Name, Opts) ->
 
     HeaderName = proplists:get_value(header_name, Opts, ?DEFAULT_HEADER_NAME),
 
+    %% dispatch.conf には Spam, SpamAdmin, Egg, EggAdmin があるとする
+    %% Services に指定した文字列 [{services, [<<"Spam">>, <<"SpamAdmin">>]}]
+    %% これが有効になり他は有効にならない
+        %% バリデーション頑張ってないので要注意
+    %% [] は全部に対応するという意味にする
+    Services = proplists:get_value(services, Opts, []),
+
     Dispatch = cowboy_router:compile([
-        {'_', [{"/", swidden_api_handler, [{header_name, HeaderName}]}]}
+        {'_', [{"/", swidden_api_handler, [{header_name, HeaderName}, {services, Services}]}]}
     ]),
 
     Port = proplists:get_value(port, Opts, 8000),
@@ -44,13 +51,13 @@ start(Name, Opts) ->
 
     Env = {env, [{dispatch, Dispatch}]},
 
-    cowboy:start_http(?REF, 10, [{port, Port}], [Env|ProtoOpts2]).
+    cowboy:start_http({?REF, Port}, 10, [{port, Port}], [Env|ProtoOpts2]).
 
 
--spec stop() -> ok.
-stop() ->
+-spec stop(inet:port_number()) -> ok.
+stop(Port) ->
     %% TODO(nakai): ets 周りも削除する
-    ok = cowboy:stop_listener(?REF). 
+    ok = cowboy:stop_listener({?REF, Port}). 
 
 
 -spec success() -> ok.

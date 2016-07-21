@@ -2,8 +2,16 @@
 CHANGES
 #################
 
-2.x
-===
+3.0.0
+-----
+
+- [ADD] 利用できるサービスを swidden:start 時に [{services, [<<"Spam">>]}] のように指定できるようにする
+- [CHANGE] start/0 が配信され start/1 で Port 番号を指定する必要がある
+
+2.3.0
+-----
+
+- [CHANGE] swidden_client の戻り JSON を Map 形式にする
 
 2.2.2
 -----

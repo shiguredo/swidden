@@ -47,5 +47,5 @@ setup() ->
     ?assertEqual({spam_admin_handler, get_metrics},
                  swidden_dispatch:lookup(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>)),
 
-    ?assertEqual(ok, swidden:stop()),
+    ?assertEqual(ok, swidden:stop(8000)),
     ok.
