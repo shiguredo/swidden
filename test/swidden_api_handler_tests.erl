@@ -57,6 +57,9 @@ success() ->
     ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
                               [{username, <<"yakihata">>}, {password, <<"nogyo">>}, {group, <<"amazon">>}])),
 
+    ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
+                              [{username, <<"error_code">>}, {password, <<"nogyo">>}, {group, <<"amazon">>}])),
+
     ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>,
                               [{reset, false}])),
 
