@@ -6,6 +6,7 @@ CHANGES
 -----
 
 - [ADD] map を指定できる failure/2 を追加する
+- [UPDATE] rebar3 を rebar 3.2.0 on Erlang/OTP 19 Erts 8.0.2 にアップデートする
 
 3.0.0
 -----
