@@ -2,8 +2,22 @@
 CHANGES
 #################
 
-2.x
-===
+3.1.0
+-----
+
+- [ADD] map を指定できる failure/2 を追加する
+- [UPDATE] rebar3 を rebar 3.2.0 on Erlang/OTP 19 Erts 8.0.2 にアップデートする
+
+3.0.0
+-----
+
+- [ADD] 利用できるサービスを swidden:start 時に [{services, [<<"Spam">>]}] のように指定できるようにする
+- [CHANGE] start/0 が配信され start/1 で Port 番号を指定する必要がある
+
+2.3.0
+-----
+
+- [CHANGE] swidden_client の戻り JSON を Map 形式にする
 
 2.2.2
 -----

@@ -28,7 +28,7 @@ request0(RawPort, Target, Service, Version, Operation, RawJSON) ->
                 {ok, <<>>} ->
                     {ok, StatusCode};
                 {ok, Body} ->
-                    {ok, StatusCode, jsone:decode(Body, [{object_format, proplist}])}
+                    {ok, StatusCode, jsone:decode(Body)}
             end;
         {ok, StatusCode, _RespHeaders, _ClientRef} ->
             {error, {status_code, StatusCode}};

@@ -37,12 +37,17 @@ lookup(Service, Version, Operation) ->
 
 -spec start(atom()) -> ok.
 start(Name) when is_atom(Name) ->
-    _Tid = ets:new(?TABLE, [set, public, named_table, {keypos, #swidden_dispatch.id}]), 
-    case load_dispatch_conf(Name) of
-        ok ->
-            ok;
-        {error, Reason} ->
-            error(Reason)
+    case ets:info(?TABLE) of
+        undefined ->
+            _Tid = ets:new(?TABLE, [set, public, named_table, {keypos, #swidden_dispatch.id}]), 
+            case load_dispatch_conf(Name) of
+                ok ->
+                    ok;
+                {error, Reason} ->
+                    error(Reason)
+            end;
+        _Info ->
+            ok
     end.
 
 
