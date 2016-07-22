@@ -6,25 +6,19 @@
 -export([crash/1]).
 
 
-get_user(JSON) ->
-    _Username = proplists:get_value(<<"username">>, JSON),
+get_user(#{<<"username">> := _Username}) ->
     swidden:success([{password, <<"password">>}]).
 
 
-create_user(JSON) ->
-    _Username = proplists:get_value(<<"username">>, JSON),
-    _Password = proplists:get_value(<<"password">>, JSON),
+create_user(#{<<"username">> := _Username, <<"password">> := _Password}) ->
     swidden:success().
 
 
-update_user(JSON) ->
-    _Username = proplists:get_value(<<"username">>, JSON),
-    _Password = proplists:get_value(<<"password">>, JSON),
+update_user(#{<<"username">> := _Username, <<"password">> := _Password}) ->
     swidden:success().
 
 
-delete_user(JSON) ->
-    _Username = proplists:get_value(<<"username">>, JSON),
+delete_user(#{<<"username">> := _Username}) ->
     swidden:success().
 
 
@@ -39,7 +33,7 @@ update_authenticated_user(_JSON, Opts) ->
 
 
 list_users() ->
-    swidden:success([[{username, <<"username">>}, {password, <<"password">>}]]).
+    swidden:success([#{username => <<"username">>, password => <<"password">>}]).
 
 
 crash(JSON) ->
