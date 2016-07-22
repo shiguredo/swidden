@@ -88,11 +88,11 @@ terminate(Reason, _Req, _State) ->
 dispatch(Service, Version, Operation, Opts) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
-            {400, [{error_type, <<"MissingTarget">>}]};
+            {400, #{error_type => <<"MissingTarget">>}};
         {Module, Function} ->
             case code:which(Module) of
                 non_existing ->
-                    {400, [{error_type, <<"MissingTargetModule">>}]};
+                    {400, #{error_type => <<"MissingTargetModule">>}};
                 _ ->
                     case lists:member({Function, 0}, Module:module_info(exports)) of
                         true ->
@@ -102,7 +102,7 @@ dispatch(Service, Version, Operation, Opts) ->
                                 true ->
                                     apply0(Module, Function, [Opts]);
                                 false ->
-                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
+                                    {400, #{error_type => <<"MissingTargetFunction">>}}
                             end
                     end
             end
@@ -115,7 +115,7 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
             case code:which(Module) of
                 non_existing ->
-                    {400, [{error_type, <<"MissingTargetModule">>}]};
+                    {400, #{error_type => <<"MissingTargetModule">>}};
                 _ ->
                     case lists:member({Function, 1}, Module:module_info(exports)) of
                         true ->
@@ -125,7 +125,7 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                                 true ->
                                     apply0(Module, Function, [JSON, Opts]);
                                 false ->
-                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
+                                    {400, #{error_type => <<"MissingTargetFunction">>}}
                             end
                     end
             end;

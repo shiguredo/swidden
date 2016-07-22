@@ -3,7 +3,5 @@
 -export([get_metrics/1]).
 
 
-get_metrics(JSON) ->
-    _Reset = proplists:get_value(reset, JSON),
-    %% FIXME(nakai): ダミーデータ
-    swidden:success([{counter, 0}]).
+get_metrics(#{<<"reset">> := _Reset}) ->
+    swidden:success(#{counter => 0}).
