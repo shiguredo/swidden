@@ -11,23 +11,20 @@ start() ->
     ok.
 
 
-get_user(JSON) ->
-    Username = proplists:get_value(<<"username">>, JSON),
+get_user(#{<<"username">> := Username}) ->
     case ets:lookup(?TABLE, Username) of
         [] ->
             swidden:failure(<<"MissingUserException">>);
         [{Username, Password}] ->
             %% proplists を戻せば JSON で返ります
-            swidden:success([{password, Password}]);
+            swidden:success(#{password => Password});
         [{Username, Password, _Group}] ->
             %% spam_user_with_group 対応
-            swidden:success([{password, Password}])
+            swidden:success({password => Password})
     end.
 
 
-create_user(JSON) ->
-    Username = proplists:get_value(<<"username">>, JSON),
-    Password = proplists:get_value(<<"password">>, JSON),
+create_user(#{<<"username">> := Username, <<"password">> := Password}) ->
     case ets:insert_new(?TABLE, {Username, Password}) of
         true ->
             swidden:success();
@@ -36,7 +33,7 @@ create_user(JSON) ->
     end.
 
 
-update_user(JSON) ->
+update_user(#{<<"username">> := Username, <<"password">> := Password}) ->
     Username = proplists:get_value(<<"username">>, JSON),
     Password = proplists:get_value(<<"password">>, JSON),
     case ets:lookup(?TABLE, Username) of
@@ -52,8 +49,7 @@ update_user(JSON) ->
     end.
 
 
-delete_user(JSON) ->
-    Username = proplists:get_value(<<"username">>, JSON),
+delete_user(#{<<"username">> := Username}) ->
     case ets:lookup(?TABLE, Username) of
         [] ->
             swidden:failure(<<"MissingUserException">>);

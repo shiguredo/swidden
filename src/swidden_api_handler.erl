@@ -23,7 +23,7 @@ init(Req, Opts) ->
                 undefined ->
                     %% ヘッダーがみつからない
                     %% XXX(nakai): 400 としたが 404 がいいか？
-                    RawJSON = jsone:encode([{type, <<"MissingHeaderName">>}]),
+                    RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}),
                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
                     {ok, Req2, Opts};
                 HeaderValue ->
@@ -38,18 +38,18 @@ init(Req, Opts) ->
                                     Req2 = handle(Service, Version, Operation, Req, Opts),
                                     {ok, Req2, Opts};
                                 false ->
-                                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"InvalidTarget">>}]), Req),
+                                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode(#{error_type => <<"InvalidTarget">>}), Req),
                                     {ok, Req2, Opts}
                             end;
                         _ ->
                             %% サービスに対応してなかったよ
-                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode([{error_type, <<"MissingService">>}]), Req),
+                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode(#{error_type => <<"MissingService">>}), Req),
                             {ok, Req2, Opts}
                     end
             end;
         _Other ->
             %% POST 以外受け付けていないのでエラーメッセージ
-            RawJSON = jsone:encode([{type, <<"UnexpectedMethod">>}]),
+            RawJSON = jsone:encode(#{type => <<"UnexpectedMethod">>}),
             Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
             {ok, Req2, Opts}
     end.
@@ -88,11 +88,11 @@ terminate(Reason, _Req, _State) ->
 dispatch(Service, Version, Operation, Opts) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
-            {400, [{error_type, <<"MissingTarget">>}]};
+            {400, #{error_type => <<"MissingTarget">>}};
         {Module, Function} ->
             case code:which(Module) of
                 non_existing ->
-                    {400, [{error_type, <<"MissingTargetModule">>}]};
+                    {400, #{error_type => <<"MissingTargetModule">>}};
                 _ ->
                     case lists:member({Function, 0}, Module:module_info(exports)) of
                         true ->
@@ -102,7 +102,7 @@ dispatch(Service, Version, Operation, Opts) ->
                                 true ->
                                     apply0(Module, Function, [Opts]);
                                 false ->
-                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
+                                    {400, #{error_type => <<"MissingTargetFunction">>}}
                             end
                     end
             end
@@ -115,7 +115,7 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
             case code:which(Module) of
                 non_existing ->
-                    {400, [{error_type, <<"MissingTargetModule">>}]};
+                    {400, #{error_type => <<"MissingTargetModule">>}};
                 _ ->
                     case lists:member({Function, 1}, Module:module_info(exports)) of
                         true ->
@@ -125,7 +125,7 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                                 true ->
                                     apply0(Module, Function, [JSON, Opts]);
                                 false ->
-                                    {400, [{error_type, <<"MissingTargetFunction">>}]}
+                                    {400, #{error_type => <<"MissingTargetFunction">>}}
                             end
                     end
             end;
