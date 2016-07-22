@@ -26,14 +26,14 @@ request0(RawPort, Target, Service, Version, Operation, RawJSON) ->
         {ok, StatusCode, _RespHeaders, ClientRef} when StatusCode =:= 200 orelse StatusCode =:= 400 ->
             case hackney:body(ClientRef) of
                 {ok, <<>>} ->
-                    hackne:close(ClientRef),
+                    hackney:close(ClientRef),
                     {ok, StatusCode};
                 {ok, Body} ->
-                    hackne:close(ClientRef),
+                    hackney:close(ClientRef),
                     {ok, StatusCode, jsone:decode(Body)}
             end;
         {ok, StatusCode, _RespHeaders, ClientRef} ->
-            hackne:close(ClientRef),
+            hackney:close(ClientRef),
             {error, {status_code, StatusCode}};
         {error, Reason} ->
             {error, Reason}
