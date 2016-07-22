@@ -45,7 +45,7 @@ success() ->
     ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
 
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetUser">>,
-                              [{username, <<"yakihata">>}])),
+                              #{username => <<"yakihata">>})),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"CreateUser">>,
                               [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateUser">>,
@@ -55,10 +55,13 @@ success() ->
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
 
     ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
-                              [{username, <<"yakihata">>}, {password, <<"nogyo">>}, {group, <<"amazon">>}])),
+                              #{username => <<"yakihata">>, password => <<"nogyo">>, group => <<"amazon">>})),
+
+    ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
+                              #{username => <<"error_code">>, password => <<"nogyo">>, group => <<"amazon">>})),
 
     ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>,
-                              [{reset, false}])),
+                              #{reset => false})),
 
     ?assertEqual(ok, swidden:stop(40000)),
     ok.

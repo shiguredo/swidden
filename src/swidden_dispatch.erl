@@ -47,7 +47,6 @@ start(Name) when is_atom(Name) ->
                     error(Reason)
             end;
         _Info ->
-            ?debugVal3(_Info),
             ok
     end.
 

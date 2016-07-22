@@ -135,7 +135,7 @@ $ rebar create-app appid=spam
 {deps,
   [
    {swidden,
-    ".*", {git, "git@github.com:shiguredo/swidden.git", {tag, "0.1.0"}}}
+    ".*", {git, "git@github.com:shiguredo/swidden.git", {tag, "4.0.0"}}}
   ]
 }.
 ```
@@ -276,8 +276,7 @@ start() ->
     ok.
 
 
-get_user(JSON) ->
-    Username = proplists:get_value(<<"username">>, JSON),
+get_user(#{<<"username">> := Username}) ->
     case ets:lookup(?TABLE, Username) of
         [] ->
             swidden:failure(<<"MissingUserException">>);
@@ -286,13 +285,11 @@ get_user(JSON) ->
             swidden:success([{password, Password}]);
         [{Username, Password, _Group}] ->
             %% spam_user_with_group 対応
-            swidden:success([{password, Password}])
+            swidden:success(#{password => Password})
     end.
 
 
-create_user(JSON) ->
-    Username = proplists:get_value(<<"username">>, JSON),
-    Password = proplists:get_value(<<"password">>, JSON),
+create_user(#{<<"username">> := Username, <<"password">> := Password}) ->
     case ets:insert_new(?TABLE, {Username, Password}) of
         true ->
             swidden:success();
@@ -301,9 +298,7 @@ create_user(JSON) ->
     end.
 
 
-update_user(JSON) ->
-    Username = proplists:get_value(<<"username">>, JSON),
-    Password = proplists:get_value(<<"password">>, JSON),
+update_user(#{<<"username">> := Username, <<"password">> := Password}) ->
     case ets:lookup(?TABLE, Username) of
         [] ->
             swidden:failure(<<"MissingUserException">>);
@@ -443,8 +438,8 @@ Spam は 3000 番ポートで、 SpamAdmin は 5000 番ポートで有効にな�
 
 ```
 list_users() ->
-    Users = [ [{username, Username},
-               {password, Password}] || {Username, Password} <- ets:tab2list(?TABLE) ],
+    Users = [ #{username => Username,
+               {password => Password} || {Username, Password} <- ets:tab2list(?TABLE) ],
     swidden:success(Users).
 ```
 
