@@ -76,6 +76,6 @@ failure(Type) when is_binary(Type) ->
     {error, Type}.
 
 
-failure(Type, Map) when is_binary(Type) andalso is_map(Map) ->
-    {error, Type, Map}.
+failure(Type, Reason) when is_binary(Type) andalso is_map(Reason) ->
+    {error, Type, Reason}.
 

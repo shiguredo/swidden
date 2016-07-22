@@ -153,6 +153,6 @@ apply0(Module, Function, Args) ->
             {200, RespJSON};
         {error, Type} ->
             {400, #{error_type => Type}};
-        {error, Type, Map} ->
-            {400, Map#{error_type => Type}}
+        {error, Type, Reason} ->
+            {400, #{error_type => Type, error_reason => Reason}}
     end.
