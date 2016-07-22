@@ -1,5 +1,9 @@
 # CHANGES
 
+## 4.1.0
+
+- [CHANGE] #{error_reason: #{}} を追加する
+
 ## 4.0.0
 
 - [CHANGE] JSON は全て map で処理する仕組みを追加する

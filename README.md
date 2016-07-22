@@ -341,6 +341,18 @@ swidden:failure/1 は処理が失敗したときに使用します。
 
 たとえばユーザが存在しなかった時は <<"MissingUserException">> などです。
 
+戻りは {"error_type": "MissingUserException"} となります。
+
+### swidden:failure/2
+
+swidden:failure/1 は処理が失敗したときに使用し、Type 意外に Reason が指定できます。
+
+Reason は自由にユーザが決めて良い値です。 Reason はマップを使用してください。
+
+たとえば Reason に #{code := 500} というのを入れた場合
+
+戻りは {"error_type": "MissingUserException", "error_reason": {"code": 500}} となります。
+
 #### 動作確認
 
 examples/spam で make; make dev を実行します。

@@ -8,7 +8,7 @@ create_user(#{<<"username">> := Username,
               <<"group">> := _Group}) ->
     case Username of
         <<"error_code">> ->
-            swidden:failure(<<"DuplicatedUser">>, #{error_code => 666});
+            swidden:failure(<<"DuplicatedUser">>, #{code => 666});
         _ ->
             swidden:failure(<<"DuplicatedUser">>)
     end.
