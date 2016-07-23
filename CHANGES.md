@@ -1,5 +1,9 @@
 # CHANGES
 
+## 4.2.1
+
+- [UPDATE] MissingTargetFunction 時の戻りに error_reason を返すようにする
+
 ## 4.2.0
 
 - [ADD] middleware 用の swidden_middleware:failure/2,3 を追加する
