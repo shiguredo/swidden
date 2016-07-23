@@ -1,5 +1,11 @@
 # CHANGES
 
+## 4.2.0
+
+- [ADD] middleware 用の swidden_middleware:failure/2,3 を追加する
+- [ADD] ヘッダーを追加できるテスト用クライアント swidden_client:request_with_ehaders/6,7 を追加する
+    - ヘッダーは [{binary(), any()}] で渡す
+
 ## 4.1.0
 
 - [CHANGE] #{error_reason: #{}} を追加する
