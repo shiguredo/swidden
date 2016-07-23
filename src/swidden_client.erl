@@ -32,7 +32,9 @@ request0(RawPort, Headers0, Target, Service, Version, Operation, RawJson) ->
     Headers = [{Target, list_to_binary([Service, $_, Version, $., Operation])}|Headers0],
     Options = [{pool, false}],
     case hackney:post(URL, Headers, RawJson, Options) of
-        {ok, StatusCode, _RespHeaders, ClientRef} when StatusCode =:= 200 orelse StatusCode =:= 400 ->
+        {ok, StatusCode, _RespHeaders, ClientRef} when StatusCode =:= 200 orelse
+                                                       StatusCode =:= 400 orelse
+                                                       StatusCode =:= 403 ->
             case hackney:body(ClientRef) of
                 {ok, <<>>} ->
                     hackney:close(ClientRef),
