@@ -102,7 +102,10 @@ dispatch(Service, Version, Operation, Opts) ->
                                 true ->
                                     apply0(Module, Function, [Opts]);
                                 false ->
-                                    {400, #{error_type => <<"MissingTargetFunction">>}}
+                                    {400, #{error_type => <<"MissingTargetFunction">>,
+                                            error_reason => #{service => Service,
+                                                              version => Version,
+                                                              operation => Operation}}}
                             end
                     end
             end
@@ -125,7 +128,10 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                                 true ->
                                     apply0(Module, Function, [JSON, Opts]);
                                 false ->
-                                    {400, #{error_type => <<"MissingTargetFunction">>}}
+                                    {400, #{error_type => <<"MissingTargetFunction">>,
+                                            error_reason => #{service => Service,
+                                                              version => Version,
+                                                              operation => Operation}}}
                             end
                     end
             end;
