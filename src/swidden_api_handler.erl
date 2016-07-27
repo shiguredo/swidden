@@ -100,6 +100,8 @@ dispatch(Service, Version, Operation, Opts) ->
                         false ->
                             case lists:member({Function, 1}, Module:module_info(exports)) of
                                 true ->
+                                    %% FIXME(nakai): これ下の /1 とかぶってしまって分けわからなくなるからなんとかしたほうがいい
+                                    %% クラッシュしたときのエラーがわかりにくすぎる
                                     apply0(Module, Function, [Opts]);
                                 false ->
                                     {400, #{error_type => <<"MissingTargetFunction">>,
