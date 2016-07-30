@@ -100,6 +100,8 @@ dispatch(Service, Version, Operation, Opts) ->
                         false ->
                             case lists:member({Function, 1}, Module:module_info(exports)) of
                                 true ->
+                                    %% FIXME(nakai): これ下の /1 とかぶってしまって分けわからなくなるからなんとかしたほうがいい
+                                    %% クラッシュしたときのエラーがわかりにくすぎる
                                     apply0(Module, Function, [Opts]);
                                 false ->
                                     {400, #{error_type => <<"MissingTargetFunction">>,
@@ -141,13 +143,13 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
         {error, {database_error, {Service, Version, Operation}, schema_not_found}} ->
             %% TODO(nakai): この部分は外だしする
             {400, #{error_type => <<"SchemaNotFound">>,
-                    error_reasons => #{service => Service,
-                                       version => Version,
-                                       operation => Operation}}};
+                    error_reason => #{service => Service,
+                                      version => Version,
+                                      operation => Operation}}};
         {error, Reasons} ->
             ErrorReasons = swidden_json_schema:to_json(Reasons),
             {400, #{error_type => <<"InvalidJSON">>,
-                    error_reasons => ErrorReasons}}
+                    error_reason => ErrorReasons}}
     end.
 
 
