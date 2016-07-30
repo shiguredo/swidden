@@ -1,5 +1,11 @@
 {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "additionalProperties": false,
     "properties": {
-        "username": {"type": "string", "required": true}
+        "username": {
+            "type": "string",
+            "required": true
+        }
     }
 }
