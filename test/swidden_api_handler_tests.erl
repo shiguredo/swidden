@@ -45,7 +45,7 @@ success() ->
     ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
 
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetUser">>,
-                              [{username, <<"yakihata">>}])),
+                              #{username => <<"yakihata">>})),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"CreateUser">>,
                               [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateUser">>,
@@ -54,14 +54,24 @@ success() ->
                               [{username, <<"yakihata">>}])),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
 
-    ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
-                              [{username, <<"yakihata">>}, {password, <<"nogyo">>}, {group, <<"amazon">>}])),
+    %% JSON あり、ヘッダー追加バージョン
+    ?assertEqual(200, request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
+                                           <<"Spam">>, <<"20141101">>, <<"GetUser">>,
+                                           #{username => <<"yakihata">>})),
+
+    %% JSON なし、ヘッダー追加バージョン
+    ?assertEqual(200, request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
+                                           <<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
+
 
     ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
-                              [{username, <<"error_code">>}, {password, <<"nogyo">>}, {group, <<"amazon">>}])),
+                              #{username => <<"yakihata">>, password => <<"nogyo">>, group => <<"amazon">>})),
+
+    ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
+                              #{username => <<"error_code">>, password => <<"nogyo">>, group => <<"amazon">>})),
 
     ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>,
-                              [{reset, false}])),
+                              #{reset => false})),
 
     ?assertEqual(ok, swidden:stop(40000)),
     ok.
@@ -154,6 +164,32 @@ request(Service, Version, Operation) ->
         {error, {status_code, StatusCode}} ->
             StatusCode
     end.
+
+
+request_with_headers(Headers, Service, Version, Operation, JSON) ->
+    request_with_headers(40000, Headers, Service, Version, Operation, JSON).
+
+request_with_headers(Port, Headers, Service, Version, Operation, JSON) ->
+    case swidden_client:request_with_headers(Port, Headers, <<"x-swd-target">>, Service, Version, Operation, JSON) of
+        {ok, StatusCode} ->
+            StatusCode;
+        {ok, StatusCode, _Body} ->
+            StatusCode;
+        {error, {status_code, StatusCode}} ->
+            StatusCode
+    end.
+
+
+request_with_headers(Headers, Service, Version, Operation) ->
+    case swidden_client:request_with_headers(40000, Headers, <<"x-swd-target">>, Service, Version, Operation) of
+        {ok, StatusCode} ->
+            StatusCode;
+        {ok, StatusCode, _Body} ->
+            StatusCode;
+        {error, {status_code, StatusCode}} ->
+            StatusCode
+    end.
+
 
 
 %% TODO(nakai): これ以降のリクエスト関連、リファクタすること
