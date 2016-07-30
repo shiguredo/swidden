@@ -1,5 +1,10 @@
 # CHANGES
 
+## 4.3.0
+
+- [FIX] エラー理由が error_reasons なっていたのを error_reason にする
+- [ADD] テストクライアントの戻りに 403 を許可する
+
 ## 4.2.1
 
 - [UPDATE] MissingTargetFunction 時の戻りに error_reason を返すようにする
