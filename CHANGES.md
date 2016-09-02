@@ -1,5 +1,11 @@
 # CHANGES
 
+## develop
+
+## 4.4.0
+
+- [UPDATE] jsone を 1.3.0 にアップデートする
+
 ## 4.3.0
 
 - [FIX] エラー理由が error_reasons なっていたのを error_reason にする
