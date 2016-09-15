@@ -1,5 +1,20 @@
 # CHANGES
 
+## develop
+
+## 4.4.1
+
+- [UPDATE] jsone を 1.3.1 にアップデートする
+
+## 4.4.0
+
+- [UPDATE] jsone を 1.3.0 にアップデートする
+
+## 4.3.0
+
+- [FIX] エラー理由が error_reasons なっていたのを error_reason にする
+- [ADD] テストクライアントの戻りに 403 を許可する
+
 ## 4.2.1
 
 - [UPDATE] MissingTargetFunction 時の戻りに error_reason を返すようにする
