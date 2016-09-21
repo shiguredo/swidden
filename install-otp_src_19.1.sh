@@ -1,10 +1,10 @@
 set -x
 set -e
-if [ ! -e ~/otp-19.0/bin/erl ]; then
-  curl -O http://erlang.shiguredo.jp/otp_src_19.0.tar.gz
-  tar xzf otp_src_19.0.tar.gz
-  cd otp_src_19.0
-  ./configure --prefix=/home/ubuntu/otp-19.0 \
+if [ ! -e ~/otp-19.1/bin/erl ]; then
+  curl -O http://erlang.shiguredo.jp/otp_src_19.1.tar.gz
+  tar xzf otp_src_19.1.tar.gz
+  cd otp_src_19.1
+  ./configure --prefix=/home/ubuntu/otp-19.1 \
               --enable-smp-support \
               --enable-m64-build \
               --enable-threads \
