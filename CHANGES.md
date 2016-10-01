@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] jsone を 1.4.0 にアップデートする
+
 ## 4.4.1
 
 - [UPDATE] jsone を 1.3.1 にアップデートする
