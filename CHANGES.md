@@ -2,6 +2,12 @@
 
 ## develop
 
+## 4.4.3
+
+- [UPDATE] hackney 1.6.2 にアップデートする
+
+## 4.4.2
+
 - [UPDATE] jsone を 1.4.0 にアップデートする
 
 ## 4.4.1
@@ -39,7 +45,7 @@
 
 - [ADD] map を指定できる failure/2 を追加する
 - [UPDATE] rebar3 を rebar 3.2.0 on Erlang/OTP 19 Erts 8.0.2 にアップデートする
-- [CHANGE] hackney 1.6.1 に上げる
+- [UPDATE] hackney 1.6.1 に上げる
 
 ## 3.0.0
 
