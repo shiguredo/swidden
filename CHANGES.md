@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] hackney 1.6.3 にアップデートする
+
 ## 4.4.3
 
 - [UPDATE] hackney 1.6.2 にアップデートする
