@@ -49,6 +49,7 @@ start(Name, Opts) ->
                          ProtoOpts#{onresponse => OnResponse}
                  end,
 
+    %% コード的に意味不明
     Env = ProtoOpts2#{env => #{dispatch => Dispatch}},
 
     cowboy:start_clear({?REF, Port}, 10, [{port, Port}], Env).
