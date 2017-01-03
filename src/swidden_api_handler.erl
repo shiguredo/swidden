@@ -11,7 +11,7 @@
 %% {match,[<<"XYZ">>,<<"20001210">>,<<"CreateUser">>]}
 -define(REGEXP, <<"^([a-zA-Z]+)\_(\\d{4}\\d{2}\\d{2})\.([a-zA-Z]+)$">>).
 
--define(DEFAULT_HEADERS, [{<<"content-type">>, <<"application/json">>}]).
+-define(DEFAULT_HEADERS, #{<<"content-type">> => <<"application/json">>}).
 
 
 init(Req, Opts) ->
@@ -59,7 +59,7 @@ handle(Service, Version, Operation, Req, Opts) ->
     %% TODO(nakai): リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
-            {ok, Body, Req2} = cowboy_req:body(Req),
+            {ok, Body, Req2} = cowboy_req:read_body(Req),
             case validate_json(Service, Version, Operation, Body, Opts) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
