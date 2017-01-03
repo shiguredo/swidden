@@ -1,7 +1,7 @@
 [{<<"certifi">>,{pkg,<<"certifi">>,<<"0.7.0">>},1},
  {<<"cowboy">>,
   {git,"git://github.com/ninenines/cowboy",
-       {ref,"c5a9771ac4f7844b61b5e36bfc7eb371a082c560"}},
+       {ref,"1048bff929791f18b7425d9cc7871d78d63cf4f8"}},
   0},
  {<<"cowlib">>,
   {git,"https://github.com/ninenines/cowlib",
@@ -28,6 +28,6 @@
  {<<"mimerl">>,{pkg,<<"mimerl">>,<<"1.0.2">>},1},
  {<<"ranch">>,
   {git,"https://github.com/ninenines/ranch",
-       {ref,"a5d2efcde9a34ad38ab89a26d98ea5335e88625a"}},
+       {ref,"40809cd2b257a8a53bcb5588ecaa88cc5381ff5c"}},
   1},
  {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1}].
