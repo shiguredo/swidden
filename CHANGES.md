@@ -2,7 +2,14 @@
 
 ## develop
 
+## 5.0.1
+
+- [UPDATE] cowboy 2.0.0-pre.5 にアップデートする
+
+## 5.0.0
+
 - [UPDATE] hackney 1.6.3 にアップデートする
+- [UPDATE] cowboy 2.0.0-pre.4 にアップデートする
 
 ## 4.4.3
 
