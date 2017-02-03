@@ -2,6 +2,10 @@
 
 ## develop
 
+## 5.0.2
+
+- [UPDATE] cowboy 2.0.0-pre.6 にアップデートする
+
 ## 5.0.1
 
 - [UPDATE] cowboy 2.0.0-pre.5 にアップデートする
