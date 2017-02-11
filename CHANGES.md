@@ -2,11 +2,13 @@
 
 ## develop
 
+## 5.0.4
+
 - [UPDATE] jsone 1.4.2 にアップデートする
 
 ## 5.0.3
 
-- [UPDATE] hackney 1.6.4 にアップデートする
+- [UPDATE] hackney 1.6.5 にアップデートする
 - [UPDATE] jsone 1.4.1 にアップデートする
 
 ## 5.0.2
