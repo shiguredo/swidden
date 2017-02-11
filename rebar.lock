@@ -1,7 +1,8 @@
+{"1.1.0",
 [{<<"certifi">>,{pkg,<<"certifi">>,<<"0.7.0">>},1},
  {<<"cowboy">>,
   {git,"git://github.com/ninenines/cowboy",
-       {ref,"e5a8088e68f29206e162ee0f25f45a55ce05fe04"}},
+       {ref,"d8d7838a77cdb5c83e1994452122b5891db599cb"}},
   0},
  {<<"cowlib">>,
   {git,"https://github.com/ninenines/cowlib",
@@ -9,7 +10,7 @@
   1},
  {<<"hackney">>,
   {git,"git://github.com/benoitc/hackney",
-       {ref,"b3814c981cb600211f0b1b0e133c4dbffc8299bc"}},
+       {ref,"f69567eb28d6cbf2fdf820100055fca5e6c66938"}},
   0},
  {<<"idna">>,{pkg,<<"idna">>,<<"1.2.0">>},1},
  {<<"jesse">>,
@@ -18,7 +19,7 @@
   0},
  {<<"jsone">>,
   {git,"git://github.com/sile/jsone",
-       {ref,"1ba7c1ab24b00d8eb7c33e4711a815e330be6c61"}},
+       {ref,"0ba743ae56c1eb413d69e01df9392605ada59c4b"}},
   0},
  {<<"jsx">>,
   {git,"git://github.com/talentdeficit/jsx.git",
@@ -30,4 +31,12 @@
   {git,"https://github.com/ninenines/ranch",
        {ref,"40809cd2b257a8a53bcb5588ecaa88cc5381ff5c"}},
   1},
- {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1}].
+ {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1}]}.
+[
+{pkg_hash,[
+ {<<"certifi">>, <<"861A57F3808F7EB0C2D1802AFEAAE0FA5DE813B0DF0979153CBAFCD853ABABAF">>},
+ {<<"idna">>, <<"AC62EE99DA068F43C50DC69ACF700E03A62A348360126260E87F2B54ECED86B2">>},
+ {<<"metrics">>, <<"25F094DEA2CDA98213CECC3AEFF09E940299D950904393B2A29D191C346A8486">>},
+ {<<"mimerl">>, <<"993F9B0E084083405ED8252B99460C4F0563E41729AB42D9074FD5E52439BE88">>},
+ {<<"ssl_verify_fun">>, <<"28A4D65B7F59893BC2C7DE786DEC1E1555BD742D336043FE644AE956C3497FBE">>}]}
+].
