@@ -2,6 +2,10 @@
 
 ## develop
 
+## 5.0.5
+
+- [UPDATE] cowboy 2.0.0-pre.7 にアップデートする
+
 ## 5.0.4
 
 - [UPDATE] jsone 1.4.2 にアップデートする
