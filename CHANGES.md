@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] hackney を 1.7.0 にアップデートする
+
 ## 5.0.5
 
 - [UPDATE] cowboy 2.0.0-pre.7 にアップデートする
