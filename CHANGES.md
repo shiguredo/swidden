@@ -2,7 +2,7 @@
 
 ## develop
 
-- [UPDATE] hackney を 1.7.0 にアップデートする
+- [UPDATE] hackney を 1.7.1 にアップデートする
 
 ## 5.0.5
 
