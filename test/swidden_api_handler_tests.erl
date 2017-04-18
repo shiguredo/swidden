@@ -35,6 +35,7 @@ all_test_() ->
       fun success/0,
       fun services_success/0,
       fun failure/0,
+      fun middlewares/0,
       fun crash/0
      ]
     }.
@@ -116,6 +117,22 @@ failure() ->
     ?assertEqual(ok, swidden:stop(40000)),
     ok.
 
+
+middlewares() ->
+    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{middlewares, [cowboy_router,
+                                                                    sample_middleware,
+                                                                    cowboy_handler]},
+                                                     {port, 40000}])),
+
+    ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+
+    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
+    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
+
+    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
+
+    ?assertEqual(ok, swidden:stop(40000)),
+    ok.
 
 
 crash() ->

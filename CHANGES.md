@@ -2,6 +2,10 @@
 
 ## develop
 
+## 6.1.0
+
+- [CHANGE] middleware を復帰させる
+
 ## 6.0.0
 
 - [UPDATE] hackney を 1.7.1 にアップデートする
