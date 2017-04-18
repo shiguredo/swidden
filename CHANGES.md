@@ -2,6 +2,12 @@
 
 ## develop
 
+## 6.0.0
+
+- [UPDATE] hackney を 1.7.1 にアップデートする
+- [UPDATE] jsone を 1.4.3 にアップデートする
+- [CHANGE] Opts を削除する
+
 ## 5.0.5
 
 - [UPDATE] cowboy 2.0.0-pre.7 にアップデートする

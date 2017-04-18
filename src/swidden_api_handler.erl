@@ -32,10 +32,10 @@ init(Req, Opts) ->
                         {match, [Service, Version, Operation]} ->
                             case lists:member(Service, Services) of
                                 true ->
-                                    Req2 = handle(Service, Version, Operation, Req, Opts),
+                                    Req2 = handle(Service, Version, Operation, Req),
                                     {ok, Req2, Opts};
                                 false when Services == [] ->
-                                    Req2 = handle(Service, Version, Operation, Req, Opts),
+                                    Req2 = handle(Service, Version, Operation, Req),
                                     {ok, Req2, Opts};
                                 false ->
                                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode(#{error_type => <<"InvalidTarget">>}), Req),
@@ -55,12 +55,12 @@ init(Req, Opts) ->
     end.
 
 
-handle(Service, Version, Operation, Req, Opts) ->
+handle(Service, Version, Operation, Req) ->
     %% TODO(nakai): リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
             {ok, Body, Req2} = cowboy_req:read_body(Req),
-            case validate_json(Service, Version, Operation, Body, Opts) of
+            case validate_json(Service, Version, Operation, Body) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                 {StatusCode, JSON} ->
@@ -68,7 +68,7 @@ handle(Service, Version, Operation, Req, Opts) ->
                     cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
             end;
         false ->
-            case dispatch(Service, Version, Operation, Opts) of
+            case dispatch(Service, Version, Operation) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
                 {StatusCode, JSON} ->
@@ -85,7 +85,7 @@ terminate(Reason, _Req, _State) ->
     ok.
 
 
-dispatch(Service, Version, Operation, Opts) ->
+dispatch(Service, Version, Operation) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
             {400, #{error_type => <<"MissingTarget">>}};
@@ -98,23 +98,16 @@ dispatch(Service, Version, Operation, Opts) ->
                         true ->
                             apply0(Module, Function, []);
                         false ->
-                            case lists:member({Function, 1}, Module:module_info(exports)) of
-                                true ->
-                                    %% FIXME(nakai): これ下の /1 とかぶってしまって分けわからなくなるからなんとかしたほうがいい
-                                    %% クラッシュしたときのエラーがわかりにくすぎる
-                                    apply0(Module, Function, [Opts]);
-                                false ->
-                                    {400, #{error_type => <<"MissingTargetFunction">>,
-                                            error_reason => #{service => Service,
-                                                              version => Version,
-                                                              operation => Operation}}}
-                            end
+                            {400, #{error_type => <<"MissingTargetFunction">>,
+                                    error_reason => #{service => Service,
+                                                      version => Version,
+                                                      operation => Operation}}}
                     end
             end
     end.
 
 
-validate_json(Service, Version, Operation, RawJSON, Opts) ->
+validate_json(Service, Version, Operation, RawJSON) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
             %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
@@ -126,15 +119,10 @@ validate_json(Service, Version, Operation, RawJSON, Opts) ->
                         true ->
                             apply0(Module, Function, [JSON]);
                         false ->
-                            case lists:member({Function, 2}, Module:module_info(exports)) of
-                                true ->
-                                    apply0(Module, Function, [JSON, Opts]);
-                                false ->
-                                    {400, #{error_type => <<"MissingTargetFunction">>,
-                                            error_reason => #{service => Service,
-                                                              version => Version,
-                                                              operation => Operation}}}
-                            end
+                            {400, #{error_type => <<"MissingTargetFunction">>,
+                                    error_reason => #{service => Service,
+                                                      version => Version,
+                                                      operation => Operation}}}
                     end
             end;
         {error, {data_error, _Reason}} ->
