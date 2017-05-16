@@ -1,6 +1,6 @@
 -module(swidden_api_handler).
 
--behaviour(cowboy_handler).
+%% -behaviour(cowboy_handler).
 
 -export([init/2,
          terminate/3]).
