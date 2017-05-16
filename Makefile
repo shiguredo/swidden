@@ -1,6 +1,6 @@
-.PHONY: all upgrade compile test clean
+.PHONY: all upgrade compile test dialyzer clean
 
-all: clean upgrade compile test
+all: clean upgrade compile test dialyzer
 
 upgrade:
 	@./rebar3 do update, upgrade
@@ -10,6 +10,9 @@ compile:
 
 test:
 	@./rebar3 as test eunit, cover
+
+dialyzer:
+	@./rebar3 dialyzer
 
 clean:
 	@./rebar3 clean
