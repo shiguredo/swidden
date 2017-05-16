@@ -1,6 +1,6 @@
 -module(swidden_api_handler).
 
--behaviour(cowboy_handler).
+%% -behaviour(cowboy_handler).
 
 -export([init/2,
          terminate/3]).
@@ -141,7 +141,6 @@ validate_json(Service, Version, Operation, RawJSON) ->
     end.
 
 
--spec apply0(module(), atom(), arity()) -> 200 | {200 | 400, #{}}.
 apply0(Module, Function, Args) ->
     case apply(Module, Function, Args) of
         ok ->
