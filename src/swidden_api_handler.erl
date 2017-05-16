@@ -141,6 +141,7 @@ validate_json(Service, Version, Operation, RawJSON) ->
     end.
 
 
+-spec apply0(module(), atom(), arity()) -> 200 | {200 | 400, #{}}.
 apply0(Module, Function, Args) ->
     case apply(Module, Function, Args) of
         ok ->
