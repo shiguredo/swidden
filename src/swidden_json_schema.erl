@@ -76,14 +76,16 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
     end.
 
 
--spec add_schema(binary(), binary(), binary(), binary()) -> ok | {error, term()}.
+-spec add_schema(binary(), binary(), binary(), binary()) -> ok | jesse_error:error().
 add_schema(_Service, _Version, _Operation, <<>>) ->
     ok;
 add_schema(Service, Version, Operation, RawJSON) ->
     jesse:add_schema({Service, Version, Operation}, RawJSON, [{parser_fun, parse_fun()}]).
 
 
--spec validate(binary(), binary(), binary(), binary()) -> ok | {error, {database_error, atom(), schema_not_found} | term()}.
+-spec validate(binary(), binary(), binary(), binary()) -> {ok, jesse:json_term()}
+                                                          | jesse_error:error()
+                                                          | jesse_database:error().
 validate(Service, Version, Operation, RawJSON) ->
     jesse:validate({Service, Version, Operation}, RawJSON, [{parser_fun, parse_fun()}]).
 
