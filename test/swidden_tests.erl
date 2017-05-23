@@ -9,10 +9,10 @@
     %% swidden/priv/swidden/schemas
 
 start_apps() ->
-    [ application:start(App) || App <- [ranch, cowboy, swidden] ].
+    [ application:start(App) || App <- [unicode_util_compat, ranch, cowboy, swidden] ].
 
 stop_apps() ->
-    [ application:stop(App) || App <- [swidden, cowboy, ranch] ].
+    [ application:stop(App) || App <- [unicode_util_compat, swidden, cowboy, ranch] ].
 
 
 all_test_() ->

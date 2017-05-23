@@ -1,18 +1,18 @@
 {"1.1.0",
-[{<<"certifi">>,{pkg,<<"certifi">>,<<"1.1.0">>},1},
+[{<<"certifi">>,{pkg,<<"certifi">>,<<"1.2.1">>},1},
  {<<"cowboy">>,
   {git,"git://github.com/ninenines/cowboy",
-       {ref,"b403f26da6bef8ff41855fa499c75f42b02ecb69"}},
+       {ref,"2ad057ab1c41fe2dffa4138695e8fd8205ee818a"}},
   0},
  {<<"cowlib">>,
   {git,"https://github.com/ninenines/cowlib",
-       {ref,"15750e632d9886eb9bfc876ba03402464b8facb3"}},
+       {ref,"0d5b36e1ba765c4aef84449e76c8ab8061074f96"}},
   1},
  {<<"hackney">>,
   {git,"git://github.com/benoitc/hackney",
-       {ref,"b664164288f748f8717c64353f2ba2bffa588074"}},
+       {ref,"338b3a560eb797b26a9aabb433d1d2ce662441c5"}},
   0},
- {<<"idna">>,{pkg,<<"idna">>,<<"4.0.0">>},1},
+ {<<"idna">>,{pkg,<<"idna">>,<<"5.0.1">>},1},
  {<<"jesse">>,
   {git,"git://github.com/for-GET/jesse",
        {ref,"f4270eb0a9bc64291c6e2205645b45b5b7b686f8"}},
@@ -31,12 +31,14 @@
   {git,"https://github.com/ninenines/ranch",
        {ref,"40809cd2b257a8a53bcb5588ecaa88cc5381ff5c"}},
   1},
- {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1}]}.
+ {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1},
+ {<<"unicode_util_compat">>,{pkg,<<"unicode_util_compat">>,<<"0.1.0">>},2}]}.
 [
 {pkg_hash,[
- {<<"certifi">>, <<"C9B71A547016C2528A590CCFC28DE786C7EDB74AAFA17446B84F54E04EFC00EE">>},
- {<<"idna">>, <<"10AAA9F79D0B12CF0DEF53038547855B91144F1BFCC0EC73494F38BB7B9C4961">>},
+ {<<"certifi">>, <<"C3904F192BD5284E5B13F20DB3CEAC9626E14EEACFBB492E19583CF0E37B22BE">>},
+ {<<"idna">>, <<"5AA8FDCE3F876F49D90DAA13F071155A7C3259D02F7847DADD164DA4A877DA2A">>},
  {<<"metrics">>, <<"25F094DEA2CDA98213CECC3AEFF09E940299D950904393B2A29D191C346A8486">>},
  {<<"mimerl">>, <<"993F9B0E084083405ED8252B99460C4F0563E41729AB42D9074FD5E52439BE88">>},
- {<<"ssl_verify_fun">>, <<"28A4D65B7F59893BC2C7DE786DEC1E1555BD742D336043FE644AE956C3497FBE">>}]}
+ {<<"ssl_verify_fun">>, <<"28A4D65B7F59893BC2C7DE786DEC1E1555BD742D336043FE644AE956C3497FBE">>},
+ {<<"unicode_util_compat">>, <<"F554C539C826EAC8BCF101D2DBCC4A798BA8A960A176CA58D0B2F225C265B174">>}]}
 ].

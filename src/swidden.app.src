@@ -1,7 +1,7 @@
 {application, swidden,
  [
   {description, ""},
-  {vsn, "6.2.0"},
+  {vsn, "6.2.1"},
   {registered, []},
   {applications, [
                   kernel,
