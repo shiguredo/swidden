@@ -8,7 +8,7 @@
     %% swidden/priv/swidden/dispatch.conf
     %% swidden/priv/swidden/schemas
 
--define(APPS, [ranch, cowlib, cowboy, swidden]).
+-define(APPS, [unicode_util_compat, ranch, cowlib, cowboy, swidden]).
 
 
 start_apps() ->
