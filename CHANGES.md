@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] hackney を 1.8.4 にアップデートする
+
 ## 6.2.2
 
 - [FIX] rebar3 を OTP 19.3 でビルドしたものにする
