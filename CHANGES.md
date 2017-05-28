@@ -3,6 +3,7 @@
 ## develop
 
 - [UPDATE] hackney を 1.8.4 にアップデートする
+- [FIX] 1.8.0 系で hackney:start/stop がなくなったので対応
 
 ## 6.2.2
 
