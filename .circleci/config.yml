@@ -1,0 +1,10 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: shiguredo/erlang:erlang-19.3.6-ubuntu-16.04
+        working_directory: ~/shiguredo
+        steps:
+            - checkout
+            - run: make
+
