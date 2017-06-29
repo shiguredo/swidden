@@ -52,7 +52,7 @@ start(Name, Opts) ->
     %% コード的に意味不明
     Env = ProtoOpts2#{env => #{dispatch => Dispatch}},
 
-    cowboy:start_clear({?REF, Port}, 10, [{port, Port}], Env).
+    cowboy:start_clear({?REF, Port}, [{port, Port}], Env).
 
 
 -spec stop(inet:port_number()) -> ok.

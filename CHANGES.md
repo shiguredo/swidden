@@ -2,7 +2,9 @@
 
 ## develop
 
-- [UPDATE] hackney を 1.8.4 にアップデートする
+- [UPDATE] cowboy 2.0.0-pre.10 にアップデートする
+- [UPDATE] jsone を 1.4.4 にアップデートする
+- [UPDATE] hackney を 1.8.6 にアップデートする
 - [FIX] 1.8.0 系で hackney:start/stop がなくなったので対応
 
 ## 6.2.2
