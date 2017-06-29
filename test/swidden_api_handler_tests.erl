@@ -8,11 +8,11 @@
     %% swidden/priv/swidden/dispatch.conf
     %% swidden/priv/swidden/schemas
 
--define(APPS, [unicode_util_compat, ranch, cowlib, cowboy, swidden]).
+-define(APPS, [hackney, ranch, cowlib, cowboy, swidden]).
 
 
 start_apps() ->
-    [ application:start(App) || App <- ?APPS ].
+    [ application:ensure_all_started(App) || App <- ?APPS ].
 
 
 stop_apps() ->
@@ -23,12 +23,10 @@ all_test_() ->
     {foreach,
      fun() ->
              start_apps(),
-             hackney:start(),
              ok
      end,
      fun(_) ->
              stop_apps(),
-             hackney:stop(),
              ok
      end,
      [
