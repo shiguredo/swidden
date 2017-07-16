@@ -6,7 +6,7 @@
   0},
  {<<"cowlib">>,
   {git,"https://github.com/ninenines/cowlib",
-       {ref,"21bb4295eb380fd38123a1983559fe6c7d59fa27"}},
+       {ref,"11e07d3c2b164d06ad35188d83ad70e7501396db"}},
   1},
  {<<"hackney">>,
   {git,"git://github.com/benoitc/hackney",
