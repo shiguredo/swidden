@@ -19,7 +19,7 @@
   0},
  {<<"jsone">>,
   {git,"git://github.com/sile/jsone",
-       {ref,"cc66e14dd3639fe0978ff2cd3b4dced2467eb5bc"}},
+       {ref,"b0b037df7c1a8ee99c9f1bd124cd72e550a87936"}},
   0},
  {<<"jsx">>,
   {git,"git://github.com/talentdeficit/jsx.git",
