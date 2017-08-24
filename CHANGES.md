@@ -4,7 +4,7 @@
 
 - [UPDATE] hackney を 1.9.0 にアップデートする
 - [UPDATE] jsone を 1.4.5 にアップデートする
-- [UPDATE] cowboy 2.0.0-rc.1 にアップデートする
+- [UPDATE] cowboy 2.0.0-rc.2 にアップデートする
 
 ## 6.3.1
 
