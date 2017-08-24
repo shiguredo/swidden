@@ -2,6 +2,8 @@
 
 ## develop
 
+## 6.4.0
+
 - [UPDATE] hackney を 1.9.0 にアップデートする
 - [UPDATE] jsone を 1.4.5 にアップデートする
 - [UPDATE] cowboy 2.0.0-rc.2 にアップデートする
