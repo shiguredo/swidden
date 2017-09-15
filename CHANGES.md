@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] cowboy 2.0.0-rc.3 にアップデートする
+
 ## 6.4.0
 
 - [UPDATE] hackney を 1.9.0 にアップデートする
