@@ -57,7 +57,7 @@ load_schemas(_Path, []) ->
     ok;
 load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
                                       schema = Schema}|Rest]) ->
-    FileName = string:join([atom_to_list(Schema), "json"], "."),
+    FileName = lists:flatten(lists:join(".", [atom_to_list(Schema), "json"])),
     PascalCaseService = swidden_misc:pascal2snake(Service),
     %% <application>/priv/swidden/schemas/<service>/<version>/<schema>.json
     FilePath = filename:join([Path, "schemas", PascalCaseService, Version, FileName]),
