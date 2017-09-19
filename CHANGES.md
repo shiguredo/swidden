@@ -2,7 +2,10 @@
 
 ## develop
 
+## 6.4.1
+
 - [UPDATE] cowboy 2.0.0-rc.3 にアップデートする
+- [UPDATE] rebar3 を rebar 3.4.4 にアップデートする
 - [FIX] string:join/2 を lists:join/2 に切り替える
 
 ## 6.4.0
