@@ -2,6 +2,10 @@
 
 ## develop
 
+## 7.0.0
+
+- [UPDATE] cowboy 2.0.0 にアップデートする
+
 ## 6.4.1
 
 - [UPDATE] cowboy 2.0.0-rc.3 にアップデートする
