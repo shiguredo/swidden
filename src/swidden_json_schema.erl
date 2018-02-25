@@ -24,7 +24,8 @@ start(Name) ->
 
 -spec validate_json(binary(), binary(), binary(), binary()) -> ok | {error, term()}.
 validate_json(Service, Version, Operation, RawJSON) ->
-    case validate(Service, Version, Operation, RawJSON) of
+    Key = binary_to_list(list_to_binary([Service, $_, Version, $., Operation])),
+    case validate(Key, RawJSON) of
         {ok, JSON} ->
             case swidden_dispatch:lookup(Service, Version, Operation) of
                 not_found ->
@@ -63,7 +64,8 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
     FilePath = filename:join([Path, "schemas", PascalCaseService, Version, FileName]),
     case file:read_file(FilePath) of
         {ok, Binary} ->
-            case add_schema(Service, Version, Operation, Binary) of
+            Key = binary_to_list(list_to_binary([Service, $_, Version, $., Operation])),
+            case add_schema(Key, Binary) of
                 ok ->
                     load_schemas(Path, Rest);
                 [{[],[],[]}] ->
@@ -76,18 +78,16 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
     end.
 
 
--spec add_schema(binary(), binary(), binary(), binary()) -> ok | jesse_error:error().
-add_schema(_Service, _Version, _Operation, <<>>) ->
+-spec add_schema(string(), binary()) -> ok | jesse_error:error().
+add_schema(_Key, <<>>) ->
     ok;
-add_schema(Service, Version, Operation, RawJSON) ->
-    jesse:add_schema({Service, Version, Operation}, RawJSON, [{parser_fun, parse_fun()}]).
+add_schema(Key, RawJSON) ->
+    jesse:add_schema(Key, RawJSON, [{parser_fun, parse_fun()}]).
 
 
--spec validate(binary(), binary(), binary(), binary()) -> {ok, jesse:json_term()}
-                                                          | jesse_error:error()
-                                                          | jesse_database:error().
-validate(Service, Version, Operation, RawJSON) ->
-    jesse:validate({Service, Version, Operation}, RawJSON, [{parser_fun, parse_fun()}]).
+-spec validate(string(), binary()) -> {ok, jesse:json_term()} | jesse_error:error() | jesse_database:error().
+validate(Key, RawJSON) ->
+    jesse:validate(Key, RawJSON, [{parser_fun, parse_fun()}]).
 
 
 -spec parse_fun() -> function().
