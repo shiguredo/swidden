@@ -34,10 +34,7 @@ validate_json(Service, Version, Operation, RawJSON) ->
                     {ok, Module, Function, JSON}
             end;
         {error, Reason} ->
-            {error, Reason};
-        _Result ->
-            ?debugVal(_Result),
-            error(not_implemented)
+            {error, Reason}
     end.
 
 
