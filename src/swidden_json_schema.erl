@@ -78,14 +78,14 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
     end.
 
 
--spec add_schema(binary(), binary()) -> ok | jesse_error:error().
+-spec add_schema(string(), binary()) -> ok | jesse_error:error().
 add_schema(_Key, <<>>) ->
     ok;
 add_schema(Key, RawJSON) ->
     jesse:add_schema(Key, RawJSON, [{parser_fun, parse_fun()}]).
 
 
--spec validate(binary(), binary()) -> {ok, jesse:json_term()} | jesse_error:error() | jesse_database:error().
+-spec validate(string(), binary()) -> {ok, jesse:json_term()} | jesse_error:error() | jesse_database:error().
 validate(Key, RawJSON) ->
     jesse:validate(Key, RawJSON, [{parser_fun, parse_fun()}]).
 

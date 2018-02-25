@@ -2,6 +2,11 @@
 
 ## develop
 
+- [UPDATE] cowboy 2.2.0 にアップデートする
+- [UPDATE] hackney を 1.11.0 にアップデートする
+- [UPDATE] jesse を 1.5.0 にアップデートする
+- [UPDATE] rebar3 を rebar 3.5.0 にアップデートする
+
 ## 7.1.0
 
 - [UPDATE] cowboy 2.2.0 にアップデートする
