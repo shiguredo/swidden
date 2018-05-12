@@ -2,6 +2,9 @@
 
 ## develop
 
+- [UPDATE] rebar を 3.5.3 にアップデートする
+- [UPDATE] cowboy を 2.4.0 にアップデートする
+
 ## 7.3.0
 
 - [UPDATE] cowboy 2.3.0 にアップデートする
