@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] OTP 21.0-rc2 に対応する
+    - TODO: リリースする場合はかならず tag または ref にすること
 - [UPDATE] rebar を 3.5.3 にアップデートする
 - [UPDATE] cowboy を 2.4.0 にアップデートする
 
