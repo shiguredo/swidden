@@ -22,7 +22,7 @@ start(Name) ->
     end.
 
 
--spec validate_json(binary(), binary(), binary(), binary()) -> {ok, module(), function(), jsone:jsonterm()} | {error, term()}.
+-spec validate_json(binary(), binary(), binary(), binary()) -> {ok, module(), function(), jsone:json_term()} | {error, term()}.
 validate_json(Service, Version, Operation, RawJSON) ->
     Key = binary_to_list(list_to_binary([Service, $_, Version, $., Operation])),
     case validate(Key, RawJSON) of
