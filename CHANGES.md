@@ -2,8 +2,8 @@
 
 ## develop
 
-- [UPDATE] OTP 21.0-rc2 に対応する
-    - TODO: リリースする場合はかならず tag または ref にすること
+- [UPDATE] OTP 21.0 に対応する
+- [UPDATE] jsone を 1.4.6 にアップデートする
 - [UPDATE] rebar を 3.5.3 にアップデートする
 - [UPDATE] cowboy を 2.4.0 にアップデートする
 
