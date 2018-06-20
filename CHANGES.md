@@ -2,6 +2,15 @@
 
 ## develop
 
+## 8.0.0
+
+- [UPDATE] OTP 21.0 に対応する
+- [UPDATE] jsone を 1.4.6 にアップデートする
+- [UPDATE] rebar を 3.5.3 にアップデートする
+- [UPDATE] cowboy を 2.4.0 にアップデートする
+- [UPDATE] jesse を shiguredo の otp-21-compatibility に変更するする
+    - 公式が正式バージョンリリースするまではこのブランチ指定で進める
+
 ## 7.3.0
 
 - [UPDATE] cowboy 2.3.0 にアップデートする
