@@ -2,6 +2,11 @@
 
 ## develop
 
+## 8.0.1
+
+- [UPDATE] jesse を 1.5.1 にアップデートする
+- [UPDATE] rebar3 を 3.6.1 にアップデートする
+
 ## 8.0.0
 
 - [UPDATE] OTP 21.0 に対応する
