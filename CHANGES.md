@@ -2,6 +2,9 @@
 
 ## develop
 
+## 8.1.0
+
+- [UPDATE] OTP 21.1 に対応する
 - [UPDATE] jesse を 1.5.2 にアップデートする
 - [UPDATE] jsone を 1.4.7 にアップデートする
 - [UPDATE] cowboy を 2.5.0 にアップデートする
