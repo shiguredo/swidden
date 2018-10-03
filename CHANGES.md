@@ -2,6 +2,11 @@
 
 ## develop
 
+- [UPDATE] jesse を 1.5.2 にアップデートする
+- [UPDATE] jsone を 1.4.7 にアップデートする
+- [UPDATE] cowboy を 2.5.0 にアップデートする
+- [UPDATE] rebar3 を 3.6.2 にアップデートする
+
 ## 8.0.1
 
 - [UPDATE] jesse を 1.5.1 にアップデートする
