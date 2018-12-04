@@ -2,6 +2,11 @@
 
 ## develop
 
+## 8.2.0
+
+- [UPDATE] cowboy を 2.6.1 にアップデートする
+- [UPDATE] rebar3 を 3.7.5 にアップデートする
+
 ## 8.1.0
 
 - [UPDATE] OTP 21.1 に対応する
