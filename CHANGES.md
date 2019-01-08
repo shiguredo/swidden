@@ -3,6 +3,7 @@
 ## develop
 
 - [UPDATE] rebar3 を 3.8.0 にアップデートする
+- [UPDATE] hackney を 1.15.0 にアップデートする
 
 ## 8.2.0
 
