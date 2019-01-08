@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] rebar3 を 3.8.0 にアップデートする
+
 ## 8.2.0
 
 - [UPDATE] cowboy を 2.6.1 にアップデートする
