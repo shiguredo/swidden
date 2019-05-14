@@ -2,8 +2,9 @@
 
 ## develop
 
-- [UPDATE] rebar3 を 3.8.0 にアップデートする
-- [UPDATE] hackney を 1.15.0 にアップデートする
+- [UPDATE] cowboy を 2.6.3 にアップデートする
+- [UPDATE] rebar3 を 3.10.0 にアップデートする
+- [UPDATE] hackney を 1.15.1 にアップデートする
 
 ## 8.2.0
 
