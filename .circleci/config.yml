@@ -2,7 +2,7 @@ version: 2
 jobs:
     build:
         docker:
-            - image: shiguredo/erlang:otp-21.1-ubuntu-18.04
+            - image: shiguredo/erlang:otp-21.2.2-ubuntu-18.04
         working_directory: ~/shiguredo
         steps:
             - checkout
