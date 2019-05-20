@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] OTP 22.0 に対応する
+
 ## 8.3.0
 
 - [UPDATE] cowboy を 2.6.3 にアップデートする
