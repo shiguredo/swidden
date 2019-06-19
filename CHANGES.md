@@ -2,6 +2,12 @@
 
 ## develop
 
+## 8.4.0
+
+- [UPDATE] OTP 22.0 に対応する
+- [UPDATE] rebar3 を 3.11.1 にアップデートする
+- [UPDATE] jsone を 1.5.0 にアップデートする
+
 ## 8.3.0
 
 - [UPDATE] cowboy を 2.6.3 にアップデートする
