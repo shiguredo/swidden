@@ -1,6 +1,6 @@
 {application, swidden,
  [
-  {description, ""},
+  {description, "swidden"},
   {vsn, "8.4.0"},
   {registered, []},
   {applications, [
