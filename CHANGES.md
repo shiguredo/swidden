@@ -2,6 +2,10 @@
 
 ## develop
 
+- [UPDATE] cowboy を 2.7.0 にアップデートする
+- [UPDATE] hackney を 1.15.2 にアップデートする
+- [UPDATE] rebar3 を 3.12.0 にアップデートする
+
 ## 8.4.0
 
 - [UPDATE] OTP 22.0 に対応する
