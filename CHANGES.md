@@ -2,6 +2,14 @@
 
 ## develop
 
+## 8.5.0
+
+- [UPDATE] rebar3 の minimum_otp_vsn を 22.1 にする
+- [UPDATE] CI のイメージを OTP-22.1.3 にアップデートする
+- [UPDATE] cowboy を 2.7.0 にアップデートする
+- [UPDATE] hackney を 1.15.2 にアップデートする
+- [UPDATE] rebar3 を 3.12.0 にアップデートする
+
 ## 8.4.0
 
 - [UPDATE] OTP 22.0 に対応する
