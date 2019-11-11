@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] jsone を 1.5.1 にアップデートする
+
 ## 8.5.0
 
 - [UPDATE] rebar3 の minimum_otp_vsn を 22.1 にする
