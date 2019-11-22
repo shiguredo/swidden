@@ -36,6 +36,13 @@ start(Name, Opts) ->
 
     Port = proplists:get_value(port, Opts, 8000),
 
+    LoopbackAddress = case proplists:get_value(loopback_address_only, Opts, false) of
+                          true ->
+                              [];
+                          false ->
+                              [{ip, {127,0,0,1}}]
+                      end,
+
     ProtoOpts = case proplists:get_value(middlewares, Opts, not_found) of
                     not_found ->
                         #{};
@@ -52,13 +59,13 @@ start(Name, Opts) ->
     %% コード的に意味不明
     Env = ProtoOpts2#{env => #{dispatch => Dispatch}},
 
-    cowboy:start_clear({?REF, Port}, [{port, Port}], Env).
+    cowboy:start_clear({?REF, Port}, [{port, Port}] ++ LoopbackAddress, Env).
 
 
 -spec stop(inet:port_number()) -> ok.
 stop(Port) ->
     %% TODO(nakai): ets 周りも削除する
-    ok = cowboy:stop_listener({?REF, Port}). 
+    ok = cowboy:stop_listener({?REF, Port}).
 
 
 -spec success() -> ok.
