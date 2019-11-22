@@ -3,6 +3,7 @@
 ## develop
 
 - [UPDATE] jsone を 1.5.1 にアップデートする
+- [ADD] loopback_address_only オプションを追加する
 
 ## 8.5.0
 
