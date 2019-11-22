@@ -2,7 +2,10 @@
 
 ## develop
 
+## 9.0.0
+
 - [UPDATE] jsone を 1.5.1 にアップデートする
+- [UPDATE] CI のイメージを OTP-22.1.7 にアップデートする
 - [ADD] loopback_address_only オプションを追加する
 
 ## 8.5.0
