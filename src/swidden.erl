@@ -37,9 +37,9 @@ start(Name, Opts) ->
     Port = proplists:get_value(port, Opts, 8000),
 
     LoopbackAddress = case proplists:get_value(loopback_address_only, Opts, false) of
-                          true ->
-                              [];
                           false ->
+                              [];
+                          true ->
                               [{ip, {127,0,0,1}}]
                       end,
 
