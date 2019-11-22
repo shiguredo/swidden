@@ -2,6 +2,10 @@
 
 ## develop
 
+## 9.0.1
+
+- [FIX] loopback_address_only が逆になっていたのを修正する
+
 ## 9.0.0
 
 - [UPDATE] jsone を 1.5.1 にアップデートする
