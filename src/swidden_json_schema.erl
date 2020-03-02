@@ -107,6 +107,9 @@ to_json(Reasons) ->
                   schema => Schema,
                   error => Error,
                   data => Data,
-                  path => Path}
+                  path => Path};
+           ({data_error, {parse_error, badarg}})->
+                #{invalid => parse}
+
         end,
     lists:map(F, Reasons).
