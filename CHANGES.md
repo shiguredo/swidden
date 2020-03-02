@@ -2,6 +2,10 @@
 
 ## develop
 
+- [UPDATE] jsone を 1.5.2 にアップデートする
+- [UPDATE] jesse を shiguredo:http-uri-depricated にアップデートする
+    - https://github.com/for-GET/jesse/pull/86 マージまでの暫定対応
+
 ## 9.0.1
 
 - [FIX] loopback_address_only が逆になっていたのを修正する
