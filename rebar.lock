@@ -15,7 +15,7 @@
  {<<"idna">>,{pkg,<<"idna">>,<<"5.1.0">>},1},
  {<<"jesse">>,
   {git,"git://github.com/shiguredo/jesse",
-       {ref,"3e184212011b8df8c9e85a386a6ef93e4dc3e415"}},
+       {ref,"92f380375034abe0e7f77c9015fd320e6a28e2fc"}},
   0},
  {<<"jsone">>,
   {git,"git://github.com/sile/jsone",
