@@ -6,7 +6,7 @@
 
 AWS DynamoDB や Kinesis などの API の形式に影響を受けた HTTP API ライブラリです。
 
-[DynamoDB や Route53 などの AWS API が独特な仕様なので紹介 - Qiita](http://qiita.com/voluntas/items/a3ee5b0e2843d589d45f)
+[DynamoDB や Route53 などの AWS API が独特な仕様なので紹介](https://gist.github.com/voluntas/811240c5b6a169ae1c6ac401e0197417)
 
 特徴は以下の通りの部分です
 
