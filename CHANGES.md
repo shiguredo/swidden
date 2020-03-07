@@ -2,7 +2,9 @@
 
 ## develop
 
-## 9.0.2
+## 2020.1
+
+**YYYY.RELEASE[.FIX] にバージョン番号表記を変更**
 
 - [UPDATE] rebar3 の minimum_otp_vsn を 22.2 にする
 - [UPDATE] CI のイメージを OTP-22.2.8 にアップデートする
