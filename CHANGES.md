@@ -2,10 +2,12 @@
 
 ## develop
 
+## 9.0.2
+
 - [UPDATE] rebar3 の minimum_otp_vsn を 22.2 にする
 - [UPDATE] CI のイメージを OTP-22.2.8 にアップデートする
-- [UPDATE] jesse を shiguredo:http-uri-depricated にアップデートする
-    - https://github.com/for-GET/jesse/pull/86 マージまでの暫定対応
+- [UPDATE] jesse を "efe0dca" にアップデートする
+    - OTP 23 対応がリリースされるまでの暫定対応
 - [UPDATE] jsone を 1.5.2 にアップデートする
 
 ## 9.0.1
