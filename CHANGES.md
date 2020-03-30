@@ -2,6 +2,7 @@
 
 ## develop
 
+- [CHANGE] CircleCI をやめる
 - [UPDATE] CI のイメージを OTP-23.0-rc2 にアップデートする
 - [UPDATE] jesse を 1.5.4 にアップデートする
 
