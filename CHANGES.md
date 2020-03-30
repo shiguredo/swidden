@@ -2,6 +2,9 @@
 
 ## develop
 
+- [UPDATE] CI のイメージを OTP-23.0-rc2 にアップデートする
+- [UPDATE] jesse を 1.5.4 にアップデートする
+
 ## 2020.1
 
 **YYYY.RELEASE[.FIX] にバージョン番号表記を変更**

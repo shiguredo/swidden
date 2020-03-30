@@ -1,7 +1,5 @@
 # ヘッダーベース HTTP API フレームワーク
 
-[![Build Status](https://circleci.com/gh/shiguredo/swidden.png)](https://circleci.com/gh/shiguredo/swidden)
-
 ## 概要
 
 AWS DynamoDB や Kinesis などの API の形式に影響を受けた HTTP API ライブラリです。
@@ -173,7 +171,7 @@ spam/priv/swidden/dispatch.conf
 {サービス名1, [
     {バージョンX,
         [{オペレーション名3, モジュール名3}]}]}.
-``` 
+```
 
 モジュール名はそのオペレーションが実装されているモジュールを指定します。
 モジュールが spam_user でオペレーションが CreateUser の場合は spam_user:create_user/1 が呼び出されます。

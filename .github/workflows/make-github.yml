@@ -1,0 +1,17 @@
+name: make-github-workflow
+
+on:
+  push:
+    paths-ignore:
+    - 'doc/**'
+    - '**.rst'
+  pull_request:
+
+jobs:
+  make-github:
+    runs-on: ubuntu-latest
+    container:
+      image: shiguredo/erlang:otp-23.0-rc2-ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - run: make github

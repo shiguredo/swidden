@@ -1,4 +1,4 @@
-.PHONY: all upgrade compile test dialyzer clean
+.PHONY: all upgrade compile test dialyzer clean github
 
 all: clean upgrade compile test dialyzer
 
@@ -17,3 +17,4 @@ dialyzer:
 clean:
 	@./rebar3 clean
 
+github: compile dialyzer test
