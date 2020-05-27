@@ -1,6 +1,5 @@
 {"1.1.0",
-[{<<"certifi">>,{pkg,<<"certifi">>,<<"2.0.0">>},1},
- {<<"cowboy">>,
+[{<<"cowboy">>,
   {git,"git://github.com/ninenines/cowboy",
        {ref,"3eec447960eb03cde48f0f04cd72fd4d1e548ca0"}},
   0},
@@ -8,11 +7,6 @@
   {git,"https://github.com/ninenines/cowlib",
        {ref,"1b5539a1da1d39b110d81b118000f00bbedaf4b4"}},
   1},
- {<<"hackney">>,
-  {git,"git://github.com/benoitc/hackney",
-       {ref,"6dc3b235bdd1c3dc2821d0513c35e9c8023ddd24"}},
-  0},
- {<<"idna">>,{pkg,<<"idna">>,<<"5.1.0">>},1},
  {<<"jesse">>,
   {git,"git://github.com/for-GET/jesse",
        {ref,"1b5a16cc40c9b299ec825abcaf54a4bf140c4ba9"}},
@@ -22,23 +16,13 @@
        {ref,"2ebbe2361d19af3cc4c94b7345972710aec4fbda"}},
   0},
  {<<"jsx">>,{pkg,<<"jsx">>,<<"2.9.0">>},1},
- {<<"metrics">>,{pkg,<<"metrics">>,<<"1.0.1">>},1},
- {<<"mimerl">>,{pkg,<<"mimerl">>,<<"1.0.2">>},1},
  {<<"ranch">>,
   {git,"https://github.com/ninenines/ranch",
        {ref,"3190aef88aea04d6dce8545fe9b4574288903f44"}},
   1},
- {<<"rfc3339">>,{pkg,<<"rfc3339">>,<<"0.2.2">>},1},
- {<<"ssl_verify_fun">>,{pkg,<<"ssl_verify_fun">>,<<"1.1.1">>},1},
- {<<"unicode_util_compat">>,{pkg,<<"unicode_util_compat">>,<<"0.3.1">>},2}]}.
+ {<<"rfc3339">>,{pkg,<<"rfc3339">>,<<"0.2.2">>},1}]}.
 [
 {pkg_hash,[
- {<<"certifi">>, <<"A0C0E475107135F76B8C1D5BC7EFB33CD3815CB3CF3DEA7AEFDD174DABEAD064">>},
- {<<"idna">>, <<"D72B4EFFEB324AD5DA3CAB1767CB16B17939004E789D8C0AD5B70F3CEA20C89A">>},
  {<<"jsx">>, <<"D2F6E5F069C00266CAD52FB15D87C428579EA4D7D73A33669E12679E203329DD">>},
- {<<"metrics">>, <<"25F094DEA2CDA98213CECC3AEFF09E940299D950904393B2A29D191C346A8486">>},
- {<<"mimerl">>, <<"993F9B0E084083405ED8252B99460C4F0563E41729AB42D9074FD5E52439BE88">>},
- {<<"rfc3339">>, <<"1552DF616ACA368D982E9F085A0E933B6688A3F4938A671798978EC2C0C58730">>},
- {<<"ssl_verify_fun">>, <<"28A4D65B7F59893BC2C7DE786DEC1E1555BD742D336043FE644AE956C3497FBE">>},
- {<<"unicode_util_compat">>, <<"A1F612A7B512638634A603C8F401892AFBF99B8CE93A45041F8AACA99CADB85E">>}]}
+ {<<"rfc3339">>, <<"1552DF616ACA368D982E9F085A0E933B6688A3F4938A671798978EC2C0C58730">>}]}
 ].

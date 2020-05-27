@@ -2,6 +2,7 @@
 
 ## develop
 
+- [UPDATE] CI のイメージを OTP-23.0.1 にアップデートする
 - [UPDATE] rebar3 の minimum_otp_vsn を 23.0 にする
 - [UPDATE] cowboy を 2.8.0 にアップデートする
 - [UPDATE] jesse を 1.5.5 にアップデートする
