@@ -2,6 +2,11 @@
 
 ## develop
 
+- [UPDATE] rebar3 の minimum_otp_vsn を 23.0 にする
+- [UPDATE] cowboy を 2.8.0 にアップデートする
+- [UPDATE] jesse を 1.5.5 にアップデートする
+- [UPDATE] hackney を 1.16.0 にアップデートする
+
 ## 2020.2
 
 - [CHANGE] CircleCI をやめる
