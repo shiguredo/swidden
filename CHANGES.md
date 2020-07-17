@@ -2,12 +2,16 @@
 
 ## develop
 
-- [UPDATE] CI のイメージを OTP-23.0.1 にアップデートする
+## 2020.3
+
+- [UPDATE] CI のイメージを OTP-23.0.2 にアップデートする
 - [UPDATE] rebar3 の minimum_otp_vsn を 23.0 にする
 - [UPDATE] cowboy を 2.8.0 にアップデートする
 - [UPDATE] jesse を 1.5.5 にアップデートする
 - [UPDATE] hackney を 1.16.0 にアップデートする
 - [FIX] hackney を prod deps へ移動する
+- [FIX] cowboy_req:read_body の more に対応する
+- [FIX] body が 0 バイトに対応する
 
 ## 2020.2
 

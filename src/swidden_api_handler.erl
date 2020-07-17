@@ -54,18 +54,36 @@ init(Req, Opts) ->
             {ok, Req2, Opts}
     end.
 
+read_body(Req, Acc) ->
+    case cowboy_req:read_body(Req) of
+        {ok, Data, Req2} ->
+             {ok, <<Acc/binary, Data/binary>>, Req2};
+        {more, Data, Req2} ->
+            read_body(Req2, <<Acc/binary, Data/binary>>)
+    end.
+
 
 handle(Service, Version, Operation, Req) ->
     %% TODO(nakai): リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
-            {ok, Body, Req2} = cowboy_req:read_body(Req),
-            case validate_json(Service, Version, Operation, Body) of
-                200 ->
-                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
-                {StatusCode, JSON} ->
-                    RawJSON = jsone:encode(JSON),
-                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
+            case read_body(Req, <<>>) of
+                {ok, <<>>, Req2} ->
+                    case dispatch(Service, Version, Operation) of
+                        200 ->
+                            cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
+                        {StatusCode, JSON} ->
+                            RawJSON = jsone:encode(JSON),
+                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
+                    end;
+                {ok, Body, Req2} ->
+                    case validate_json(Service, Version, Operation, Body) of
+                        200 ->
+                            cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
+                        {StatusCode, JSON} ->
+                            RawJSON = jsone:encode(JSON),
+                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
+                    end
             end;
         false ->
             case dispatch(Service, Version, Operation) of
