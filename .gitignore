@@ -6,6 +6,7 @@ dev/*
 .eunit/*
 *.plt
 .rebar/*
+.rebar3/*
 erl_crash.dump
 
 *.pyc
