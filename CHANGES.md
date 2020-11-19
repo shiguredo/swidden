@@ -6,7 +6,7 @@
 - [UPDATE] rebar3 を 3.14.1 にアップデートする
 - [UPDATE] rebar3 の minimum_otp_vsn を 23.1 にする
 - [UPDATE] jsone を 1.5.3 にアップデートする
-
+- [UPDATE] jesse を 1.5.6 にアップデートする
 
 ## 2020.3.1
 
