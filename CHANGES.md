@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2020.4
+
 - [UPDATE] CI のイメージを OTP-23.1.2 にアップデートする
 - [UPDATE] rebar3 を 3.14.1 にアップデートする
 - [UPDATE] rebar3 の minimum_otp_vsn を 23.1 にする
