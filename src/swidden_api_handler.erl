@@ -23,7 +23,7 @@ init(Req, Opts) ->
                 undefined ->
                     %% ヘッダーがみつからない
                     %% XXX(nakai): 400 としたが 404 がいいか？
-                    RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}),
+                    RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}, [skip_undefined]),
                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
                     {ok, Req2, Opts};
                 HeaderValue ->
@@ -38,18 +38,20 @@ init(Req, Opts) ->
                                     Req2 = handle(Service, Version, Operation, Req),
                                     {ok, Req2, Opts};
                                 false ->
-                                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode(#{error_type => <<"InvalidTarget">>}), Req),
+                                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
+                                                            jsone:encode(#{error_type => <<"InvalidTarget">>}, [skip_undefined]), Req),
                                     {ok, Req2, Opts}
                             end;
                         _ ->
                             %% サービスに対応してなかったよ
-                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, jsone:encode(#{error_type => <<"MissingService">>}), Req),
+                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
+                                                    jsone:encode(#{error_type => <<"MissingService">>}, [skip_undefined]), Req),
                             {ok, Req2, Opts}
                     end
             end;
         _Other ->
             %% POST 以外受け付けていないのでエラーメッセージ
-            RawJSON = jsone:encode(#{type => <<"UnexpectedMethod">>}),
+            RawJSON = jsone:encode(#{type => <<"UnexpectedMethod">>}, [skip_undefined]),
             Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
             {ok, Req2, Opts}
     end.
@@ -73,7 +75,7 @@ handle(Service, Version, Operation, Req) ->
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                         {StatusCode, JSON} ->
-                            RawJSON = jsone:encode(JSON),
+                            RawJSON = jsone:encode(JSON, [skip_undefined]),
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
                     end;
                 {ok, Body, Req2} ->
@@ -81,7 +83,7 @@ handle(Service, Version, Operation, Req) ->
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                         {StatusCode, JSON} ->
-                            RawJSON = jsone:encode(JSON),
+                            RawJSON = jsone:encode(JSON, [skip_undefined]),
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
                     end
             end;
@@ -90,7 +92,7 @@ handle(Service, Version, Operation, Req) ->
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
                 {StatusCode, JSON} ->
-                    RawJSON = jsone:encode(JSON),
+                    RawJSON = jsone:encode(JSON, [skip_undefined]),
                     cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
             end
     end.
