@@ -1,7 +1,7 @@
 {application, swidden,
  [
   {description, "swidden"},
-  {vsn, "2020.4"},
+  {vsn, "2020.5"},
   {registered, []},
   {applications, [
                   kernel,
