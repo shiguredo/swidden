@@ -2,6 +2,12 @@
 
 ## develop
 
+- [UPDATE] CI のイメージを OTP-23.1.4 にアップデートする
+- [UPDATE] rebar3 を 3.14.2 にアップデートする
+- [UPDATE] jsone を 1.5.4 にアップデートする
+- [CHANGE] jsone:encode/2 に skip_undefined を指定する
+
+
 ## 2020.4
 
 - [UPDATE] CI のイメージを OTP-23.1.2 にアップデートする
