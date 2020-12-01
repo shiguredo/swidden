@@ -2,6 +2,13 @@
 
 ## develop
 
+## 2020.5.1
+
+- [FIX] jsone を 1.5.5 にアップデートする
+    - skip_undefined のバグ修正
+
+## 2020.5
+
 - [UPDATE] CI のイメージを OTP-23.1.4 にアップデートする
 - [UPDATE] rebar3 を 3.14.2 にアップデートする
 - [UPDATE] jsone を 1.5.4 にアップデートする
