@@ -2,6 +2,8 @@
 
 ## develop
 
+- [ADD] covertool を追加してみる
+
 ## 2020.5.1
 
 - [FIX] jsone を 1.5.5 にアップデートする
