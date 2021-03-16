@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2021.1
+
 - [ADD] covertool を追加してみる
 - [UPDATE] CI のイメージを OTP-24.0-rc1 にアップデートする
 - [UPDATE] rebar3 の minimum_otp_vsn を 24.0 にする
