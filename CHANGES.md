@@ -2,6 +2,15 @@
 
 ## develop
 
+## 2021.1
+
+- [ADD] covertool を追加してみる
+- [UPDATE] CI のイメージを OTP-24.0-rc1 にアップデートする
+- [UPDATE] rebar3 の minimum_otp_vsn を 24.0 にする
+- [UPDATE] jsone を 1.5.6 にアップデートする
+- [UPDATE] rebar3 を 3.14.4 にアップデートする
+- [UPDATE] hackney を 1.17.0 にアップデートする
+
 ## 2020.5.1
 
 - [FIX] jsone を 1.5.5 にアップデートする
