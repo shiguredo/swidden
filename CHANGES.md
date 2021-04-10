@@ -2,6 +2,9 @@
 
 ## develop
 
+- [UPDATE] CI のイメージを OTP-24.0-rc2 にアップデートする
+- [UPDATE] jsone を 1.5.7 にアップデートする
+
 ## 2021.1
 
 - [ADD] covertool を追加してみる
