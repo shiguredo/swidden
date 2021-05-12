@@ -2,6 +2,12 @@
 
 ## develop
 
+## 2021.2
+
+- [UPDATE] cowboy を 2.9.0 にアップデートする
+- [UPDATE] CI のイメージを OTP-24.0 にアップデートする
+- [UPDATE] jsone を 1.5.7 にアップデートする
+
 ## 2021.1
 
 - [ADD] covertool を追加してみる
