@@ -2,7 +2,8 @@
 
 ## develop
 
-- [UPDATE] CI のイメージを OTP-24.0-rc2 にアップデートする
+- [UPDATE] cowboy を 2.9.0 にアップデートする
+- [UPDATE] CI のイメージを OTP-24.0 にアップデートする
 - [UPDATE] jsone を 1.5.7 にアップデートする
 
 ## 2021.1
