@@ -3,6 +3,8 @@
 -export([start/1, start/2, stop/1]).
 -export([success/0, success/1]).
 -export([failure/1, failure/2]).
+-export([redirect/1]).
+
 -export_type([json_object/0]).
 
 -define(DEFAULT_HEADER_NAME, <<"x-swd-target">>).
@@ -87,3 +89,6 @@ failure(Type) when is_binary(Type) ->
 failure(Type, Reason) when is_binary(Type) andalso is_map(Reason) ->
     {error, Type, Reason}.
 
+
+redirect(Location) when is_binary(Location) ->
+    {ok, {redirect, Location}}.
