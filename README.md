@@ -453,36 +453,13 @@ list_users() ->
     swidden:success(Users).
 ```
 
-## middleware の処理結果を handler に渡したい場合
-
-たとえば認証を cowboy_middleware で処理して、成功したら取得した UserID を handler で使いたい場合などがあるかもしれません。
-
-- middleware の引数 Env のキー handler_opts に対する値に、handler に渡したい値を追加する
-- handler は Opts引数付き (Opts) か (JSON, Opts) で実装し、middleware から渡された値を Opts から取り出す
-- swidden:start で middleware を追加する
-
-例は以下です。
-
-spam_auth.erl
+## リダイレクト
 
 ```
--behaviour(cowboy_middleware).
+get_user(Json) ->
+    %% 転送したい先の Location を渡す
+    swidden:redirect(Location).
 
-execute(Req, Env) ->
-    {bearer, Token} = cowboy_req:parse_header(<<"authorization">>, Req),
-    UserID = get_user_id(Token),
-    HandlerOpts = proplists:get_value(handler_opts, Env),
-    Env2 = lists:keyreplace(handler_opts, 1, Env, {handler_opts, [{user_id, UserID} | HandlerOpts]}),
-    {ok, Req, Env2}.
-```
-
-spam_handler.erl
-
-```
-get_user(Opts) ->
-    UserID = proplists:get_value(user_id, Opts),
-    spam_db:get_user(UserID),
-    swidden:success(User).
 ```
 
 ## TODO
@@ -498,7 +475,7 @@ get_user(Opts) ->
 ## ライセンス
 
 ```
-Copyright 2016-202, Shiguredo Inc.
+Copyright 2016-2021, Shiguredo Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
