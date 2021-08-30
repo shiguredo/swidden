@@ -2,6 +2,14 @@
 
 ## develop
 
+## 2021.3
+
+- [ADD] swidden:redirect/1 を追加
+    - HTTP Status Code 307 でリダイレクトされる
+- [UPDATE] rebar3 を 3.16.1 にアップデートする
+- [UPDATE] jsone を 1.6.1 にアップデートする
+- [UPDATE] CI のイメージを OTP-24.0.5 にアップデートする
+
 ## 2021.2
 
 - [UPDATE] cowboy を 2.9.0 にアップデートする

@@ -13,6 +13,8 @@
 
 -define(DEFAULT_HEADERS, #{<<"content-type">> => <<"application/json">>}).
 
+-define(REDIRECT_STATUS_CODE, 307).
+
 
 init(Req, Opts) ->
     HeaderName = proplists:get_value(header_name, Opts),
@@ -39,13 +41,15 @@ init(Req, Opts) ->
                                     {ok, Req2, Opts};
                                 false ->
                                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
-                                                            jsone:encode(#{error_type => <<"InvalidTarget">>}, [skip_undefined]), Req),
+                                                            jsone:encode(#{error_type => <<"InvalidTarget">>},
+                                                                         [skip_undefined]), Req),
                                     {ok, Req2, Opts}
                             end;
                         _ ->
                             %% サービスに対応してなかったよ
                             Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
-                                                    jsone:encode(#{error_type => <<"MissingService">>}, [skip_undefined]), Req),
+                                                    jsone:encode(#{error_type => <<"MissingService">>},
+                                                                 [skip_undefined]), Req),
                             {ok, Req2, Opts}
                     end
             end;
@@ -74,6 +78,8 @@ handle(Service, Version, Operation, Req) ->
                     case dispatch(Service, Version, Operation) of
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
+                        {?REDIRECT_STATUS_CODE, Location} ->
+                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
                         {StatusCode, JSON} ->
                             RawJSON = jsone:encode(JSON, [skip_undefined]),
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
@@ -82,6 +88,8 @@ handle(Service, Version, Operation, Req) ->
                     case validate_json(Service, Version, Operation, Body) of
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
+                        {?REDIRECT_STATUS_CODE, Location} ->
+                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
                         {StatusCode, JSON} ->
                             RawJSON = jsone:encode(JSON, [skip_undefined]),
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
@@ -91,6 +99,8 @@ handle(Service, Version, Operation, Req) ->
             case dispatch(Service, Version, Operation) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
+                {?REDIRECT_STATUS_CODE, Location} ->
+                    cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
                 {StatusCode, JSON} ->
                     RawJSON = jsone:encode(JSON, [skip_undefined]),
                     cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
@@ -101,7 +111,7 @@ handle(Service, Version, Operation, Req) ->
 terminate(normal, _Req, _State) ->
     ok;
 terminate(Reason, _Req, _State) ->
-    ?debugVal3(Reason),
+    ?debugVal(Reason, 10000),
     ok.
 
 
@@ -146,7 +156,7 @@ validate_json(Service, Version, Operation, RawJSON) ->
                     end
             end;
         {error, {data_error, _Reason}} ->
-            ?debugVal(_Reason),
+            ?debugVal(_Reason, 1000),
             {400, #{error_type => <<"MalformedJSON">>}};
         {error, {database_error, _Key, schema_not_found}} ->
             %% TODO(nakai): この部分は外だしする
@@ -163,6 +173,8 @@ validate_json(Service, Version, Operation, RawJSON) ->
 
 apply0(Module, Function, Args) ->
     case apply(Module, Function, Args) of
+        {ok, {redirect, Location}} ->
+            {?REDIRECT_STATUS_CODE, Location};
         ok ->
             200;
         {ok, RespJSON} ->
