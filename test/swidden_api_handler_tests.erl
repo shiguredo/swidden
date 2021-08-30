@@ -34,6 +34,7 @@ all_test_() ->
       fun services_success/0,
       fun failure/0,
       fun middlewares/0,
+      fun redirect/0,
       fun crash/0
      ]
     }.
@@ -128,6 +129,15 @@ middlewares() ->
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
 
     ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
+
+    ?assertEqual(ok, swidden:stop(40000)),
+    ok.
+
+
+redirect() ->
+    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
+
+    ?assertEqual(307, request(<<"Spam">>, <<"20141101">>, <<"Redirect">>)),
 
     ?assertEqual(ok, swidden:stop(40000)),
     ok.
