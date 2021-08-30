@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2021.3
+
 - [ADD] swidden:redirect/1 を追加
     - HTTP Status Code 307 でリダイレクトされる
 - [UPDATE] rebar3 を 3.16.1 にアップデートする
