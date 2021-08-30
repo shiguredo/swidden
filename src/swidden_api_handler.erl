@@ -111,7 +111,7 @@ handle(Service, Version, Operation, Req) ->
 terminate(normal, _Req, _State) ->
     ok;
 terminate(Reason, _Req, _State) ->
-    ?debugVal3(Reason),
+    ?debugVal(Reason, 10000),
     ok.
 
 
@@ -156,7 +156,7 @@ validate_json(Service, Version, Operation, RawJSON) ->
                     end
             end;
         {error, {data_error, _Reason}} ->
-            ?debugVal(_Reason),
+            ?debugVal(_Reason, 1000),
             {400, #{error_type => <<"MalformedJSON">>}};
         {error, {database_error, _Key, schema_not_found}} ->
             %% TODO(nakai): この部分は外だしする
