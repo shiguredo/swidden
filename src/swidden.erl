@@ -51,15 +51,9 @@ start(Name, Opts) ->
                     Middlewares ->
                         #{middlewares => Middlewares}
                 end,
-    ProtoOpts2 = case proplists:get_value(onresponse, Opts, not_found) of
-                     not_found ->
-                         ProtoOpts;
-                     OnResponse ->
-                         ProtoOpts#{onresponse => OnResponse}
-                 end,
 
     %% コード的に意味不明
-    Env = ProtoOpts2#{env => #{dispatch => Dispatch}},
+    Env = ProtoOpts#{env => #{dispatch => Dispatch}},
 
     cowboy:start_clear({?REF, Port}, [{port, Port}] ++ LoopbackAddress, Env).
 

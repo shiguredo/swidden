@@ -2,6 +2,8 @@
 
 ## develop
 
+- [CHANGE] cowboy 2.0 で onresponse オプションが無くなったため削除する
+
 ## 2021.3
 
 - [ADD] swidden:redirect/1 を追加
