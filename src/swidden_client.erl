@@ -3,8 +3,6 @@
 -export([request/5, request/6]).
 -export([request_with_headers/6, request_with_headers/7]).
 
-%% TODO(nakai): headers を指定出来るようにする
-
 %% Host は 127.0.0.1 固定にする
 
 

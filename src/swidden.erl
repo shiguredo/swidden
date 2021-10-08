@@ -13,7 +13,6 @@
 
 -type json_object() :: jsone:json_object().
 
-%% TODO(nakai): Target も Opts に入れてしまうかどうか検討すること
 
 start(Name) when is_atom(Name) ->
     start(Name, []).
