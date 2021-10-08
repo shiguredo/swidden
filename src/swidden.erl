@@ -31,10 +31,12 @@ start(Name, Opts) ->
         %% バリデーション頑張ってないので要注意
     %% [] は全部に対応するという意味にする
     Services = proplists:get_value(services, Opts, []),
+    Interceptor = proplists:get_value(interceptor, Opts, undefined),
 
-    Dispatch = cowboy_router:compile([
-        {'_', [{"/", swidden_api_handler, [{header_name, HeaderName}, {services, Services}]}]}
-    ]),
+    Dispatch = cowboy_router:compile(
+                 [{'_', [{"/", swidden_api_handler, [{header_name, HeaderName},
+                                                     {services, Services},
+                                                     {interceptor, Interceptor}]}]}]),
 
     Port = proplists:get_value(port, Opts, 8000),
 
