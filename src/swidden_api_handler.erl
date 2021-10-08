@@ -25,7 +25,6 @@ init(Req, Opts) ->
             case cowboy_req:header(HeaderName, Req) of
                 undefined ->
                     %% ヘッダーがみつからない
-                    %% XXX(nakai): 400 としたが 404 がいいか？
                     RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}, [skip_undefined]),
                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
                     {ok, Req2, Opts};
@@ -64,9 +63,9 @@ init(Req, Opts) ->
 read_body(Req, Acc) ->
     case cowboy_req:read_body(Req) of
         {ok, Data, Req2} ->
-             {ok, <<Acc/binary, Data/binary>>, Req2};
+             {ok, iolist_to_binary([Acc, Data]), Req2};
         {more, Data, Req2} ->
-            read_body(Req2, <<Acc/binary, Data/binary>>)
+            read_body(Req2, [Acc, Data])
     end.
 
 
@@ -74,7 +73,7 @@ handle(Service, Version, Operation, Req, Interceptor) ->
     %% TODO(nakai): リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
-            case read_body(Req, <<>>) of
+            case read_body(Req, []) of
                 {ok, <<>>, Req2} ->
                     case dispatch(Service, Version, Operation, Interceptor) of
                         200 ->
@@ -141,7 +140,6 @@ dispatch(Service, Version, Operation, Interceptor) ->
 validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
-            %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
             case code:which(Module) of
                 non_existing ->
                     {400, #{error_type => <<"MissingTargetModule">>}};
