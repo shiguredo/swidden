@@ -35,6 +35,7 @@ all_test_() ->
       fun failure/0,
       fun middlewares/0,
       fun redirect/0,
+      fun interceptor/0,
       fun crash/0
      ]
     }.
@@ -152,6 +153,44 @@ crash() ->
     ok.
 
 
+interceptor() ->
+    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}, {interceptor, sample_interceptor}])),
+
+    %% 素通しする
+    ?assertEqual({200,#{<<"password">> => <<"password">>}},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Hermione">>}])),
+    %% ok
+    ?assertEqual(200,
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Ron">>}])),
+    %% ok, JSON 付き
+    ?assertEqual({200, #{<<"everyboby">> => <<"know him">>}},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Harry">>}])),
+
+    %% リダイレクト
+    ?assertEqual({307, <<"http://example.com/albus">>},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Dumbledore">>}])),
+
+    %% エラー
+    ?assertEqual({400, #{<<"error_type">> => <<"He-Who-Must-Not-Be-Named">>}},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Voldemort">>}])),
+    %% エラー, JSON 付き
+    ?assertEqual({400,
+                  #{<<"error_type">> => <<"insufficient privilege">>,
+                    <<"error_reason">> => #{<<"caution">> => <<"Slytherin only">>}}},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Snape">>}])),
+
+
+    %% 引数なしパターン
+    ?assertEqual({200, [#{<<"password">> => <<"password">>,
+                          <<"username">> => <<"username">>}]},
+                  request2(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
+    ?assertEqual({400, #{<<"error_type">> => <<"not allowed">>}},
+                 request2(<<"Spam">>, <<"20141101">>, <<"Redirect">>)),
+
+    ?assertEqual(ok, swidden:stop(40000)),
+    ok.
+
+
 request(Service, Version, Operation, JSON) ->
     request(40000, Service, Version, Operation, JSON).
 
@@ -174,6 +213,46 @@ request(Service, Version, Operation) ->
             StatusCode;
         {error, {status_code, StatusCode}} ->
             StatusCode
+    end.
+
+
+request2(Service, Version, Operation) ->
+    request2(Service, Version, Operation, <<>>).
+
+request2(Service, Version, Operation, JSON) when is_list(JSON) ->
+    Body = jsone:encode(JSON),
+    request2(Service, Version, Operation, Body);
+request2(Service, Version, Operation, ReqBody) when is_binary(ReqBody) ->
+    URL = <<"http://127.0.0.1:40000/">>,
+    Headers = [{<<"x-swd-target">>, list_to_binary([Service, $_, Version, $., Operation])}],
+    Options = [{pool, false}],
+    case hackney:post(URL, Headers, ReqBody, Options) of
+        {ok, StatusCode, _RespHeaders, ClientRef} when StatusCode =:= 200 orelse
+                                                       StatusCode =:= 400 orelse
+                                                       StatusCode =:= 403 ->
+            case hackney:body(ClientRef) of
+                {ok, <<>>} ->
+                    hackney:close(ClientRef),
+                    StatusCode;
+                {ok, Body} ->
+                    hackney:close(ClientRef),
+                    {StatusCode, jsone:decode(Body)}
+            end;
+        {ok, 307, RespHeaders, ClientRef} ->
+            Location = proplists:get_value(<<"location">>, RespHeaders),
+            hackney:close(ClientRef),
+            {307, Location};
+        {ok, StatusCode, _RespHeaders, ClientRef} ->
+            case hackney:body(ClientRef) of
+                {ok, <<>>} ->
+                    hackney:close(ClientRef),
+                    {error, StatusCode};
+                {ok, Body} ->
+                    hackney:close(ClientRef),
+                    {StatusCode, jsone:decode(Body)}
+            end;
+        {error, Reason} ->
+            {error, Reason}
     end.
 
 
