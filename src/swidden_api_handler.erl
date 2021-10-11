@@ -126,7 +126,7 @@ dispatch(Service, Version, Operation, Interceptor) ->
                 _ ->
                     case lists:member({Function, 0}, Module:module_info(exports)) of
                         true ->
-                            intercept0(Module, Function, Interceptor);
+                            preprocess0(Module, Function, Interceptor);
                         false ->
                             {400, #{error_type => <<"MissingTargetFunction">>,
                                     error_reason => #{service => Service,
@@ -146,7 +146,7 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
                 _ ->
                     case lists:member({Function, 1}, Module:module_info(exports)) of
                         true ->
-                            intercept1(Module, Function, JSON, Interceptor);
+                            preprocess1(Module, Function, JSON, Interceptor);
                         false ->
                             {400, #{error_type => <<"MissingTargetFunction">>,
                                     error_reason => #{service => Service,
@@ -170,31 +170,41 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
     end.
 
 
-intercept0(Module, Function, undefined) ->
+preprocess0(Module, Function, undefined) ->
     apply_mfa(Module, Function, []);
-intercept0(Module, Function, Interceptor) ->
-    case Interceptor:execute(Module, Function) of
+preprocess0(Module, Function, Interceptor) ->
+    case Interceptor:preprocess(Module, Function) of
         continue ->
-            apply_mfa(Module, Function, []);
+            apply_mfa(Module, Function, [], Interceptor);
         {stop, Result} ->
             response(Result)
     end.
 
 
-intercept1(Module, Function, JSON, undefined) ->
+preprocess1(Module, Function, JSON, undefined) ->
     apply_mfa(Module, Function, [JSON]);
-intercept1(Module, Function, JSON0, Interceptor) ->
-    case Interceptor:execute(Module, Function, JSON0) of
+preprocess1(Module, Function, JSON0, Interceptor) ->
+    case Interceptor:preprocess(Module, Function, JSON0) of
         {continue, JSON1} ->
-            apply_mfa(Module, Function, [JSON1]);
+            apply_mfa(Module, Function, [JSON1], Interceptor);
         {stop, Result} ->
-            response(Result)
+            postprocess(Module, Function, Result, Interceptor)
     end.
 
 
 apply_mfa(Module, Function, Args) ->
     Result = apply(Module, Function, Args),
     response(Result).
+
+
+apply_mfa(Module, Function, Args, Interceptor) ->
+    Result = apply(Module, Function, Args),
+    postprocess(Module, Function, Result, Interceptor).
+
+
+postprocess(Module, Function, Result0, Interceptor) ->
+    Result1 = Interceptor:postprocess(Module, Function, Result0),
+    response(Result1).
 
 
 response({ok, {redirect, Location}}) ->

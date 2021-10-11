@@ -6,6 +6,7 @@
 - [ADD] interceptor オプションを追加する
   - dispatch 前に interceptor モジュールを呼び出し、JSON の変更、およびリクエストの中断を
     可能にする
+  - dispatch 後に interceptor モジュールを呼び出し、JSON の変更を可能にする
 
 ## 2021.3
 

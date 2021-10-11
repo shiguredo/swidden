@@ -157,26 +157,29 @@ interceptor() ->
     ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}, {interceptor, sample_interceptor}])),
 
     %% 素通しする
-    ?assertEqual({200,#{<<"password">> => <<"password">>}},
+    ?assertEqual({200,#{<<"password">> => <<"password">>,
+                        <<"good_or_bad">> => <<"good">>}},
                  request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Hermione">>}])),
     %% ok
     ?assertEqual(200,
                  request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Ron">>}])),
     %% ok, JSON 付き
-    ?assertEqual({200, #{<<"everyboby">> => <<"know him">>}},
+    ?assertEqual({200, #{<<"everyboby">> => <<"know him">>,
+                         <<"good_or_bad">> => <<"good">>}},
                  request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Harry">>}])),
 
     %% リダイレクト
-    ?assertEqual({307, <<"http://example.com/albus">>},
+    ?assertEqual({307, <<"http://example.com/albus?foo=bar">>},
                  request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Dumbledore">>}])),
 
     %% エラー
-    ?assertEqual({400, #{<<"error_type">> => <<"He-Who-Must-Not-Be-Named">>}},
+    ?assertEqual({400, #{<<"error_type">> => <<"He-Who-Must-Not-Be-Named, You-Know-Who">>}},
                  request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Voldemort">>}])),
     %% エラー, JSON 付き
     ?assertEqual({400,
                   #{<<"error_type">> => <<"insufficient privilege">>,
-                    <<"error_reason">> => #{<<"caution">> => <<"Slytherin only">>}}},
+                    <<"error_reason">> => #{<<"caution">> => <<"Slytherin only">>,
+                                            <<"good_or_bad">> => <<"bad">>}}},
                  request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Snape">>}])),
 
 
