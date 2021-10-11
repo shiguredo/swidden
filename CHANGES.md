@@ -2,6 +2,14 @@
 
 ## develop
 
+## 2021.4
+
+- [CHANGE] cowboy 2.0 で onresponse オプションが無くなったため削除する
+- [ADD] interceptor オプションを追加する
+  - dispatch 前に interceptor モジュールを呼び出し、JSON の変更、およびリクエストの中断を
+    可能にする
+  - dispatch 後に interceptor モジュールを呼び出し、JSON の変更を可能にする
+
 ## 2021.3
 
 - [ADD] swidden:redirect/1 を追加

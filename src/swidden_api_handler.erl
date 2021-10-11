@@ -1,6 +1,6 @@
 -module(swidden_api_handler).
 
-%% -behaviour(cowboy_handler).
+-behaviour(cowboy_handler).
 
 -export([init/2,
          terminate/3]).
@@ -19,12 +19,12 @@
 init(Req, Opts) ->
     HeaderName = proplists:get_value(header_name, Opts),
     Services = proplists:get_value(services, Opts),
+    Interceptor = proplists:get_value(interceptor, Opts),
     case cowboy_req:method(Req) of
         <<"POST">> ->
             case cowboy_req:header(HeaderName, Req) of
                 undefined ->
                     %% ヘッダーがみつからない
-                    %% XXX(nakai): 400 としたが 404 がいいか？
                     RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}, [skip_undefined]),
                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
                     {ok, Req2, Opts};
@@ -34,10 +34,10 @@ init(Req, Opts) ->
                         {match, [Service, Version, Operation]} ->
                             case lists:member(Service, Services) of
                                 true ->
-                                    Req2 = handle(Service, Version, Operation, Req),
+                                    Req2 = handle(Service, Version, Operation, Req, Interceptor),
                                     {ok, Req2, Opts};
                                 false when Services == [] ->
-                                    Req2 = handle(Service, Version, Operation, Req),
+                                    Req2 = handle(Service, Version, Operation, Req, Interceptor),
                                     {ok, Req2, Opts};
                                 false ->
                                     Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
@@ -63,19 +63,19 @@ init(Req, Opts) ->
 read_body(Req, Acc) ->
     case cowboy_req:read_body(Req) of
         {ok, Data, Req2} ->
-             {ok, <<Acc/binary, Data/binary>>, Req2};
+             {ok, iolist_to_binary([Acc, Data]), Req2};
         {more, Data, Req2} ->
-            read_body(Req2, <<Acc/binary, Data/binary>>)
+            read_body(Req2, [Acc, Data])
     end.
 
 
-handle(Service, Version, Operation, Req) ->
+handle(Service, Version, Operation, Req, Interceptor) ->
     %% TODO(nakai): リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
-            case read_body(Req, <<>>) of
+            case read_body(Req, []) of
                 {ok, <<>>, Req2} ->
-                    case dispatch(Service, Version, Operation) of
+                    case dispatch(Service, Version, Operation, Interceptor) of
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                         {?REDIRECT_STATUS_CODE, Location} ->
@@ -85,7 +85,7 @@ handle(Service, Version, Operation, Req) ->
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
                     end;
                 {ok, Body, Req2} ->
-                    case validate_json(Service, Version, Operation, Body) of
+                    case validate_json(Service, Version, Operation, Body, Interceptor) of
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                         {?REDIRECT_STATUS_CODE, Location} ->
@@ -96,7 +96,7 @@ handle(Service, Version, Operation, Req) ->
                     end
             end;
         false ->
-            case dispatch(Service, Version, Operation) of
+            case dispatch(Service, Version, Operation, Interceptor) of
                 200 ->
                     cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
                 {?REDIRECT_STATUS_CODE, Location} ->
@@ -115,7 +115,7 @@ terminate(Reason, _Req, _State) ->
     ok.
 
 
-dispatch(Service, Version, Operation) ->
+dispatch(Service, Version, Operation, Interceptor) ->
     case swidden_dispatch:lookup(Service, Version, Operation) of
         not_found ->
             {400, #{error_type => <<"MissingTarget">>}};
@@ -126,7 +126,7 @@ dispatch(Service, Version, Operation) ->
                 _ ->
                     case lists:member({Function, 0}, Module:module_info(exports)) of
                         true ->
-                            apply0(Module, Function, []);
+                            preprocess0(Module, Function, Interceptor);
                         false ->
                             {400, #{error_type => <<"MissingTargetFunction">>,
                                     error_reason => #{service => Service,
@@ -137,17 +137,16 @@ dispatch(Service, Version, Operation) ->
     end.
 
 
-validate_json(Service, Version, Operation, RawJSON) ->
+validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
-            %% ここは swidden:success/0,1 と swidden:failure/1 の戻り値
             case code:which(Module) of
                 non_existing ->
                     {400, #{error_type => <<"MissingTargetModule">>}};
                 _ ->
                     case lists:member({Function, 1}, Module:module_info(exports)) of
                         true ->
-                            apply0(Module, Function, [JSON]);
+                            preprocess1(Module, Function, JSON, Interceptor);
                         false ->
                             {400, #{error_type => <<"MissingTargetFunction">>,
                                     error_reason => #{service => Service,
@@ -171,16 +170,50 @@ validate_json(Service, Version, Operation, RawJSON) ->
     end.
 
 
-apply0(Module, Function, Args) ->
-    case apply(Module, Function, Args) of
-        {ok, {redirect, Location}} ->
-            {?REDIRECT_STATUS_CODE, Location};
-        ok ->
-            200;
-        {ok, RespJSON} ->
-            {200, RespJSON};
-        {error, Type} ->
-            {400, #{error_type => Type}};
-        {error, Type, Reason} ->
-            {400, #{error_type => Type, error_reason => Reason}}
+preprocess0(Module, Function, undefined) ->
+    apply_mfa(Module, Function, []);
+preprocess0(Module, Function, Interceptor) ->
+    case Interceptor:preprocess(Module, Function) of
+        continue ->
+            apply_mfa(Module, Function, [], Interceptor);
+        {stop, Result} ->
+            response(Result)
     end.
+
+
+preprocess1(Module, Function, JSON, undefined) ->
+    apply_mfa(Module, Function, [JSON]);
+preprocess1(Module, Function, JSON0, Interceptor) ->
+    case Interceptor:preprocess(Module, Function, JSON0) of
+        {continue, JSON1} ->
+            apply_mfa(Module, Function, [JSON1], Interceptor);
+        {stop, Result} ->
+            postprocess(Module, Function, Result, Interceptor)
+    end.
+
+
+apply_mfa(Module, Function, Args) ->
+    Result = apply(Module, Function, Args),
+    response(Result).
+
+
+apply_mfa(Module, Function, Args, Interceptor) ->
+    Result = apply(Module, Function, Args),
+    postprocess(Module, Function, Result, Interceptor).
+
+
+postprocess(Module, Function, Result0, Interceptor) ->
+    Result1 = Interceptor:postprocess(Module, Function, Result0),
+    response(Result1).
+
+
+response({ok, {redirect, Location}}) ->
+    {?REDIRECT_STATUS_CODE, Location};
+response(ok) ->
+    200;
+response({ok, RespJSON}) ->
+    {200, RespJSON};
+response({error, Type}) ->
+    {400, #{error_type => Type}};
+response({error, Type, Reason}) ->
+    {400, #{error_type => Type, error_reason => Reason}}.

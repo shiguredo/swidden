@@ -8,7 +8,7 @@
 
 
 get_user(#{<<"username">> := _Username}) ->
-    swidden:success([{password, <<"password">>}]).
+    swidden:success(#{password => <<"password">>}).
 
 
 create_user(#{<<"username">> := _Username, <<"password">> := _Password}) ->

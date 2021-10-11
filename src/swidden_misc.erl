@@ -2,7 +2,6 @@
 
 -export([pascal2snake/1]).
 
-%% -spec is_pascalcase(binary()) -> ok | error.
 
 -spec pascal2snake(binary()) -> no_pascalcase | binary().
 pascal2snake(<<C:8, _/binary>> = Binary) when $A =< C andalso C =< $Z ->
