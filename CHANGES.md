@@ -2,6 +2,11 @@
 
 ## develop
 
+## 2021.5
+
+- [UPDATE] 依存を git: から git@ に変更する
+  - @shino
+
 ## 2021.4
 
 - [CHANGE] cowboy 2.0 で onresponse オプションが無くなったため削除する
