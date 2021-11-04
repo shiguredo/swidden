@@ -2,6 +2,14 @@
 
 ## develop
 
+## 2021.6
+
+- [UPDATE] 依存を git@ から https に変更する
+- [UPDATE] OTP 最小を 24.1 に上げる
+- [UPDATE] CI のイメージを OTP-24.1.4 にアップデートする
+- [UPDATE] jsone を 1.7.0 にアップデートする
+- [UPDATE] hackney を 1.18.0 にアップデートする
+
 ## 2021.5
 
 - [UPDATE] 依存を git: から git@ に変更する
