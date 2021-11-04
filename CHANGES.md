@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2021.6
+
 - [UPDATE] 依存を git@ から https に変更する
 - [UPDATE] OTP 最小を 24.1 に上げる
 - [UPDATE] CI のイメージを OTP-24.1.4 にアップデートする
