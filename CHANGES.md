@@ -2,13 +2,20 @@
 
 ## develop
 
+- [CHANGE] covertool 削除
+
 ## 2021.6
 
 - [UPDATE] 依存を git@ から https に変更する
+    - @voluntas
 - [UPDATE] OTP 最小を 24.1 に上げる
+    - @voluntas
 - [UPDATE] CI のイメージを OTP-24.1.4 にアップデートする
+    - @voluntas
 - [UPDATE] jsone を 1.7.0 にアップデートする
+    - @voluntas
 - [UPDATE] hackney を 1.18.0 にアップデートする
+    - @voluntas
 
 ## 2021.5
 
@@ -18,10 +25,13 @@
 ## 2021.4
 
 - [CHANGE] cowboy 2.0 で onresponse オプションが無くなったため削除する
+    - @voluntas
 - [ADD] interceptor オプションを追加する
   - dispatch 前に interceptor モジュールを呼び出し、JSON の変更、およびリクエストの中断を
     可能にする
+    - @voluntas
   - dispatch 後に interceptor モジュールを呼び出し、JSON の変更を可能にする
+    - @voluntas
 
 ## 2021.3
 
