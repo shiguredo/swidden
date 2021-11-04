@@ -1,5 +1,5 @@
 {"1.2.0",
-[{<<"certifi">>,{pkg,<<"certifi">>,<<"2.6.1">>},1},
+[{<<"certifi">>,{pkg,<<"certifi">>,<<"2.8.0">>},1},
  {<<"cowboy">>,
   {git,"git@github.com:ninenines/cowboy",
        {ref,"04ca4c5d31a92d4d3de087bbd7d6021dc4a6d409"}},
@@ -10,7 +10,7 @@
   1},
  {<<"hackney">>,
   {git,"git@github.com:benoitc/hackney",
-       {ref,"6e79b2bb11a77389d3ba9ff3a0828a45796fe7a8"}},
+       {ref,"c8f3a6c5a837e4554be219f7c21ae8fdb3d01c40"}},
   0},
  {<<"idna">>,{pkg,<<"idna">>,<<"6.1.1">>},1},
  {<<"jesse">>,
@@ -34,7 +34,7 @@
  {<<"unicode_util_compat">>,{pkg,<<"unicode_util_compat">>,<<"0.7.0">>},1}]}.
 [
 {pkg_hash,[
- {<<"certifi">>, <<"DBAB8E5E155A0763EEA978C913CA280A6B544BFA115633FA20249C3D396D9493">>},
+ {<<"certifi">>, <<"D4FB0A6BB20B7C9C3643E22507E42F356AC090A1DCEA9AB99E27E0376D695EBA">>},
  {<<"idna">>, <<"8A63070E9F7D0C62EB9D9FCB360A7DE382448200FBBD1B106CC96D3D8099DF8D">>},
  {<<"jsx">>, <<"D2F6E5F069C00266CAD52FB15D87C428579EA4D7D73A33669E12679E203329DD">>},
  {<<"metrics">>, <<"25F094DEA2CDA98213CECC3AEFF09E940299D950904393B2A29D191C346A8486">>},
@@ -44,7 +44,7 @@
  {<<"ssl_verify_fun">>, <<"CF344F5692C82D2CD7554F5EC8FD961548D4FD09E7D22F5B62482E5AEAEBD4B0">>},
  {<<"unicode_util_compat">>, <<"BC84380C9AB48177092F43AC89E4DFA2C6D62B40B8BD132B1059ECC7232F9A78">>}]},
 {pkg_hash_ext,[
- {<<"certifi">>, <<"524C97B4991B3849DD5C17A631223896272C6B0AF446778BA4675A1DFF53BB7E">>},
+ {<<"certifi">>, <<"6AC7EFC1C6F8600B08D625292D4BBF584E14847CE1B6B5C44D983D273E1097EA">>},
  {<<"idna">>, <<"92376EB7894412ED19AC475E4A86F7B413C1B9FBB5BD16DCCD57934157944CEA">>},
  {<<"jsx">>, <<"8EE1DB1CABAFDD578A2776A6AAAE87C2A8CE54B47B59E9EC7DAB5D7EB71CD8DC">>},
  {<<"metrics">>, <<"69B09ADDDC4F74A40716AE54D140F93BEB0FB8978D8636EADED0C31B6F099F16">>},
