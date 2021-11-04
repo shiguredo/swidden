@@ -19,7 +19,7 @@
   0},
  {<<"jsone">>,
   {git,"git@github.com:sile/jsone",
-       {ref,"f34edbc7fabf396a57c3f59a5827fb8fd7c4e59b"}},
+       {ref,"5b8a8581743e5975f1b4062f768cff1e75ee39ef"}},
   0},
  {<<"jsx">>,{pkg,<<"jsx">>,<<"2.9.0">>},1},
  {<<"metrics">>,{pkg,<<"metrics">>,<<"1.0.1">>},1},
