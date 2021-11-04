@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] CI のイメージを OTP-24.1.4 にアップデートする
+
 ## 2021.5
 
 - [UPDATE] 依存を git: から git@ に変更する
