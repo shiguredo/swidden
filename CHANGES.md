@@ -2,6 +2,8 @@
 
 ## develop
 
+- [ADD] rebar3_plugin hex を追加する
+- [CHANGE] hex package を利用するようにする
 - [CHANGE] covertool 削除
 
 ## 2021.6
