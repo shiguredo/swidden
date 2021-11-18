@@ -2,6 +2,10 @@
 
 ## develop
 
+## 2021.8.0
+
+- [CHANGE] バージョン番号 を YYYY.RELEASE.FIX に統一する
+
 ## 2021.7
 
 - [ADD] rebar3_plugin hex を追加する
