@@ -1,12 +1,14 @@
 {application, swidden,
  [
-  {description, "swidden"},
-  {vsn, "2021.8.0"},
+  {description, "Swidden"},
+  {vsn, "2021.9.0"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib
                  ]},
   {mod, { swidden_app, []}},
+  {licenses, ["Apache-2.0"]},
+  {links, [{"GitHub", "https://github.com/shiguredo/swidden"}]},
   {env, []}
  ]}.

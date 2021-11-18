@@ -2,6 +2,9 @@
 
 ## develop
 
+- [ADD] app.src に licenses を追加する
+- [ADD] app.src に links を追加する
+
 ## 2021.8.0
 
 - [CHANGE] バージョン番号 を YYYY.RELEASE.FIX に統一する
