@@ -9,7 +9,7 @@ compile:
 	@./rebar3 xref
 
 test:
-	@./rebar3 as test eunit, cover, covertool generate
+	@./rebar3 as test eunit, cover
 
 dialyzer:
 	@./rebar3 dialyzer
