@@ -2,10 +2,13 @@
 
 ## develop
 
+## 2021.10.0
+
+- [CHANGE] loopback_address_only を削除
+- [ADD] ip を追加
+
 ## 2021.9.0
 
-- [ADD] loopback_address_only を削除
-- [ADD] ip を追加
 - [ADD] app.src に licenses を追加する
 - [ADD] app.src に links を追加する
 
