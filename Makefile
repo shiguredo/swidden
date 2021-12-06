@@ -21,3 +21,6 @@ github:
 	$(MAKE) compile
 	$(MAKE) dialyzer
 	$(MAKE) test
+
+publish:
+	@./rebar3 hex publish
