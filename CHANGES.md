@@ -2,19 +2,33 @@
 
 ## develop
 
+## 2021.11.0
+
+- [UPDATE] CI のイメージを OTP-24.1.7 にアップデートする
+    - @voluntas
+- [UPDATE] jesse を 1.6.1 にアップデートする
+    - @voluntas
+- [ADD] make publish コマンドを追加する
+    - @voluntas
+
 ## 2021.10.0
 
 - [CHANGE] loopback_address_only を削除
+    - @voluntas
 - [ADD] ip を追加
+    - @voluntas
 
 ## 2021.9.0
 
 - [ADD] app.src に licenses を追加する
+    - @voluntas
 - [ADD] app.src に links を追加する
+    - @voluntas
 
 ## 2021.8.0
 
 - [CHANGE] バージョン番号 を YYYY.RELEASE.FIX に統一する
+    - @voluntas
 
 ## 2021.7
 
