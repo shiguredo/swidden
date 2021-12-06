@@ -2,6 +2,11 @@
 
 ## develop
 
+- [UPDATE] CI のイメージを OTP-24.1.7 にアップデートする
+    - @voluntas
+- [UPDATE] jesse を 1.6.1 にアップデートする
+- [ADD] make publish コマンドを追加する
+
 ## 2021.10.0
 
 - [CHANGE] loopback_address_only を削除
