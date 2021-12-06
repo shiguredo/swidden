@@ -37,14 +37,8 @@ start(Name, Opts) ->
                                                      {services, Services},
                                                      {interceptor, Interceptor}]}]}]),
 
+    IpAddress = proplists:get_value(ip, Opts, {0,0,0,0}),
     Port = proplists:get_value(port, Opts, 8000),
-
-    LoopbackAddress = case proplists:get_value(loopback_address_only, Opts, false) of
-                          false ->
-                              [];
-                          true ->
-                              [{ip, {127,0,0,1}}]
-                      end,
 
     ProtoOpts = case proplists:get_value(middlewares, Opts, not_found) of
                     not_found ->
@@ -56,7 +50,7 @@ start(Name, Opts) ->
     %% コード的に意味不明
     Env = ProtoOpts#{env => #{dispatch => Dispatch}},
 
-    cowboy:start_clear({?REF, Port}, [{port, Port}] ++ LoopbackAddress, Env).
+    cowboy:start_clear({?REF, Port}, [{ip, IpAddress}, {port, Port}], Env).
 
 
 -spec stop(inet:port_number()) -> ok.
