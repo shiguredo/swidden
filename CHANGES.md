@@ -2,6 +2,10 @@
 
 ## develop
 
+- [CHANGE] rebar3 の minimum_otp_vsn を 24.2 にする
+- [UPDATE] GitHub Actions の docker の OTP を 24.2 に上げる
+- [ADD] slack 通知を secrets.SLACK_INTERNAL_CHANNEL に変更
+
 ## 2021.11.0
 
 - [UPDATE] CI のイメージを OTP-24.1.7 にアップデートする
