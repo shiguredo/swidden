@@ -5,7 +5,7 @@
     {continue, swidden:json_object()} |
     {stop, ok} |
     {stop, {ok, swidden:json_object()}} |
-    {sotp, {redirect, binary()}} |
+    {stop, {redirect, binary()}} |
     {stop, {error, binary()}} |
     {stop, {error, binary(), map()}}.
 
@@ -14,7 +14,7 @@
     continue |
     {stop, ok} |
     {stop, {ok, swidden:json_object()}} |
-    {sotp, {redirect, binary()}} |
+    {stop, {redirect, binary()}} |
     {stop, {error, binary()}} |
     {stop, {error, binary(), map()}}.
 
