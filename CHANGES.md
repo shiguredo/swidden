@@ -5,6 +5,7 @@
 - [CHANGE] rebar3 の minimum_otp_vsn を 24.2 にする
 - [UPDATE] GitHub Actions の docker の OTP を 24.2 に上げる
 - [ADD] slack 通知を secrets.SLACK_INTERNAL_CHANNEL に変更
+- [FIX] swidden_interceptor の callback のタイポを修正する
 
 ## 2021.11.0
 
