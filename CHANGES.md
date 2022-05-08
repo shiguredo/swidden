@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2022.12.0
+
 - [UPDATE] jesse を 1.7.9 にアップデートする
     - @voluntas
 - [CHANGE] rebar3 の minimum_otp_vsn を 24.2 にする
