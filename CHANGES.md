@@ -2,6 +2,19 @@
 
 ## develop
 
+## 2022.12.0
+
+- [UPDATE] jesse を 1.7.9 にアップデートする
+    - @voluntas
+- [CHANGE] rebar3 の minimum_otp_vsn を 24.2 にする
+    - @voluntas
+- [UPDATE] GitHub Actions の docker の OTP を 24.2 に上げる
+    - @voluntas
+- [ADD] slack 通知を secrets.SLACK_INTERNAL_CHANNEL に変更
+    - @voluntas
+- [FIX] swidden_interceptor の callback のタイポを修正する
+    - @voluntas
+
 ## 2021.11.0
 
 - [UPDATE] CI のイメージを OTP-24.1.7 にアップデートする
