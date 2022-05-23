@@ -11,9 +11,9 @@ jobs:
   make-github:
     runs-on: ubuntu-latest
     container:
-      image: shiguredo/erlang:otp-24.2-ubuntu-20.04
+      image: shiguredo/erlang:otp-25.0-openssl-3.0.3-ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: make github
       - name: Slack Notification
         if: failure()

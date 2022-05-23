@@ -2,6 +2,16 @@
 
 ## develop
 
+- [CHANGE] rebar3 の minimum_otp_vsn を 25.0 にする
+    - @voluntas
+- [UPDATE] jesse を 1.7.11 にアップデートする
+    - @voluntas
+- [UPDATE] GitHub Actions の docker の OTP を 25.0 (OpenSSL 3.0.3) に上げる
+    - @voluntas
+- [UPDATE] GitHub Actions checkout を v3 に上げる
+    - @voluntas
+
+
 ## 2022.12.0
 
 - [UPDATE] jesse を 1.7.9 にアップデートする
