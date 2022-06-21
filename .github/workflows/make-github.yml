@@ -11,7 +11,9 @@ jobs:
   make-github:
     runs-on: ubuntu-latest
     container:
-      image: shiguredo/erlang:otp-25.0-openssl-3.0.3-ubuntu-22.04
+      image: shiguredo/erlang:otp-25.0.1-openssl-3.0.3-ubuntu-22.04
+    env:
+      ERL_FLAGS: -enable-feature maybe_expr
     steps:
       - uses: actions/checkout@v3
       - run: make github

@@ -6,7 +6,7 @@
     - @voluntas
 - [UPDATE] jesse を 1.7.11 にアップデートする
     - @voluntas
-- [UPDATE] GitHub Actions の docker の OTP を 25.0 (OpenSSL 3.0.3) に上げる
+- [UPDATE] GitHub Actions の docker の OTP を 25.0.1 (OpenSSL 3.0.3) に上げる
     - @voluntas
 - [UPDATE] GitHub Actions checkout を v3 に上げる
     - @voluntas
