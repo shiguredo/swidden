@@ -3,7 +3,7 @@
 all: clean upgrade compile test dialyzer
 
 upgrade:
-	@./rebar3 do update, upgrade
+	@./rebar3 do update, upgrade --all
 
 compile:
 	@./rebar3 xref
