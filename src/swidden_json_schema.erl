@@ -8,10 +8,10 @@
 -include("swidden_dispatch.hrl").
 
 %% TODO(nakai): req/res 両方のスキーマが必要なのでは ...
-    %% TODO(nakai): レスポンスのバリデーションチェックはどうする？
+%% TODO(nakai): レスポンスのバリデーションチェックはどうする？
 
 
--spec start(atom()) -> ok | {error, term()}.
+-spec start(atom()) -> ok | no_return().
 start(Name) ->
     case load_schemas(Name) of
         ok ->
@@ -56,8 +56,11 @@ load_schemas(Name) ->
 
 load_schemas(_Path, []) ->
     ok;
-load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
-                                      schema = Schema}|Rest]) ->
+load_schemas(Path,
+             [#swidden_dispatch{
+                id = {Service, Version, Operation},
+                schema = Schema
+               } | Rest]) ->
     FileName = lists:flatten(lists:join(".", [atom_to_list(Schema), "json"])),
     PascalCaseService = swidden_misc:pascal2snake(Service),
     %% <application>/priv/swidden/schemas/<service>/<version>/<schema>.json
@@ -68,7 +71,7 @@ load_schemas(Path, [#swidden_dispatch{id = {Service, Version, Operation},
             case add_schema(Key, Binary) of
                 ok ->
                     load_schemas(Path, Rest);
-                [{[],[],[]}] ->
+                [{[], [], []}] ->
                     load_schemas(Path, Rest);
                 [{_, _, {error, invalid_json, LineNumber}}] ->
                     {error, {invalid_json, FileName, LineNumber}}
@@ -97,18 +100,22 @@ parse_fun() ->
 
 to_json(Reasons) ->
     F = fun({data_invalid, Schema, {Error, _}, Data, Path}) ->
-                #{invalid => data,
+                #{
+                  invalid => data,
                   schema => Schema,
                   error => Error,
                   data => Data,
-                  path => Path};
+                  path => Path
+                 };
            ({data_invalid, Schema, Error, Data, Path}) ->
-                #{invalid => data,
+                #{
+                  invalid => data,
                   schema => Schema,
                   error => Error,
                   data => Data,
-                  path => Path};
-           ({data_error, {parse_error, badarg}})->
+                  path => Path
+                 };
+           ({data_error, {parse_error, badarg}}) ->
                 #{invalid => parse}
 
         end,

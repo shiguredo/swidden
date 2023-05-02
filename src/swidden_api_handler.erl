@@ -1,7 +1,5 @@
 -module(swidden_api_handler).
 
--behaviour(cowboy_handler).
-
 -export([init/2,
          terminate/3]).
 
@@ -40,16 +38,20 @@ init(Req, Opts) ->
                                     Req2 = handle(Service, Version, Operation, Req, Interceptor),
                                     {ok, Req2, Opts};
                                 false ->
-                                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
+                                    Req2 = cowboy_req:reply(400,
+                                                            ?DEFAULT_HEADERS,
                                                             jsone:encode(#{error_type => <<"InvalidTarget">>},
-                                                                         [skip_undefined]), Req),
+                                                                         [skip_undefined]),
+                                                            Req),
                                     {ok, Req2, Opts}
                             end;
                         _ ->
                             %% サービスに対応してなかったよ
-                            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS,
+                            Req2 = cowboy_req:reply(400,
+                                                    ?DEFAULT_HEADERS,
                                                     jsone:encode(#{error_type => <<"MissingService">>},
-                                                                 [skip_undefined]), Req),
+                                                                 [skip_undefined]),
+                                                    Req),
                             {ok, Req2, Opts}
                     end
             end;
@@ -60,10 +62,11 @@ init(Req, Opts) ->
             {ok, Req2, Opts}
     end.
 
+
 read_body(Req, Acc) ->
     case cowboy_req:read_body(Req) of
         {ok, Data, Req2} ->
-             {ok, iolist_to_binary([Acc, Data]), Req2};
+            {ok, iolist_to_binary([Acc, Data]), Req2};
         {more, Data, Req2} ->
             read_body(Req2, [Acc, Data])
     end.
@@ -128,10 +131,15 @@ dispatch(Service, Version, Operation, Interceptor) ->
                         true ->
                             preprocess0(Module, Function, Interceptor);
                         false ->
-                            {400, #{error_type => <<"MissingTargetFunction">>,
-                                    error_reason => #{service => Service,
-                                                      version => Version,
-                                                      operation => Operation}}}
+                            {400,
+                             #{
+                               error_type => <<"MissingTargetFunction">>,
+                               error_reason => #{
+                                                 service => Service,
+                                                 version => Version,
+                                                 operation => Operation
+                                                }
+                              }}
                     end
             end
     end.
@@ -148,10 +156,15 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
                         true ->
                             preprocess1(Module, Function, JSON, Interceptor);
                         false ->
-                            {400, #{error_type => <<"MissingTargetFunction">>,
-                                    error_reason => #{service => Service,
-                                                      version => Version,
-                                                      operation => Operation}}}
+                            {400,
+                             #{
+                               error_type => <<"MissingTargetFunction">>,
+                               error_reason => #{
+                                                 service => Service,
+                                                 version => Version,
+                                                 operation => Operation
+                                                }
+                              }}
                     end
             end;
         {error, {data_error, _Reason}} ->
@@ -159,14 +172,22 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
             {400, #{error_type => <<"MalformedJSON">>}};
         {error, {database_error, _Key, schema_not_found}} ->
             %% TODO(nakai): この部分は外だしする
-            {400, #{error_type => <<"SchemaNotFound">>,
-                    error_reason => #{service => Service,
-                                      version => Version,
-                                      operation => Operation}}};
+            {400,
+             #{
+               error_type => <<"SchemaNotFound">>,
+               error_reason => #{
+                                 service => Service,
+                                 version => Version,
+                                 operation => Operation
+                                }
+              }};
         {error, Reasons} ->
             ErrorReasons = swidden_json_schema:to_json(Reasons),
-            {400, #{error_type => <<"InvalidJSON">>,
-                    error_reason => ErrorReasons}}
+            {400,
+             #{
+               error_type => <<"InvalidJSON">>,
+               error_reason => ErrorReasons
+              }}
     end.
 
 
