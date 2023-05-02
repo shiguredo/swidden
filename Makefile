@@ -23,4 +23,4 @@ github:
 	$(MAKE) test
 
 publish:
-	@./rebar3 hex publish
+	@./rebar3 hex publish package
