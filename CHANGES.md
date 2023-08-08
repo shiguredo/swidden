@@ -2,6 +2,9 @@
 
 ## develop
 
+- [CHANGE] swidden_client を hackney から gun へ切り替える
+    - @voluntas
+
 ## 2023.1.0
 
 - [CHANGE] rebar3 の minimum_otp_vsn を 26.0 にする
