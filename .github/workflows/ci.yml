@@ -12,11 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: shiguredo/shiguredo-erlang:otp-26.0.2-openssl-3.1.1-ubuntu-22.04-x86_64
-    env:
-      ERL_FLAGS: -enable-feature maybe_expr
     steps:
       - uses: actions/checkout@v3
-      - run: make github
+      - run: make ci
       - name: Slack Notification
         if: failure()
         uses: rtCamp/action-slack-notify@v2
