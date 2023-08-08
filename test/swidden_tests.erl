@@ -5,11 +5,13 @@
 -include_lib("eunit/include/eunit.hrl").
 
 %% 下記二つを使ったテスト
-    %% swidden/priv/swidden/dispatch.conf
-    %% swidden/priv/swidden/schemas
+%% swidden/priv/swidden/dispatch.conf
+%% swidden/priv/swidden/schemas
+
 
 start_apps() ->
     [ application:start(App) || App <- [hackney, ranch, cowboy, swidden] ].
+
 
 stop_apps() ->
     [ application:stop(App) || App <- [hackney, swidden, cowboy, ranch] ].
@@ -25,10 +27,7 @@ all_test_() ->
              stop_apps(),
              ok
      end,
-     [
-      fun setup/0
-     ]
-    }.
+     [fun setup/0]}.
 
 
 setup() ->

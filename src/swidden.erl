@@ -17,6 +17,7 @@
 start(Name) when is_atom(Name) ->
     start(Name, []).
 
+
 start(Name, Opts) ->
     %% FIXME(nakai): error/1 で対応しているが本来は {error, Reason} で返すべき
     ok = swidden_dispatch:start(Name),
@@ -27,17 +28,19 @@ start(Name, Opts) ->
     %% dispatch.conf には Spam, SpamAdmin, Egg, EggAdmin があるとする
     %% Services に指定した文字列 [{services, [<<"Spam">>, <<"SpamAdmin">>]}]
     %% これが有効になり他は有効にならない
-        %% バリデーション頑張ってないので要注意
+    %% バリデーション頑張ってないので要注意
     %% [] は全部に対応するという意味にする
     Services = proplists:get_value(services, Opts, []),
     Interceptor = proplists:get_value(interceptor, Opts, undefined),
 
     Dispatch = cowboy_router:compile(
-                 [{'_', [{"/", swidden_api_handler, [{header_name, HeaderName},
-                                                     {services, Services},
-                                                     {interceptor, Interceptor}]}]}]),
+                 [{'_', [{"/",
+                          swidden_api_handler,
+                          [{header_name, HeaderName},
+                           {services, Services},
+                           {interceptor, Interceptor}]}]}]),
 
-    IpAddress = proplists:get_value(ip, Opts, {0,0,0,0}),
+    IpAddress = proplists:get_value(ip, Opts, {0, 0, 0, 0}),
     Port = proplists:get_value(port, Opts, 8000),
 
     ProtoOpts = case proplists:get_value(middlewares, Opts, not_found) of

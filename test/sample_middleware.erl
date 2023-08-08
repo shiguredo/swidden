@@ -27,6 +27,6 @@ set_cors_headers(Req) ->
 
 set_headers(Headers, Req) ->
     F = fun({Header, Value}, Req0) ->
-            cowboy_req:set_resp_header(Header, Value, Req0)
+                cowboy_req:set_resp_header(Header, Value, Req0)
         end,
     lists:foldl(F, Req, Headers).

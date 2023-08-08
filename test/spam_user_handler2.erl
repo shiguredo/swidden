@@ -3,9 +3,11 @@
 -export([create_user/1]).
 
 
-create_user(#{<<"username">> := Username,
+create_user(#{
+              <<"username">> := Username,
               <<"password">> := _Password,
-              <<"group">> := _Group}) ->
+              <<"group">> := _Group
+             }) ->
     case Username of
         <<"error_code">> ->
             swidden:failure(<<"DuplicatedUser">>, #{code => 666});

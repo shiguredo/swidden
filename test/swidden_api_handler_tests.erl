@@ -8,7 +8,7 @@
 %% swidden/priv/swidden/dispatch.conf
 %% swidden/priv/swidden/schemas
 
--define(APPS, [hackney, gun, ranch, cowlib, cowboy, swidden]).
+-define(APPS, [hackney, ranch, cowlib, cowboy, swidden]).
 
 
 start_apps() ->

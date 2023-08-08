@@ -17,8 +17,10 @@ pascal2snake(_Binary) ->
 
 %% Internal
 
+
 downcase(Binary) ->
     downcase(Binary, <<>>).
+
 
 downcase(<<>>, Acc) ->
     Acc;
