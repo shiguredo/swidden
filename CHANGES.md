@@ -3,68 +3,77 @@
 ## develop
 
 - [CHANGE] swidden_client を hackney から gun へ切り替える
-    - @voluntas
+  - @voluntas
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 26.0.2 (OpenSSL 3.1.1) に上げる
+  - @voluntas
+- [UPDATE] jsone を 1.8.0 にアップデートする
+  - @voluntas
+- [UPDATE] rebar3 を 3.22.1 にアップデートする
+  - @voluntas
+- [ADD] gun を追加する
+  - ref 指定
+  - @voluntas
 
 ## 2023.1.0
 
 - [CHANGE] rebar3 の minimum_otp_vsn を 26.0 にする
-    - @voluntas
+  - @voluntas
 - [UPDATE] rebar.conf の dialyzer の設定を変更する
-    - TODO: もっと細かい設定を有効にしていく
-    - @voluntas
+  - TODO: もっと細かい設定を有効にしていく
+  - @voluntas
 - [UPDATE] rebar3 を 3.20.0 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] jesse を 1.7.11 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] hackney を 1.18.1 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] cowboy を 2.10.0 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] GitHub Actions の docker の OTP を 26.0-rc3 (OpenSSL 3.1.0) に上げる
-    - @voluntas
+  - @voluntas
 - [UPDATE] GitHub Actions checkout を v3 に上げる
-    - @voluntas
+  - @voluntas
 
 ## 2022.12.0
 
 - [UPDATE] jesse を 1.7.9 にアップデートする
-    - @voluntas
+  - @voluntas
 - [CHANGE] rebar3 の minimum_otp_vsn を 24.2 にする
-    - @voluntas
+  - @voluntas
 - [UPDATE] GitHub Actions の docker の OTP を 24.2 に上げる
-    - @voluntas
+  - @voluntas
 - [ADD] slack 通知を secrets.SLACK_INTERNAL_CHANNEL に変更
-    - @voluntas
+  - @voluntas
 - [FIX] swidden_interceptor の callback のタイポを修正する
-    - @voluntas
+  - @voluntas
 
 ## 2021.11.0
 
 - [UPDATE] CI のイメージを OTP-24.1.7 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] jesse を 1.6.1 にアップデートする
-    - @voluntas
+  - @voluntas
 - [ADD] make publish コマンドを追加する
-    - @voluntas
+  - @voluntas
 
 ## 2021.10.0
 
 - [CHANGE] loopback_address_only を削除
-    - @voluntas
+  - @voluntas
 - [ADD] ip を追加
-    - @voluntas
+  - @voluntas
 
 ## 2021.9.0
 
 - [ADD] app.src に licenses を追加する
-    - @voluntas
+  - @voluntas
 - [ADD] app.src に links を追加する
-    - @voluntas
+  - @voluntas
 
 ## 2021.8.0
 
 - [CHANGE] バージョン番号 を YYYY.RELEASE.FIX に統一する
-    - @voluntas
+  - @voluntas
 
 ## 2021.7
 
@@ -75,15 +84,15 @@
 ## 2021.6
 
 - [UPDATE] 依存を git@ から https に変更する
-    - @voluntas
+  - @voluntas
 - [UPDATE] OTP 最小を 24.1 に上げる
-    - @voluntas
+  - @voluntas
 - [UPDATE] CI のイメージを OTP-24.1.4 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] jsone を 1.7.0 にアップデートする
-    - @voluntas
+  - @voluntas
 - [UPDATE] hackney を 1.18.0 にアップデートする
-    - @voluntas
+  - @voluntas
 
 ## 2021.5
 
@@ -93,7 +102,7 @@
 ## 2021.4
 
 - [CHANGE] cowboy 2.0 で onresponse オプションが無くなったため削除する
-    - @voluntas
+  - @voluntas
 - [ADD] interceptor オプションを追加する
   - dispatch 前に interceptor モジュールを呼び出し、JSON の変更、およびリクエストの中断を
     可能にする
@@ -104,7 +113,7 @@
 ## 2021.3
 
 - [ADD] swidden:redirect/1 を追加
-    - HTTP Status Code 307 でリダイレクトされる
+  - HTTP Status Code 307 でリダイレクトされる
 - [UPDATE] rebar3 を 3.16.1 にアップデートする
 - [UPDATE] jsone を 1.6.1 にアップデートする
 - [UPDATE] CI のイメージを OTP-24.0.5 にアップデートする
@@ -127,7 +136,7 @@
 ## 2020.5.1
 
 - [FIX] jsone を 1.5.5 にアップデートする
-    - skip_undefined のバグ修正
+  - skip_undefined のバグ修正
 
 ## 2020.5
 
@@ -135,7 +144,6 @@
 - [UPDATE] rebar3 を 3.14.2 にアップデートする
 - [UPDATE] jsone を 1.5.4 にアップデートする
 - [CHANGE] jsone:encode/2 に skip_undefined を指定する
-
 
 ## 2020.4
 
@@ -172,7 +180,7 @@
 - [UPDATE] rebar3 の minimum_otp_vsn を 22.2 にする
 - [UPDATE] CI のイメージを OTP-22.2.8 にアップデートする
 - [UPDATE] jesse を "efe0dca" にアップデートする
-    - OTP 23 対応がリリースされるまでの暫定対応
+  - OTP 23 対応がリリースされるまでの暫定対応
 - [UPDATE] jsone を 1.5.2 にアップデートする
 
 ## 9.0.1
@@ -230,7 +238,7 @@
 - [UPDATE] rebar を 3.5.3 にアップデートする
 - [UPDATE] cowboy を 2.4.0 にアップデートする
 - [UPDATE] jesse を shiguredo の otp-21-compatibility に変更するする
-    - 公式が正式バージョンリリースするまではこのブランチ指定で進める
+  - 公式が正式バージョンリリースするまではこのブランチ指定で進める
 
 ## 7.3.0
 
@@ -357,7 +365,7 @@
 
 - [ADD] middleware 用の swidden_middleware:failure/2,3 を追加する
 - [ADD] ヘッダーを追加できるテスト用クライアント swidden_client:request_with_ehaders/6,7 を追加する
-    - ヘッダーは [{binary(), any()}] で渡す
+  - ヘッダーは [{binary(), any()}] で渡す
 
 ## 4.1.0
 
@@ -422,7 +430,7 @@
 ## 2.0.0
 
 - [UPDATE] rebar3 にアップグレードする
-    - rebar 3.0.0 on Erlang/OTP 18 Erts 7.2.1
+  - rebar 3.0.0 on Erlang/OTP 18 Erts 7.2.1
 
 ## 1.4.0
 
@@ -459,11 +467,9 @@
 - [ADD] Function の引数を拡張し、middleware から handler_opts で引き回したデータを Opts として扱えるようにする
 - [ADD] swidden:start/2 で Opts として onresponse hook を受け取れるようにする
 
-
 ## 1.1.12
 
 - [UPDATE] hackney を 1.4.4 にアップデート
-
 
 ## 1.1.11
 
@@ -522,7 +528,7 @@
 ## 1.1.0
 
 - [UPDATE] jsonx から jsone に変更
-- [UPDATE] list_* 系などの JSON が送られてこない場合の JSON Schema は空にする仕組みに変更
+- [UPDATE] list\_\* 系などの JSON が送られてこない場合の JSON Schema は空にする仕組みに変更
 
 ## 1.0.1
 
