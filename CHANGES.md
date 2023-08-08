@@ -2,6 +2,12 @@
 
 ## develop
 
+## 2023.2.1
+
+- [FIX] swidden.app.src のライセンス表記を Hex 向けに修正する
+  - @voluntas
+- [FIX] Hex 公開用に gun のバージョンを 2.0.1 に固定する
+  - @voluntas
 ## 2023.2.0
 
 - [CHANGE] swidden_client を hackney から gun へ切り替える
