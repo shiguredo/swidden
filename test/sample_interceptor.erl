@@ -2,8 +2,7 @@
 
 -behaviour(swidden_interceptor).
 
--export([preprocess/2,
-         preprocess/3,
+-export([preprocess/2, preprocess/3,
          postprocess/3]).
 
 
@@ -40,4 +39,3 @@ postprocess(spam_user_handler, get_user, {error, Type, Reason}) ->
     {error, Type, Reason#{<<"good_or_bad">> => <<"bad">>}};
 postprocess(_M, _F, Result) ->
     Result.
-

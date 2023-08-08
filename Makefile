@@ -17,7 +17,7 @@ dialyzer:
 clean:
 	@./rebar3 clean
 
-github:
+ci:
 	$(MAKE) compile
 	$(MAKE) dialyzer
 	$(MAKE) test

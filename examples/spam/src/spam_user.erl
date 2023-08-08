@@ -20,7 +20,7 @@ get_user(#{<<"username">> := Username}) ->
             swidden:success(#{password => Password});
         [{Username, Password, _Group}] ->
             %% spam_user_with_group 対応
-            swidden:success({password => Password})
+            swidden:success(#{password => Password})
     end.
 
 
