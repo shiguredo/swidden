@@ -1,7 +1,11 @@
 -module(spam_user_handler).
 
--export([get_user/1, create_user/1, update_user/1, delete_user/1,
-         get_authenticated_user/0, update_authenticated_user/1,
+-export([get_user/1,
+         create_user/1,
+         update_user/1,
+         delete_user/1,
+         get_authenticated_user/0,
+         update_authenticated_user/1,
          list_users/0]).
 -export([redirect/0]).
 -export([crash/1]).

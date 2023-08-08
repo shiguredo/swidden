@@ -5,10 +5,10 @@
 -include_lib("eunit/include/eunit.hrl").
 
 %% 下記二つを使ったテスト
-    %% swidden/priv/swidden/dispatch.conf
-    %% swidden/priv/swidden/schemas
+%% swidden/priv/swidden/dispatch.conf
+%% swidden/priv/swidden/schemas
 
--define(APPS, [hackney, ranch, cowlib, cowboy, swidden]).
+-define(APPS, [hackney, gun, ranch, cowlib, cowboy, swidden]).
 
 
 start_apps() ->
@@ -29,49 +29,72 @@ all_test_() ->
              stop_apps(),
              ok
      end,
-     [
-      fun success/0,
+     [fun success/0,
       fun services_success/0,
       fun failure/0,
       fun middlewares/0,
       fun redirect/0,
       fun interceptor/0,
-      fun crash/0
-     ]
-    }.
+      fun crash/0]}.
 
 
 success() ->
     ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
 
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetUser">>,
-                              #{username => <<"yakihata">>})),
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"CreateUser">>,
-                              [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateUser">>,
-                              [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"DeleteUser">>,
-                              [{username, <<"yakihata">>}])),
+    ?assertEqual(200,
+                 request(<<"Spam">>,
+                         <<"20141101">>,
+                         <<"GetUser">>,
+                         #{username => <<"yakihata">>})),
+    ?assertEqual(200,
+                 request(<<"Spam">>,
+                         <<"20141101">>,
+                         <<"CreateUser">>,
+                         [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
+    ?assertEqual(200,
+                 request(<<"Spam">>,
+                         <<"20141101">>,
+                         <<"UpdateUser">>,
+                         [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
+    ?assertEqual(200,
+                 request(<<"Spam">>,
+                         <<"20141101">>,
+                         <<"DeleteUser">>,
+                         [{username, <<"yakihata">>}])),
     ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
 
     %% JSON あり、ヘッダー追加バージョン
-    ?assertEqual(200, request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
-                                           <<"Spam">>, <<"20141101">>, <<"GetUser">>,
-                                           #{username => <<"yakihata">>})),
+    ?assertEqual(200,
+                 request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
+                                      <<"Spam">>,
+                                      <<"20141101">>,
+                                      <<"GetUser">>,
+                                      #{username => <<"yakihata">>})),
 
     %% JSON なし、ヘッダー追加バージョン
-    ?assertEqual(200, request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
-                                           <<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
+    ?assertEqual(200,
+                 request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
+                                      <<"Spam">>,
+                                      <<"20141101">>,
+                                      <<"ListUsers">>)),
 
+    ?assertEqual(400,
+                 request(<<"Spam">>,
+                         <<"20150701">>,
+                         <<"CreateUser">>,
+                         #{username => <<"yakihata">>, password => <<"nogyo">>, group => <<"amazon">>})),
 
-    ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
-                              #{username => <<"yakihata">>, password => <<"nogyo">>, group => <<"amazon">>})),
+    ?assertEqual(400,
+                 request(<<"Spam">>,
+                         <<"20150701">>,
+                         <<"CreateUser">>,
+                         #{username => <<"error_code">>, password => <<"nogyo">>, group => <<"amazon">>})),
 
-    ?assertEqual(400, request(<<"Spam">>, <<"20150701">>, <<"CreateUser">>,
-                              #{username => <<"error_code">>, password => <<"nogyo">>, group => <<"amazon">>})),
-
-    ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>,
-                              #{reset => false})),
+    ?assertEqual(200,
+                 request(<<"SpamAdmin">>,
+                         <<"20141101">>,
+                         <<"GetMetrics">>,
+                         #{reset => false})),
 
     ?assertEqual(ok, swidden:stop(40000)),
     ok.
@@ -86,7 +109,6 @@ services_success() ->
 
     ?assertEqual(200, request(50000, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
     ?assertEqual(400, request(40000, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
-
 
     ?assertEqual(ok, swidden:stop(40000)),
     ?assertEqual(ok, swidden:stop(50000)),
@@ -119,10 +141,12 @@ failure() ->
 
 
 middlewares() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{middlewares, [cowboy_router,
-                                                                    sample_middleware,
-                                                                    cowboy_handler]},
-                                                     {port, 40000}])),
+    ?assertMatch({ok, _Pid},
+                 swidden:start(swidden,
+                               [{middlewares, [cowboy_router,
+                                               sample_middleware,
+                                               cowboy_handler]},
+                                {port, 40000}])),
 
     ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
 
@@ -157,36 +181,48 @@ interceptor() ->
     ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}, {interceptor, sample_interceptor}])),
 
     %% 素通しする
-    ?assertEqual({200,#{<<"password">> => <<"password">>,
-                        <<"good_or_bad">> => <<"good">>}},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Hermione">>}])),
+    ?assertEqual({200,
+                  #{
+                    <<"password">> => <<"password">>,
+                    <<"good_or_bad">> => <<"good">>
+                   }},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Hermione">>}])),
     %% ok
     ?assertEqual(200,
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Ron">>}])),
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Ron">>}])),
     %% ok, JSON 付き
-    ?assertEqual({200, #{<<"everyboby">> => <<"know him">>,
-                         <<"good_or_bad">> => <<"good">>}},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Harry">>}])),
+    ?assertEqual({200,
+                  #{
+                    <<"everyboby">> => <<"know him">>,
+                    <<"good_or_bad">> => <<"good">>
+                   }},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Harry">>}])),
 
     %% リダイレクト
     ?assertEqual({307, <<"http://example.com/albus?foo=bar">>},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Dumbledore">>}])),
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Dumbledore">>}])),
 
     %% エラー
     ?assertEqual({400, #{<<"error_type">> => <<"He-Who-Must-Not-Be-Named, You-Know-Who">>}},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Voldemort">>}])),
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Voldemort">>}])),
     %% エラー, JSON 付き
     ?assertEqual({400,
-                  #{<<"error_type">> => <<"insufficient privilege">>,
-                    <<"error_reason">> => #{<<"caution">> => <<"Slytherin only">>,
-                                            <<"good_or_bad">> => <<"bad">>}}},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>,  [{username, <<"Snape">>}])),
-
+                  #{
+                    <<"error_type">> => <<"insufficient privilege">>,
+                    <<"error_reason">> => #{
+                                            <<"caution">> => <<"Slytherin only">>,
+                                            <<"good_or_bad">> => <<"bad">>
+                                           }
+                   }},
+                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Snape">>}])),
 
     %% 引数なしパターン
-    ?assertEqual({200, [#{<<"password">> => <<"password">>,
-                          <<"username">> => <<"username">>}]},
-                  request2(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
+    ?assertEqual({200,
+                  [#{
+                     <<"password">> => <<"password">>,
+                     <<"username">> => <<"username">>
+                    }]},
+                 request2(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
     ?assertEqual({400, #{<<"error_type">> => <<"not allowed">>}},
                  request2(<<"Spam">>, <<"20141101">>, <<"Redirect">>)),
 
@@ -196,6 +232,7 @@ interceptor() ->
 
 request(Service, Version, Operation, JSON) ->
     request(40000, Service, Version, Operation, JSON).
+
 
 request(Port, Service, Version, Operation, JSON) ->
     case swidden_client:request(Port, <<"x-swd-target">>, Service, Version, Operation, JSON) of
@@ -221,6 +258,7 @@ request(Service, Version, Operation) ->
 
 request2(Service, Version, Operation) ->
     request2(Service, Version, Operation, <<>>).
+
 
 request2(Service, Version, Operation, JSON) when is_list(JSON) ->
     Body = jsone:encode(JSON),
@@ -262,6 +300,7 @@ request2(Service, Version, Operation, ReqBody) when is_binary(ReqBody) ->
 request_with_headers(Headers, Service, Version, Operation, JSON) ->
     request_with_headers(40000, Headers, Service, Version, Operation, JSON).
 
+
 request_with_headers(Port, Headers, Service, Version, Operation, JSON) ->
     case swidden_client:request_with_headers(Port, Headers, <<"x-swd-target">>, Service, Version, Operation, JSON) of
         {ok, StatusCode} ->
@@ -282,7 +321,6 @@ request_with_headers(Headers, Service, Version, Operation) ->
         {error, {status_code, StatusCode}} ->
             StatusCode
     end.
-
 
 
 %% TODO(nakai): これ以降のリクエスト関連、リファクタすること
