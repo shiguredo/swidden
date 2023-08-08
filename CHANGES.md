@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2023.2.0
+
 - [CHANGE] swidden_client を hackney から gun へ切り替える
   - @voluntas
 - [UPDATE] GitHub Actions の docker の OTP を shiguredo 26.0.2 (OpenSSL 3.1.1) に上げる
