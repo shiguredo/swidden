@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2023.3.0
+
 - [CHANGE] jesse を時雨堂フォークの shiguredo_jesse に変更する
   - jesse 本家は OTP master で警告なしでビルドできなくなっているため
   - @sile
