@@ -2,6 +2,10 @@
 
 ## develop
 
+- [CHANGE] jesse を時雨堂フォークの shiguredo_jesse に変更する
+  - jesse 本家は OTP master で警告なしでビルドできなくなっているため
+  - @sile
+
 ## 2023.2.1
 
 - [FIX] swidden.app.src のライセンス表記を Hex 向けに修正する
