@@ -53,6 +53,7 @@ start(Name) when is_atom(Name) ->
 
 %% INTERNAL
 
+
 load_dispatch_conf(Name) ->
     case code:priv_dir(Name) of
         {error, Reason} ->
@@ -71,7 +72,7 @@ load_dispatch_conf(Name) ->
 
 load_services([]) ->
     ok;
-load_services([{Service, Versions}|Rest]) when is_binary(Service) ->
+load_services([{Service, Versions} | Rest]) when is_binary(Service) ->
     %% TODO(nakai): Service が [a-zA-Z]+ かどうかチェックすること
     ok = load_versions(Service, Versions),
     load_services(Rest).
@@ -79,7 +80,7 @@ load_services([{Service, Versions}|Rest]) when is_binary(Service) ->
 
 load_versions(_Service, []) ->
     ok;
-load_versions(Service, [{Version, Operations}|Rest]) when is_binary(Version) ->
+load_versions(Service, [{Version, Operations} | Rest]) when is_binary(Version) ->
     %% TODO(nakai): Version が YYYYMMDD かどうかをチェックすること
     ok = load_operations(Service, Version, Operations),
     load_versions(Service, Rest).
@@ -87,12 +88,16 @@ load_versions(Service, [{Version, Operations}|Rest]) when is_binary(Version) ->
 
 load_operations(_Service, _Version, []) ->
     ok;
-load_operations(Service, Version, [{Operation, Module}|Rest])
+load_operations(Service, Version, [{Operation, Module} | Rest])
   when is_binary(Operation), is_atom(Module) ->
     %% TODO(nakai): Operation が CamelCase かチェックする
     %% atom 生成しているが、起動時の一回だけなので問題ない
     %% FIXME(nakai): ここで pascal2snake のエラーを探し出す
     Schema = binary_to_atom(swidden_misc:pascal2snake(Operation), utf8),
-    true = ets:insert(?TABLE, #swidden_dispatch{id = {Service, Version, Operation},
-                                                module = Module, schema = Schema}),
+    true = ets:insert(?TABLE,
+                      #swidden_dispatch{
+                        id = {Service, Version, Operation},
+                        module = Module,
+                        schema = Schema
+                       }),
     load_operations(Service, Version, Rest).
