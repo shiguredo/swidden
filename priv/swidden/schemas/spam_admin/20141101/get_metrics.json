@@ -1,5 +1,11 @@
 {
+    "$schema": "http://json-schema.org/draft-06/schema#",
     "properties": {
-        "reset": {"type": "boolean", "required": true}
-    }
+        "reset": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "reset"
+    ],
 }

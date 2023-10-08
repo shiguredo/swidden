@@ -4,8 +4,10 @@
     "additionalProperties": false,
     "properties": {
         "username": {
-            "type": "string",
-            "required": true
+            "type": "string"
         }
-    }
+    },
+    "required": [
+        "username"
+    ]
 }
