@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2023.4.0
+
 - [CHANGE] テストの JSON Schema draft 6 対応
   - @voluntas
 - [CHANGE] shiguredo_jesse を 2023.2.0 に上げる
