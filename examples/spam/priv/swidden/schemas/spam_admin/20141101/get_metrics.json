@@ -1,5 +1,0 @@
-{
-    "properties": {
-        "reset": {"type": "boolean", "required": true}
-    }
-}
