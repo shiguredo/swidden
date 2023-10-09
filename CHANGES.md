@@ -2,6 +2,11 @@
 
 ## develop
 
+## 2023.4.1
+
+- [FIX] Hex 公開用に gun のバージョンを 2.0.1 に固定する
+  - @voluntas
+
 ## 2023.4.0
 
 - [CHANGE] テストの JSON Schema draft 6 対応

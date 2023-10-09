@@ -1,6 +1,6 @@
 {application, swidden,
  [{description, "swidden"},
-  {vsn, "2023.4.0"},
+  {vsn, "2023.4.1"},
   {registered, []},
   {applications, [kernel, stdlib]},
   {mod, {swidden_app, []}},
