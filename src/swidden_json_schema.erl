@@ -7,8 +7,8 @@
 -include("swidden.hrl").
 -include("swidden_dispatch.hrl").
 
-%% TODO(nakai): req/res 両方のスキーマが必要なのでは ...
-%% TODO(nakai): レスポンスのバリデーションチェックはどうする？
+%% TODO(v); req/res 両方のスキーマが必要なのでは ...
+%% TODO(v); レスポンスのバリデーションチェックはどうする？
 
 
 -spec start(atom()) -> ok | no_return().

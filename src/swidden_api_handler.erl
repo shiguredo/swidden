@@ -73,7 +73,7 @@ read_body(Req, Acc) ->
 
 
 handle(Service, Version, Operation, Req, Interceptor) ->
-    %% TODO(nakai): リファクタリング
+    %% TODO(v); リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
             case read_body(Req, []) of
@@ -171,7 +171,7 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
             ?debugVal(_Reason, 1000),
             {400, #{error_type => <<"MalformedJSON">>}};
         {error, {database_error, _Key, schema_not_found}} ->
-            %% TODO(nakai): この部分は外だしする
+            %% TODO(v); この部分は外だしする
             {400,
              #{
                error_type => <<"SchemaNotFound">>,

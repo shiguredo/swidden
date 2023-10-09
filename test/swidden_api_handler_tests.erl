@@ -323,7 +323,7 @@ request_with_headers(Headers, Service, Version, Operation) ->
     end.
 
 
-%% TODO(nakai): これ以降のリクエスト関連、リファクタすること
+%% TODO(v); これ以降のリクエスト関連、リファクタすること
 
 
 raw_payload_request(Service, Verision, Operation, Payload) ->

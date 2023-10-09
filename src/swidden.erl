@@ -58,7 +58,7 @@ start(Name, Opts) ->
 
 -spec stop(inet:port_number()) -> ok.
 stop(Port) ->
-    %% TODO(nakai): ets 周りも削除する
+    %% TODO(v); ets 周りも削除する
     ok = cowboy:stop_listener({?REF, Port}).
 
 
@@ -72,7 +72,7 @@ success(JSON) ->
     {ok, JSON}.
 
 
-%% TODO(nakai): 戻り値を考える
+%% TODO(v); 戻り値を考える
 -spec failure(binary()) -> {error, binary()}.
 failure(Type) when is_binary(Type) ->
     {error, Type}.
