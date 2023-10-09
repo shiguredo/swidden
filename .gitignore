@@ -1,4 +1,5 @@
-ansible/.vagrant*
+rebar3.crashdump
+
 deps/*
 ebin/*
 .qc/*
@@ -9,7 +10,6 @@ dev/*
 .rebar3/*
 erl_crash.dump
 
-*.pyc
 _build/*
 
 tag*

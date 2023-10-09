@@ -2,6 +2,11 @@
 
 ## develop
 
+- [CHANGE] shiguredo_jesse を 2023.2.0 に上げる
+  - jsx と rfc3339 依存を削除
+  - JSON Schema draft 6 のみの対応へ
+  - @voluntas
+
 ## 2023.3.0
 
 - [CHANGE] jesse を時雨堂フォークの shiguredo_jesse に変更する
@@ -14,6 +19,7 @@
   - @voluntas
 - [FIX] Hex 公開用に gun のバージョンを 2.0.1 に固定する
   - @voluntas
+
 ## 2023.2.0
 
 - [CHANGE] swidden_client を hackney から gun へ切り替える

@@ -1,6 +1,0 @@
-{
-    "description": "Get the user specified by 'username'",
-    "properties": {
-        "username": {"type": "string", "required": true}
-    }
-}
