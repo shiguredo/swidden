@@ -2,11 +2,17 @@
 
 ## develop
 
+- [UPDATE] テスト用の hackney のバージョンを 1.20.1 に上げる
+  - @voluntas
+- [UPDATE] cowboy のバージョンを 2.12.0 に上げる
+  - @voluntas
+- [UPDATE] gun のバージョンを 2.1.0 に上げる
+  - @voluntas
 - [CHANGE] rebar3 の minimum_otp_vsn を 27.0 にする
   - @voluntas
 - [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.0-rc2 / OpenSSL 3.3.0 に上げる
   - @voluntas
-- [UPDATE] rebar3 を 3.23.0 にアップデートする
+- [UPDATE] rebar3 を 3.23.0 に上げる
   - @voluntas
 
 ## 2023.4.1
