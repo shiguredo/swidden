@@ -2,6 +2,13 @@
 
 ## develop
 
+- [CHANGE] rebar3 の minimum_otp_vsn を 27.0 にする
+  - @voluntas
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.0-rc2 / OpenSSL 3.3.0 に上げる
+  - @voluntas
+- [UPDATE] rebar3 を 3.23.0 にアップデートする
+  - @voluntas
+
 ## 2023.4.1
 
 - [FIX] Hex 公開用に gun のバージョンを 2.0.1 に固定する
