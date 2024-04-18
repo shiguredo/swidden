@@ -22,19 +22,19 @@ start(Name) ->
     end.
 
 
--spec validate_json(binary(), binary(), binary(), binary()) -> {ok, module(), atom(), jsone:json_term()} | {error, term()}.
+-spec validate_json(binary(), binary(), binary(), binary()) ->
+          {ok, module(), atom(), jsone:json_term()} | {error, term()}.
 validate_json(Service, Version, Operation, RawJSON) ->
     Key = binary_to_list(list_to_binary([Service, $_, Version, $., Operation])),
-    case validate(Key, RawJSON) of
-        {ok, JSON} ->
-            case swidden_dispatch:lookup(Service, Version, Operation) of
-                not_found ->
-                    {error, missing_routing};
-                {Module, Function} ->
-                    {ok, Module, Function, JSON}
-            end;
+    maybe
+        {ok, JSON} ?= validate(Key, RawJSON),
+        {Module, Function} ?= swidden_dispatch:lookup(Service, Version, Operation),
+        {ok, Module, Function, JSON}
+    else
         {error, Reason} ->
-            {error, Reason}
+            {error, Reason};
+        not_found ->
+            {error, missing_routing}
     end.
 
 
