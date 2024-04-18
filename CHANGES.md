@@ -2,6 +2,13 @@
 
 ## develop
 
+## 2024.1.1
+
+- [FIX] コンテナイメージを修正する
+  - @voluntas
+
+## 2024.1.0
+
 - [UPDATE] テスト用の hackney のバージョンを 1.20.1 に上げる
   - @voluntas
 - [UPDATE] cowboy のバージョンを 2.12.0 に上げる
