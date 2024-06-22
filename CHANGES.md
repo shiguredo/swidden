@@ -2,6 +2,8 @@
 
 ## develop
 
+- [UPDATE] hackney を削除する
+  - @voluntas
 - [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.0 / OpenSSL 3.3.1 に上げる
   - @voluntas
 
