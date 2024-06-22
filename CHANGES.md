@@ -2,6 +2,9 @@
 
 ## develop
 
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.0 / OpenSSL 3.3.1 に上げる
+  - @voluntas
+
 ## 2024.1.1
 
 - [FIX] コンテナイメージを修正する
@@ -537,12 +540,12 @@
 
 ## 1.1.8
 
-- [UPDATE] cowboy を最新版(https://github.com/ninenines/cowboy/commit/e25634cd9db82a4760087a2ba68d4c6a76353d66) にアップデート
+- [UPDATE] cowboy を最新版(<https://github.com/ninenines/cowboy/commit/e25634cd9db82a4760087a2ba68d4c6a76353d66>) にアップデート
 - [UPDATE] hackney を 1.2.0 にアップデート
 
 ## 1.1.7
 
-- [UPDATE] cowboy を最新版(https://github.com/ninenines/cowboy/commit/341f991d58fde702f68fa9d0076ad6dc2f942917) にアップデート
+- [UPDATE] cowboy を最新版(<https://github.com/ninenines/cowboy/commit/341f991d58fde702f68fa9d0076ad6dc2f942917>) にアップデート
 - [CHANGE] OTP のバージョンを 18.0 に固定する
 - [CHANGE] rebar_swidden_plugin を一旦削除する
 
