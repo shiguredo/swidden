@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2024.2.0
+
 - [CHANGE] shiguredo_jesse を 2024.1.0 に上げる
   - jsone から shiguredo_jsone に変更
   - @voluntas
