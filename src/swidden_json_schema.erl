@@ -115,7 +115,7 @@ to_json(Reasons) ->
                   data => Data,
                   path => Path
                  };
-           ({data_error, {parse_error, badarg}}) ->
+           ({data_error, {parse_error, _}}) ->
                 #{invalid => parse}
 
         end,
