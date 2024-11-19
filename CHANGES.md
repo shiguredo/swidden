@@ -2,6 +2,22 @@
 
 ## develop
 
+## 2024.2.0
+
+- [CHANGE] shiguredo_jesse を 2024.1.0 に上げる
+  - jsone から shiguredo_jsone に変更
+  - @voluntas
+- [CHANGE] rebar3 の minimum_otp_vsn を 27.1 にする
+  - @voluntas
+- [CHANGE] json ライブラリを jsone から shiguredo_jsone (2024.1.0) に切り替える
+  - @voluntas
+- [UPDATE] hackney を削除する
+  - @voluntas
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.1.2 / OpenSSL 3.4.0 に上げる
+  - @voluntas
+- [UPDATE] rebar3 を 3.24.0 に上げる
+  - @voluntas
+
 ## 2024.1.1
 
 - [FIX] コンテナイメージを修正する
@@ -537,12 +553,12 @@
 
 ## 1.1.8
 
-- [UPDATE] cowboy を最新版(https://github.com/ninenines/cowboy/commit/e25634cd9db82a4760087a2ba68d4c6a76353d66) にアップデート
+- [UPDATE] cowboy を最新版(<https://github.com/ninenines/cowboy/commit/e25634cd9db82a4760087a2ba68d4c6a76353d66>) にアップデート
 - [UPDATE] hackney を 1.2.0 にアップデート
 
 ## 1.1.7
 
-- [UPDATE] cowboy を最新版(https://github.com/ninenines/cowboy/commit/341f991d58fde702f68fa9d0076ad6dc2f942917) にアップデート
+- [UPDATE] cowboy を最新版(<https://github.com/ninenines/cowboy/commit/341f991d58fde702f68fa9d0076ad6dc2f942917>) にアップデート
 - [CHANGE] OTP のバージョンを 18.0 に固定する
 - [CHANGE] rebar_swidden_plugin を一旦削除する
 
