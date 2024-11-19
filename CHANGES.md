@@ -2,11 +2,15 @@
 
 ## develop
 
+- [CHANGE] rebar3 の minimum_otp_vsn を 27.1 にする
+  - @voluntas
 - [CHANGE] json ライブラリを jsone から shiguredo_jsone (2024.1.0) に切り替える
   - @voluntas
 - [UPDATE] hackney を削除する
   - @voluntas
-- [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.0 / OpenSSL 3.3.1 に上げる
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 27.1.2 / OpenSSL 3.4.0 に上げる
+  - @voluntas
+- [UPDATE] rebar3 を 3.24.0 に上げる
   - @voluntas
 
 ## 2024.1.1
