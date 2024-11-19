@@ -2,6 +2,9 @@
 
 ## develop
 
+- [CHANGE] shiguredo_jesse を 2024.1.0 に上げる
+  - jsone から shiguredo_jsone に変更
+  - @voluntas
 - [CHANGE] rebar3 の minimum_otp_vsn を 27.1 にする
   - @voluntas
 - [CHANGE] json ライブラリを jsone から shiguredo_jsone (2024.1.0) に切り替える
