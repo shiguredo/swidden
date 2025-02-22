@@ -6,10 +6,6 @@
   - cowboy の依存を上書きする
   - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
   - @voluntas
-- [UPDATE] cowlib のバージョンを 2.14.0 に上げる
-  - @voluntas
-- [UPDATE] ranch のバージョンを 2.2.0 に上げる
-  - @voluntas
 
 ## 2024.2.0
 
