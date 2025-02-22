@@ -2,6 +2,8 @@
 
 ## develop
 
+## 2025.1.0
+
 - [CHANGE] rebar3 の minimum_otp_vsn を 27.2 にする
   - @voluntas
 - [UPDATE] cowboy のバージョンを 2.13.0 に上げる
