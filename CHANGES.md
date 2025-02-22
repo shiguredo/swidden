@@ -2,6 +2,11 @@
 
 ## develop
 
+- [UPDATE] cowboy のバージョンを 2.13.0 に上げる
+  - cowboy の依存を上書きする
+  - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
+  - @voluntas
+
 ## 2024.2.0
 
 - [CHANGE] shiguredo_jesse を 2024.1.0 に上げる
