@@ -2,6 +2,18 @@
 
 ## develop
 
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 28.1 / OpenSSL 3.6.0-beta1 に上げる
+  - @voluntas
+- [CHANGE] rebar3 の minimum_otp_vsn を 28.1 にする
+  - @voluntas
+- [UPDATE] cowboy のバージョンを 2.14.0 に上げる
+  - @voluntas
+- [UPDATE] cowboy の cowlib 依存バージョンを 2.16.0 に上書きする
+  - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
+  - @voluntas
+- [UPDATE] gun のバージョンを 2.2.0 に上げる
+  - @voluntas
+
 ## 2025.2.0
 
 - [CHANGE] rebar3 の minimum_otp_vsn を 27.3 にする
