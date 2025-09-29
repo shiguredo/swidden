@@ -15,6 +15,8 @@
   - @voluntas
 - [UPDATE] shiguredo_jsone のバージョンを 2025.1.0 に上げる
   - @voluntas
+- [UPDATE] shiguredo_jesse のバージョンを 2025.1.0 に上げる
+  - @voluntas
 
 ## 2025.2.0
 
