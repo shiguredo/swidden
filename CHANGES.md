@@ -2,6 +2,17 @@
 
 ## develop
 
+- [UPDATE] rebar3 を 3.27.0 に上げる
+  - @voluntas
+- [UPDATE] gun のバージョンを 2.3.0 に上げる
+  - @voluntas
+- [UPDATE] cowboy のバージョンを 2.15.0 に上げる
+  - @voluntas
+- [UPDATE] cowboy の cowlib 依存バージョンを 2.16.1 に上書きする
+  - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
+  - @voluntas
+
+
 ## 2025.3.0
 
 - [UPDATE] rebar3 を 3.25.1 に上げる
