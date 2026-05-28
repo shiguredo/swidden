@@ -2,9 +2,9 @@
 
 ## develop
 
-- [UPDATE] GitHub Actions の docker の OTP を shiguredo 28.5 / OpenSSL 3.6.2 に上げる
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.1 / AWS-LC v1.73.0
   - @voluntas
-- [CHANGE] rebar3 の minimum_otp_vsn を 28.5 にする
+- [CHANGE] rebar3 の minimum_otp_vsn を 29.0 にする
   - @voluntas
 - [UPDATE] rebar3 を 3.27.0 に上げる
   - @voluntas
