@@ -10,6 +10,9 @@
 
 -define(APPS, [gun, ranch, cowlib, cowboy, swidden]).
 
+%% swidden_api_handler の ?MAX_BODY_SIZE と揃える
+-define(MAX_BODY_SIZE, 8000000).
+
 
 start_apps() ->
     [ application:ensure_all_started(App) || App <- ?APPS ].
@@ -39,33 +42,39 @@ all_test_() ->
 
 
 success() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
+    Port = swidden:get_port(swidden),
 
     ?assertEqual(200,
-                 request(<<"Spam">>,
+                 request(Port,
+                         <<"Spam">>,
                          <<"20141101">>,
                          <<"GetUser">>,
                          #{username => <<"yakihata">>})),
     ?assertEqual(200,
-                 request(<<"Spam">>,
+                 request(Port,
+                         <<"Spam">>,
                          <<"20141101">>,
                          <<"CreateUser">>,
                          [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
     ?assertEqual(200,
-                 request(<<"Spam">>,
+                 request(Port,
+                         <<"Spam">>,
                          <<"20141101">>,
                          <<"UpdateUser">>,
                          [{username, <<"yakihata">>}, {password, <<"nogyo">>}])),
     ?assertEqual(200,
-                 request(<<"Spam">>,
+                 request(Port,
+                         <<"Spam">>,
                          <<"20141101">>,
                          <<"DeleteUser">>,
                          [{username, <<"yakihata">>}])),
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
+    ?assertEqual(200, request(Port, <<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
 
     %% JSON あり、ヘッダー追加バージョン
     ?assertEqual(200,
-                 request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
+                 request_with_headers(Port,
+                                      [{<<"x-swidden-token">>, <<"token">>}],
                                       <<"Spam">>,
                                       <<"20141101">>,
                                       <<"GetUser">>,
@@ -73,113 +82,143 @@ success() ->
 
     %% JSON なし、ヘッダー追加バージョン
     ?assertEqual(200,
-                 request_with_headers([{<<"x-swidden-token">>, <<"token">>}],
+                 request_with_headers(Port,
+                                      [{<<"x-swidden-token">>, <<"token">>}],
                                       <<"Spam">>,
                                       <<"20141101">>,
                                       <<"ListUsers">>)),
 
     ?assertEqual(400,
-                 request(<<"Spam">>,
+                 request(Port,
+                         <<"Spam">>,
                          <<"20150701">>,
                          <<"CreateUser">>,
                          #{username => <<"yakihata">>, password => <<"nogyo">>, group => <<"amazon">>})),
 
     ?assertEqual(400,
-                 request(<<"Spam">>,
+                 request(Port,
+                         <<"Spam">>,
                          <<"20150701">>,
                          <<"CreateUser">>,
                          #{username => <<"error_code">>, password => <<"nogyo">>, group => <<"amazon">>})),
 
     ?assertEqual(200,
-                 request(<<"SpamAdmin">>,
+                 request(Port,
+                         <<"SpamAdmin">>,
                          <<"20141101">>,
                          <<"GetMetrics">>,
                          #{reset => false})),
 
-    ?assertEqual(ok, swidden:stop(40000)),
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
 
 services_success() ->
-    ?assertMatch({ok, _Pid1}, swidden:start(swidden, [{port, 40000}, {services, [<<"Spam">>]}])),
-    ?assertMatch({ok, _Pid2}, swidden:start(swidden, [{port, 50000}, {services, [<<"SpamAdmin">>]}])),
+    ?assertMatch({ok, _Pid1}, swidden:start(swidden1, [{port, 0}, {app, swidden}, {services, [<<"Spam">>]}])),
+    Port1 = swidden:get_port(swidden1),
+    ?assertMatch({ok, _Pid2}, swidden:start(swidden2, [{port, 0}, {app, swidden}, {services, [<<"SpamAdmin">>]}])),
+    Port2 = swidden:get_port(swidden2),
 
-    ?assertEqual(200, request(40000, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
-    ?assertEqual(400, request(50000, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+    %% Spam サービスは 400、SpamAdmin サービスは 200
 
-    ?assertEqual(200, request(50000, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
-    ?assertEqual(400, request(40000, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+    ?assertEqual(200, request(Port1, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+    ?assertEqual(400, request(Port2, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
 
-    ?assertEqual(ok, swidden:stop(40000)),
-    ?assertEqual(ok, swidden:stop(50000)),
+    ?assertEqual(200, request(Port2, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+    ?assertEqual(400, request(Port1, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+
+    ?assertEqual(ok, swidden:stop(swidden1)),
+    ?assertEqual(ok, swidden:stop(swidden2)),
     ok.
 
 
 failure() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
+    Port = swidden:get_port(swidden),
     %% よくわからないサービス
-    ?assertEqual(400, request(<<"Bacon">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+    ?assertEqual(400, request(Port, <<"Bacon">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
     %% Body なしで送る
-    ?assertEqual(400, no_body_request(<<"Bacon">>, <<"20141101">>, <<"GetUser">>)),
+    ?assertEqual(400, no_body_request(Port, <<"Bacon">>, <<"20141101">>, <<"GetUser">>)),
 
     %% PUT メソッドで送る
-    ?assertEqual(400, put_method_request(<<"Bacon">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+    ?assertEqual(400, put_method_request(Port, <<"Bacon">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
 
     %% x-swd-target ヘッダーなし
-    ?assertEqual(400, no_header_request([{username, <<"yakihata">>}])),
+    ?assertEqual(400, no_header_request(Port, [{username, <<"yakihata">>}])),
     %% x-swd-target ヘッダーの値がおかしい
-    ?assertEqual(400, bad_header_request([{username, <<"yakihata">>}])),
+    ?assertEqual(400, bad_header_request(Port, [{username, <<"yakihata">>}])),
     %% Body が空を期待しているのに Body を送った場合
-    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, <<"all">>}])),
+    ?assertEqual(400, request(Port, <<"Spam">>, <<"20141101">>, <<"ListUsers">>, [{type, <<"all">>}])),
     %% JSON ですらない値を送った場合
-    ?assertEqual(400, raw_payload_request(<<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"abc">>)),
+    ?assertEqual(400, raw_payload_request(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"abc">>)),
 
-    %% %% JSON ですらない値を送った場合
-    %% ?assertEqual(400, raw_payload_request(<<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"">>)),
+    %% Body が上限ぴったりの場合は読み取りを通過する（JSON 不正なので InvalidJSON）
+    ?assertMatch({400, #{<<"error_type">> := <<"InvalidJSON">>}},
+                 large_body_request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, ?MAX_BODY_SIZE)),
+    %% Body が大きすぎる場合
+    ?assertEqual({413, #{<<"error_type">> => <<"PayloadTooLarge">>}},
+                 large_body_request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, ?MAX_BODY_SIZE + 1)),
 
-    ?assertEqual(ok, swidden:stop(40000)),
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
 
 middlewares() ->
-    ?assertMatch({ok, _Pid},
-                 swidden:start(swidden,
+    {ok, _Pid} = swidden:start(swidden,
                                [{middlewares, [cowboy_router,
                                                sample_middleware,
                                                cowboy_handler]},
-                                {port, 40000}])),
+                                {port, 0}]),
+    Port = swidden:get_port(swidden),
 
-    ?assertEqual(200, request(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
+    ?assertEqual(200, request(Port, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
 
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
-    ?assertEqual(200, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
+    ?assertEqual(200, request(Port, <<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
+    ?assertEqual(200, request(Port, <<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
 
-    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
+    ?assertEqual(400, request(Port, <<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
 
-    ?assertEqual(ok, swidden:stop(40000)),
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
 
 redirect() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
+    Port = swidden:get_port(swidden),
 
-    ?assertEqual(307, request(<<"Spam">>, <<"20141101">>, <<"Redirect">>)),
+    ?assertEqual(307, request(Port, <<"Spam">>, <<"20141101">>, <<"Redirect">>)),
 
-    ?assertEqual(ok, swidden:stop(40000)),
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
 
 crash() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}])),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
+    Port = swidden:get_port(swidden),
 
-    ?assertEqual(400, request(<<"Spam">>, <<"20141101">>, <<"Crash">>)),
+    %% Body なし: crash/0 が存在しないため MissingTargetFunction
+    ?assertEqual({400,
+                  #{
+                    <<"error_type">> => <<"MissingTargetFunction">>,
+                    <<"error_reason">> => #{
+                                            <<"service">> => <<"Spam">>,
+                                            <<"version">> => <<"20141101">>,
+                                            <<"operation">> => <<"Crash">>
+                                           }
+                   }},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"Crash">>)),
 
-    ?assertEqual(ok, swidden:stop(40000)),
+    %% Body あり: crash/1 が例外を起こし構造化エラーで 500 を返す
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"Crash">>, <<"{}">>)),
+
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
 
 interceptor() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden, [{port, 40000}, {interceptor, sample_interceptor}])),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}, {interceptor, sample_interceptor}]),
+    Port = swidden:get_port(swidden),
 
     %% 素通しする
     ?assertEqual({200,
@@ -187,26 +226,26 @@ interceptor() ->
                     <<"password">> => <<"password">>,
                     <<"good_or_bad">> => <<"good">>
                    }},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Hermione">>}])),
-
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Hermione">>}])),
     %% ok
     ?assertEqual(200,
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Ron">>}])),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Ron">>}])),
+
     %% ok, JSON 付き
     ?assertEqual({200,
                   #{
                     <<"everyboby">> => <<"know him">>,
                     <<"good_or_bad">> => <<"good">>
                    }},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Harry">>}])),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Harry">>}])),
 
     %% リダイレクト
     ?assertEqual({307, <<"http://example.com/albus?foo=bar">>},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Dumbledore">>}])),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Dumbledore">>}])),
 
     %% エラー
     ?assertEqual({400, #{<<"error_type">> => <<"He-Who-Must-Not-Be-Named, You-Know-Who">>}},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Voldemort">>}])),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Voldemort">>}])),
     %% エラー, JSON 付き
     ?assertEqual({400,
                   #{
@@ -216,7 +255,7 @@ interceptor() ->
                                             <<"good_or_bad">> => <<"bad">>
                                            }
                    }},
-                 request2(<<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Snape">>}])),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"Snape">>}])),
 
     %% 引数なしパターン
     ?assertEqual({200,
@@ -224,16 +263,25 @@ interceptor() ->
                      <<"password">> => <<"password">>,
                      <<"username">> => <<"username">>
                     }]},
-                 request2(<<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"ListUsers">>)),
     ?assertEqual({400, #{<<"error_type">> => <<"not allowed">>}},
-                 request2(<<"Spam">>, <<"20141101">>, <<"Redirect">>)),
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"Redirect">>)),
 
-    ?assertEqual(ok, swidden:stop(40000)),
+    %% preprocess/3 が例外を起こした場合
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"InterceptCrash">>}])),
+    %% preprocess/2 が例外を起こした場合
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
+    %% postprocess/3 が例外を起こした場合
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port,
+                           <<"Spam">>,
+                           <<"20141101">>,
+                           <<"GetUser">>,
+                           [{username, <<"PostprocessCrash">>}])),
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.
-
-
-request(Service, Version, Operation, JSON) ->
-    request(40000, Service, Version, Operation, JSON).
 
 
 request(Port, Service, Version, Operation, JSON) ->
@@ -247,8 +295,8 @@ request(Port, Service, Version, Operation, JSON) ->
     end.
 
 
-request(Service, Version, Operation) ->
-    case swidden_client:request(40000, <<"x-swd-target">>, Service, Version, Operation) of
+request(Port, Service, Version, Operation) ->
+    case swidden_client:request(Port, <<"x-swd-target">>, Service, Version, Operation) of
         {ok, StatusCode} ->
             StatusCode;
         {ok, StatusCode, _Body} ->
@@ -258,15 +306,15 @@ request(Service, Version, Operation) ->
     end.
 
 
-request2(Service, Version, Operation) ->
-    request2(Service, Version, Operation, <<>>).
+request2(Port, Service, Version, Operation) ->
+    request2(Port, Service, Version, Operation, <<>>).
 
 
-request2(Service, Version, Operation, Json) when is_list(Json) ->
+request2(Port, Service, Version, Operation, Json) when is_list(Json) ->
     Body = jsone:encode(Json),
-    request2(Service, Version, Operation, Body);
-request2(Service, Version, Operation, ReqBody) when is_binary(ReqBody) ->
-    Url = <<"http://127.0.0.1:40000/">>,
+    request2(Port, Service, Version, Operation, Body);
+request2(Port, Service, Version, Operation, ReqBody) when is_binary(ReqBody) ->
+    Url = url(Port),
     Headers = [{<<"x-swd-target">>, list_to_binary([Service, $_, Version, $., Operation])}],
     case post(Url, Headers, ReqBody) of
         {ok, StatusCode, _RespHeaders, Body} when StatusCode =:= 200 orelse
@@ -293,10 +341,6 @@ request2(Service, Version, Operation, ReqBody) when is_binary(ReqBody) ->
     end.
 
 
-request_with_headers(Headers, Service, Version, Operation, Json) ->
-    request_with_headers(40000, Headers, Service, Version, Operation, Json).
-
-
 request_with_headers(Port, Headers, Service, Version, Operation, Json) ->
     case swidden_client:request_with_headers(Port, Headers, <<"x-swd-target">>, Service, Version, Operation, Json) of
         {ok, StatusCode} ->
@@ -308,8 +352,8 @@ request_with_headers(Port, Headers, Service, Version, Operation, Json) ->
     end.
 
 
-request_with_headers(Headers, Service, Version, Operation) ->
-    case swidden_client:request_with_headers(40000, Headers, <<"x-swd-target">>, Service, Version, Operation) of
+request_with_headers(Port, Headers, Service, Version, Operation) ->
+    case swidden_client:request_with_headers(Port, Headers, <<"x-swd-target">>, Service, Version, Operation) of
         {ok, StatusCode} ->
             StatusCode;
         {ok, StatusCode, _Body} ->
@@ -322,38 +366,50 @@ request_with_headers(Headers, Service, Version, Operation) ->
 %% TODO(v); これ以降のリクエスト関連、リファクタすること
 
 
-raw_payload_request(Service, Version, Operation, Payload) ->
-    Url = <<"http://127.0.0.1:40000/">>,
+url(Port) ->
+    iolist_to_binary(["http://127.0.0.1:", integer_to_list(Port), "/"]).
+
+
+raw_payload_request(Port, Service, Version, Operation, Payload) ->
+    Url = url(Port),
     Headers = #{<<"x-swd-target">> => list_to_binary([Service, $_, Version, $., Operation])},
     {ok, StatusCode, _RespHeaders, _Body} = post(Url, Headers, Payload),
     StatusCode.
 
 
-no_body_request(Service, Version, Operation) ->
-    Url = <<"http://127.0.0.1:40000/">>,
+large_body_request2(Port, Service, Version, Operation, Size) ->
+    Url = url(Port),
+    Headers = #{<<"x-swd-target">> => list_to_binary([Service, $_, Version, $., Operation])},
+    Payload = binary:copy(<<$a>>, Size),
+    {ok, StatusCode, _RespHeaders, Body} = post(Url, Headers, Payload),
+    {StatusCode, jsone:decode(Body)}.
+
+
+no_body_request(Port, Service, Version, Operation) ->
+    Url = url(Port),
     Headers = #{<<"x-swd-target">> => list_to_binary([Service, $_, Version, $., Operation])},
     {ok, StatusCode, _RespHeaders, _Body} = post(Url, Headers, <<>>),
     StatusCode.
 
 
-put_method_request(Service, Version, Operation, Json) ->
-    Url = <<"http://127.0.0.1:40000/">>,
+put_method_request(Port, Service, Version, Operation, Json) ->
+    Url = url(Port),
     Headers = #{<<"x-swd-target">> => list_to_binary([Service, $_, Version, $., Operation])},
     Payload = jsone:encode(Json),
     {ok, StatusCode, _RespHeaders, _Body} = put(Url, Headers, Payload),
     StatusCode.
 
 
-no_header_request(Json) ->
-    Url = <<"http://127.0.0.1:40000/">>,
+no_header_request(Port, Json) ->
+    Url = url(Port),
     Headers = #{},
     Payload = jsone:encode(Json),
     {ok, StatusCode, _RespHeaders, _Body} = post(Url, Headers, Payload),
     StatusCode.
 
 
-bad_header_request(Json) ->
-    Url = <<"http://127.0.0.1:40000/">>,
+bad_header_request(Port, Json) ->
+    Url = url(Port),
     Headers = #{<<"x-swd-target">> => <<"spam.egg.ham">>},
     Payload = jsone:encode(Json),
     {ok, StatusCode, _RespHeaders, _Body} = post(Url, Headers, Payload),

@@ -98,6 +98,7 @@ parse_fun() ->
     fun(Binary) -> jsone:decode(Binary) end.
 
 
+-spec to_json([term()]) -> [map()].
 to_json(Reasons) ->
     F = fun({data_invalid, Schema, {Error, _}, Data, Path}) ->
                 #{

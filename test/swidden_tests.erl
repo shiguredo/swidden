@@ -8,13 +8,15 @@
 %% swidden/priv/swidden/dispatch.conf
 %% swidden/priv/swidden/schemas
 
+-define(APPS, [gun, ranch, cowlib, cowboy, swidden]).
+
 
 start_apps() ->
-    [ application:start(App) || App <- [hackney, ranch, cowboy, swidden] ].
+    [ application:ensure_all_started(App) || App <- ?APPS ].
 
 
 stop_apps() ->
-    [ application:stop(App) || App <- [hackney, swidden, cowboy, ranch] ].
+    [ application:stop(App) || App <- lists:reverse(?APPS) ].
 
 
 all_test_() ->
@@ -31,7 +33,7 @@ all_test_() ->
 
 
 setup() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden)),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
 
     ?assertEqual({spam_user_handler, get_user},
                  swidden_dispatch:lookup(<<"Spam">>, <<"20141101">>, <<"GetUser">>)),
@@ -46,5 +48,5 @@ setup() ->
     ?assertEqual({spam_admin_handler, get_metrics},
                  swidden_dispatch:lookup(<<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>)),
 
-    ?assertEqual(ok, swidden:stop(8000)),
+    ?assertEqual(ok, swidden:stop(swidden)),
     ok.

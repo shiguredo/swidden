@@ -1,10 +1,33 @@
-# CHANGES
+# 変更履歴
+
+- CHANGE
+  - 後方互換のない変更
+- ADD
+  - 後方互換がある追加
+- UPDATE
+  - 後方互換がある変更
+- FIX
+  - バグ修正
 
 ## develop
 
-- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.1 / AWS-LC v1.73.0
+
+## 2026.1.0
+
+**リリース日**: 2026-05-28
+
+- [UPDATE] リクエスト Body 全体の読み取り上限を 8MB に設定し超過時は 413 PayloadTooLarge を返す
   - @voluntas
+- [FIX] Interceptor の preprocess / postprocess 例外を HandlerException として返す
+  - @voluntas
+- [FIX] ?REDIRECT_STATUS_CODE を返す部分で Req を Req2 にしていない部分を修正する
+  - @voluntas
+
+### misc
+
 - [CHANGE] rebar3 の minimum_otp_vsn を 29.0 にする
+  - @voluntas
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.1 / AWS-LC v1.73.0
   - @voluntas
 - [UPDATE] rebar3 を 3.27.0 に上げる
   - @voluntas

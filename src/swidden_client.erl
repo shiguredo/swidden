@@ -5,22 +5,36 @@
 -export([request/5, request/6]).
 -export([request_with_headers/6, request_with_headers/7]).
 
+-type header() :: {binary(), binary()}.
+-type headers() :: [header()].
+-type target() :: binary().
+-type request_result() ::
+          {ok, pos_integer()}
+          | {ok, pos_integer(), term()}
+          | {error, term()}.
+
 %% Host は 127.0.0.1 固定にする
 
 
+-spec request(inet:port_number(), target(), binary(), binary(), binary()) -> request_result().
 request(Port, Target, Service, Version, Operation) ->
     request0(Port, [], Target, Service, Version, Operation, []).
 
 
+-spec request(inet:port_number(), target(), binary(), binary(), binary(), term()) -> request_result().
 request(Port, Target, Service, Version, Operation, Json) ->
     RawJson = jsone:encode(Json),
     request0(Port, [], Target, Service, Version, Operation, RawJson).
 
 
+-spec request_with_headers(inet:port_number(), headers(), target(), binary(), binary(), binary()) ->
+          request_result().
 request_with_headers(Port, Headers, Target, Service, Version, Operation) ->
     request0(Port, Headers, Target, Service, Version, Operation, []).
 
 
+-spec request_with_headers(inet:port_number(), headers(), target(), binary(), binary(), binary(), term()) ->
+          request_result().
 request_with_headers(Port, Headers, Target, Service, Version, Operation, Json) ->
     RawJson = jsone:encode(Json),
     request0(Port, Headers, Target, Service, Version, Operation, RawJson).

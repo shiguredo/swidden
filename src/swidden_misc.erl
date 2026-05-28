@@ -10,21 +10,6 @@ pascal2snake(<<C:8, _/binary>> = Binary) when $A =< C andalso C =< $Z ->
     %% "小文字または数字"と大文字の間に "_" を入れる
     Binary3 = re:replace(Binary2, "([a-z\\d])([A-Z])", "\\1_\\2", [{return, binary}, global]),
     %% すべて小文字にする
-    downcase(Binary3);
+    iolist_to_binary(string:lowercase(Binary3));
 pascal2snake(_Binary) ->
     no_pascalcase.
-
-
-%% Internal
-
-
-downcase(Binary) ->
-    downcase(Binary, <<>>).
-
-
-downcase(<<>>, Acc) ->
-    Acc;
-downcase(<<C:8, Rest/binary>>, Acc) when $A =< C andalso C =< $Z ->
-    downcase(Rest, <<Acc/binary, (C + 32):8>>);
-downcase(<<C:8, Rest/binary>>, Acc) ->
-    downcase(Rest, <<Acc/binary, C:8>>).
