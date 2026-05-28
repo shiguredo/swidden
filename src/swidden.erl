@@ -1,6 +1,6 @@
 -module(swidden).
 
--export([start/1, start/2, stop/1]).
+-export([start/1, start/3, stop/1, get_port/1]).
 -export([success/0, success/1]).
 -export([failure/1, failure/2]).
 -export([redirect/1]).
@@ -13,12 +13,15 @@
 
 -type json_object() :: jsone:json_object().
 
+-define(DEFAULT_IP_ADDRESS, {0, 0, 0, 0}).
+-define(DEFAULT_PORT,       8000).
+
 
 start(Name) when is_atom(Name) ->
-    start(Name, []).
+    start(Name, ?DEFAULT_PORT, []).
 
 
-start(Name, Opts) ->
+start(Name, Port, Opts) ->
     %% FIXME(nakai): error/1 で対応しているが本来は {error, Reason} で返すべき
     ok = swidden_dispatch:start(Name),
     ok = swidden_json_schema:start(Name),
@@ -40,8 +43,7 @@ start(Name, Opts) ->
                            {services, Services},
                            {interceptor, Interceptor}]}]}]),
 
-    IpAddress = proplists:get_value(ip, Opts, {0, 0, 0, 0}),
-    Port = proplists:get_value(port, Opts, 8000),
+    IpAddress = proplists:get_value(ip, Opts, ?DEFAULT_IP_ADDRESS),
 
     ProtoOpts = case proplists:get_value(middlewares, Opts, not_found) of
                     not_found ->
@@ -54,6 +56,12 @@ start(Name, Opts) ->
     Env = ProtoOpts#{env => #{dispatch => Dispatch}},
 
     cowboy:start_clear({?REF, Port}, [{ip, IpAddress}, {port, Port}], Env).
+
+
+%% 0 番 port でリッスンした場合のポート番号
+-spec get_port(inet:port_number()) -> inet:port_number().
+get_port(Port) ->
+    ranch:get_port({?REF, Port}).
 
 
 -spec stop(inet:port_number()) -> ok.
