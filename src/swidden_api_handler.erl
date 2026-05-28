@@ -113,8 +113,7 @@ handle(Service, Version, Operation, Req, Interceptor) ->
 
 terminate(normal, _Req, _State) ->
     ok;
-terminate(Reason, _Req, _State) ->
-    ?debugVal(Reason, 10000),
+terminate(_Reason, _Req, _State) ->
     ok.
 
 
@@ -168,7 +167,6 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
                     end
             end;
         {error, {data_error, _Reason}} ->
-            ?debugVal(_Reason, 1000),
             {400, #{error_type => <<"MalformedJSON">>}};
         {error, {database_error, _Key, schema_not_found}} ->
             %% TODO(v); この部分は外だしする
