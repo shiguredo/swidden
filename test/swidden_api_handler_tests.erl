@@ -111,9 +111,9 @@ success() ->
 
 
 services_success() ->
-    ?assertMatch({ok, _Pid1}, swidden:start(swidden1, [{port, 0}, {services, [<<"Spam">>]}])),
+    ?assertMatch({ok, _Pid1}, swidden:start(swidden1, [{port, 0}, {app, swidden}, {services, [<<"Spam">>]}])),
     Port1 = swidden:get_port(swidden1),
-    ?assertMatch({ok, _Pid2}, swidden:start(swidden2, [{port, 0}, {services, [<<"SpamAdmin">>]}])),
+    ?assertMatch({ok, _Pid2}, swidden:start(swidden2, [{port, 0}, {app, swidden}, {services, [<<"SpamAdmin">>]}])),
     Port2 = swidden:get_port(swidden2),
 
     %% Spam サービスは 400、SpamAdmin サービスは 200

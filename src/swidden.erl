@@ -30,8 +30,9 @@ start(Name, Opts) when is_atom(Name), is_list(Opts) ->
 
 start(Name, Port, Opts) ->
     %% FIXME(nakai): error/1 で対応しているが本来は {error, Reason} で返すべき
-    ok = swidden_dispatch:start(Name),
-    ok = swidden_json_schema:start(Name),
+    AppName = proplists:get_value(app, Opts, Name),
+    ok = swidden_dispatch:start(AppName),
+    ok = swidden_json_schema:start(AppName),
 
     HeaderName = proplists:get_value(header_name, Opts, ?DEFAULT_HEADER_NAME),
 
