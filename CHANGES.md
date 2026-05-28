@@ -1,6 +1,24 @@
-# CHANGES
+# 変更履歴
+
+- UPDATE
+  - 後方互換がある変更
+- ADD
+  - 後方互換がある追加
+- CHANGE
+  - 後方互換のない変更
+- FIX
+  - バグ修正
 
 ## develop
+
+## 2026.1.0
+
+**リリース日**: 2026-05-28
+
+- [FIX] ?REDIRECT_STATUS_CODE を返す部分で Req を Req2 にしていない部分を修正する
+  - @voluntas
+
+### misc
 
 - [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.1 / AWS-LC v1.73.0
   - @voluntas
@@ -16,8 +34,6 @@
   - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
   - @voluntas
 - [UPDATE] GitHub Actions の Slack 通知を shiguredo/github-actions へ切り替える
-  - @voluntas
-- [FIX] ?REDIRECT_STATUS_CODE を返す部分で Req を Req2 にしていない部分を修正する
   - @voluntas
 
 ## 2025.3.0
