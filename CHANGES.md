@@ -11,7 +11,7 @@
 
 ## develop
 
-- [UPDATE] リクエスト Body の読み取り上限を 8MB に設定する
+- [UPDATE] リクエスト Body 全体の読み取り上限を 8MB に設定し超過時は 413 PayloadTooLarge を返す
   - @voluntas
 - [FIX] Interceptor の preprocess / postprocess 例外を HandlerException として返す
   - @voluntas
