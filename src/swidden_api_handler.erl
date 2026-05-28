@@ -13,7 +13,10 @@
 
 -define(REDIRECT_STATUS_CODE, 307).
 
+-type state() :: cowboy_handler:opts().
 
+
+-spec init(cowboy_req:req(), state()) -> {ok, cowboy_req:req(), state()}.
 init(Req, Opts) ->
     HeaderName = proplists:get_value(header_name, Opts),
     Services = proplists:get_value(services, Opts),
@@ -111,6 +114,7 @@ handle(Service, Version, Operation, Req, Interceptor) ->
     end.
 
 
+-spec terminate(term(), cowboy_req:req(), state()) -> ok.
 terminate(normal, _Req, _State) ->
     ok;
 terminate(_Reason, _Req, _State) ->
