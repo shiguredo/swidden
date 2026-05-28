@@ -82,7 +82,7 @@ handle(Service, Version, Operation, Req, Interceptor) ->
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                         {?REDIRECT_STATUS_CODE, Location} ->
-                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
+                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req2);
                         {StatusCode, JSON} ->
                             RawJSON = jsone:encode(JSON, [skip_undefined]),
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
@@ -92,7 +92,7 @@ handle(Service, Version, Operation, Req, Interceptor) ->
                         200 ->
                             cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
                         {?REDIRECT_STATUS_CODE, Location} ->
-                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
+                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req2);
                         {StatusCode, JSON} ->
                             RawJSON = jsone:encode(JSON, [skip_undefined]),
                             cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
