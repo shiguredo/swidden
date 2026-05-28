@@ -33,7 +33,7 @@ all_test_() ->
 
 
 setup() ->
-    ?assertMatch({ok, _Pid}, swidden:start(swidden)),
+    {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
 
     ?assertEqual({spam_user_handler, get_user},
                  swidden_dispatch:lookup(<<"Spam">>, <<"20141101">>, <<"GetUser">>)),
