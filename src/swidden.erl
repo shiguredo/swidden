@@ -1,6 +1,7 @@
 -module(swidden).
 
--export([start/1, start/3, stop/1, get_port/1]).
+-export([start/1, start/2, start/3, stop/1]).
+-export([get_port/1]).
 -export([success/0, success/1]).
 -export([failure/1, failure/2]).
 -export([redirect/1]).
@@ -19,6 +20,12 @@
 
 start(Name) when is_atom(Name) ->
     start(Name, ?DEFAULT_PORT, []).
+
+
+start(Name, Opts) when is_atom(Name), is_list(Opts) ->
+    Port = proplists:get_value(port, Opts, ?DEFAULT_PORT),
+    StartOpts = lists:keydelete(port, 1, Opts),
+    start(Name, Port, StartOpts).
 
 
 start(Name, Port, Opts) ->
@@ -55,19 +62,13 @@ start(Name, Port, Opts) ->
     %% コード的に意味不明
     Env = ProtoOpts#{env => #{dispatch => Dispatch}},
 
-    cowboy:start_clear({?REF, Port}, [{ip, IpAddress}, {port, Port}], Env).
+    cowboy:start_clear({?REF, Name}, [{ip, IpAddress}, {port, Port}], Env).
 
 
-%% 0 番 port でリッスンした場合のポート番号
--spec get_port(inet:port_number()) -> inet:port_number().
-get_port(Port) ->
-    ranch:get_port({?REF, Port}).
-
-
--spec stop(inet:port_number()) -> ok.
-stop(Port) ->
+-spec stop(atom()) -> ok.
+stop(Name) ->
     %% TODO(v); ets 周りも削除する
-    ok = cowboy:stop_listener({?REF, Port}).
+    ok = cowboy:stop_listener({?REF, Name}).
 
 
 -spec success() -> ok.
@@ -92,3 +93,9 @@ failure(Type, Reason) when is_binary(Type) andalso is_map(Reason) ->
 
 redirect(Location) when is_binary(Location) ->
     {ok, {redirect, Location}}.
+
+
+%% 0 番 port でリッスンした場合のポート番号
+-spec get_port(atom()) -> inet:port_number().
+get_port(Name) when is_atom(Name) ->
+    ranch:get_port({?REF, Name}).
