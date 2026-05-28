@@ -17,6 +17,8 @@
   - @voluntas
 - [UPDATE] GitHub Actions の Slack 通知を shiguredo/github-actions へ切り替える
   - @voluntas
+- [FIX] ?REDIRECT_STATUS_CODE を返す部分で Req を Req2 にしていない部分を修正する
+  - @voluntas
 
 ## 2025.3.0
 
