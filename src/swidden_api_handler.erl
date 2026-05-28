@@ -216,13 +216,23 @@ preprocess1(Module, Function, JSON0, Interceptor) ->
 
 
 apply_mfa(Module, Function, Args) ->
-    Result = apply(Module, Function, Args),
-    response(Result).
+    try
+        Result = apply(Module, Function, Args),
+        response(Result)
+    catch
+        _Class:_Reason:_Stack ->
+            {500, #{error_type => <<"HandlerException">>}}
+    end.
 
 
 apply_mfa(Module, Function, Args, Interceptor) ->
-    Result = apply(Module, Function, Args),
-    postprocess(Module, Function, Result, Interceptor).
+    try
+        Result = apply(Module, Function, Args),
+        postprocess(Module, Function, Result, Interceptor)
+    catch
+        _Class:_Reason:_Stack ->
+            {500, #{error_type => <<"HandlerException">>}}
+    end.
 
 
 postprocess(Module, Function, Result0, Interceptor) ->

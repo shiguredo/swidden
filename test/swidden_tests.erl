@@ -8,13 +8,15 @@
 %% swidden/priv/swidden/dispatch.conf
 %% swidden/priv/swidden/schemas
 
+-define(APPS, [gun, ranch, cowlib, cowboy, swidden]).
+
 
 start_apps() ->
-    [ application:start(App) || App <- [hackney, ranch, cowboy, swidden] ].
+    [ application:ensure_all_started(App) || App <- ?APPS ].
 
 
 stop_apps() ->
-    [ application:stop(App) || App <- [hackney, swidden, cowboy, ranch] ].
+    [ application:stop(App) || App <- lists:reverse(?APPS) ].
 
 
 all_test_() ->

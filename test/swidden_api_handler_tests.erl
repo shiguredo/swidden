@@ -189,7 +189,21 @@ crash() ->
     {ok, _Pid} = swidden:start(swidden, [{port, 0}]),
     Port = swidden:get_port(swidden),
 
-    ?assertEqual(400, request(Port, <<"Spam">>, <<"20141101">>, <<"Crash">>)),
+    %% Body なし: crash/0 が存在しないため MissingTargetFunction
+    ?assertEqual({400,
+                  #{
+                    <<"error_type">> => <<"MissingTargetFunction">>,
+                    <<"error_reason">> => #{
+                                            <<"service">> => <<"Spam">>,
+                                            <<"version">> => <<"20141101">>,
+                                            <<"operation">> => <<"Crash">>
+                                           }
+                   }},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"Crash">>)),
+
+    %% Body あり: crash/1 が例外を起こし構造化エラーで 500 を返す
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"Crash">>, <<"{}">>)),
 
     ?assertEqual(ok, swidden:stop(swidden)),
     ok.
