@@ -10,6 +10,9 @@
 
 -define(APPS, [gun, ranch, cowlib, cowboy, swidden]).
 
+%% swidden_api_handler の ?MAX_BODY_SIZE と揃える
+-define(MAX_BODY_SIZE, 8000000).
+
 
 start_apps() ->
     [ application:ensure_all_started(App) || App <- ?APPS ].
@@ -149,8 +152,12 @@ failure() ->
     %% JSON ですらない値を送った場合
     ?assertEqual(400, raw_payload_request(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"abc">>)),
 
-    %% %% JSON ですらない値を送った場合
-    %% ?assertEqual(400, raw_payload_request(<<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"">>)),
+    %% Body が上限ぴったりの場合は読み取りを通過する（JSON 不正なので InvalidJSON）
+    ?assertMatch({400, #{<<"error_type">> := <<"InvalidJSON">>}},
+                 large_body_request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, ?MAX_BODY_SIZE)),
+    %% Body が大きすぎる場合
+    ?assertEqual({413, #{<<"error_type">> => <<"PayloadTooLarge">>}},
+                 large_body_request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, ?MAX_BODY_SIZE + 1)),
 
     ?assertEqual(ok, swidden:stop(swidden)),
     ok.
@@ -260,6 +267,19 @@ interceptor() ->
     ?assertEqual({400, #{<<"error_type">> => <<"not allowed">>}},
                  request2(Port, <<"Spam">>, <<"20141101">>, <<"Redirect">>)),
 
+    %% preprocess/3 が例外を起こした場合
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, [{username, <<"InterceptCrash">>}])),
+    %% preprocess/2 が例外を起こした場合
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port, <<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
+    %% postprocess/3 が例外を起こした場合
+    ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
+                 request2(Port,
+                           <<"Spam">>,
+                           <<"20141101">>,
+                           <<"GetUser">>,
+                           [{username, <<"PostprocessCrash">>}])),
     ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
@@ -355,6 +375,14 @@ raw_payload_request(Port, Service, Version, Operation, Payload) ->
     Headers = #{<<"x-swd-target">> => list_to_binary([Service, $_, Version, $., Operation])},
     {ok, StatusCode, _RespHeaders, _Body} = post(Url, Headers, Payload),
     StatusCode.
+
+
+large_body_request2(Port, Service, Version, Operation, Size) ->
+    Url = url(Port),
+    Headers = #{<<"x-swd-target">> => list_to_binary([Service, $_, Version, $., Operation])},
+    Payload = binary:copy(<<$a>>, Size),
+    {ok, StatusCode, _RespHeaders, Body} = post(Url, Headers, Payload),
+    {StatusCode, jsone:decode(Body)}.
 
 
 no_body_request(Port, Service, Version, Operation) ->

@@ -13,6 +13,11 @@
 
 -define(REDIRECT_STATUS_CODE, 307).
 
+%% Cowboy read_body/2 の length オプションのデフォルト（1 回あたりの chunk サイズ）
+-define(READ_BODY_CHUNK_SIZE, 8000000).
+%% リクエスト Body 全体の上限（Cowboy は chunk 単位の length しか持たないため自前で enforce する）
+-define(MAX_BODY_SIZE, 8000000).
+
 -type state() :: cowboy_handler:opts().
 
 
@@ -66,12 +71,44 @@ init(Req, Opts) ->
     end.
 
 
-read_body(Req, Acc) ->
-    case cowboy_req:read_body(Req) of
-        {ok, Data, Req2} ->
-            {ok, iolist_to_binary([Acc, Data]), Req2};
-        {more, Data, Req2} ->
-            read_body(Req2, [Acc, Data])
+read_body(Req) ->
+    read_body(Req, <<>>, 0).
+
+
+read_body(Req, Acc, AccSize) ->
+    case AccSize >= ?MAX_BODY_SIZE of
+        true ->
+            {error, payload_too_large};
+        false ->
+            %% length は chunk サイズ（best effort）。各 read_body 呼び出しごとに渡す。
+            ChunkSize = erlang:min(?READ_BODY_CHUNK_SIZE, ?MAX_BODY_SIZE - AccSize),
+            try cowboy_req:read_body(Req, #{length => ChunkSize}) of
+                {ok, Data, Req2} ->
+                    %% fin 時は chunk サイズを超える Body が届く（cowboy_stream_h の IsFin =:= fin 分岐）
+                    NewSize = AccSize + byte_size(Data),
+                    case NewSize > ?MAX_BODY_SIZE of
+                        true ->
+                            {error, payload_too_large};
+                        false ->
+                            {ok, iolist_to_binary([Acc, Data]), Req2}
+                    end;
+                {more, Data, Req2} ->
+                    DataSize = byte_size(Data),
+                    NewSize = AccSize + DataSize,
+                    %% {more, ...} は nofin: これ以上 Body が続く。
+                    %% read_urlencoded_body/2 と同様、chunk が満杯なら上限超過とみなす。
+                    case (NewSize > ?MAX_BODY_SIZE) orelse (DataSize >= ChunkSize) of
+                        true ->
+                            {error, payload_too_large};
+                        false ->
+                            read_body(Req2, [Acc, Data], NewSize)
+                    end
+            catch
+                exit:timeout ->
+                    {error, timeout};
+                exit:{{request_error, payload_too_large, _}, _} ->
+                    {error, payload_too_large}
+            end
     end.
 
 
@@ -79,7 +116,11 @@ handle(Service, Version, Operation, Req, Interceptor) ->
     %% TODO(v); リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
-            case read_body(Req, []) of
+            case read_body(Req) of
+                {error, payload_too_large} ->
+                    reply_json(413, #{error_type => <<"PayloadTooLarge">>}, Req);
+                {error, timeout} ->
+                    reply_json(408, #{error_type => <<"RequestTimeout">>}, Req);
                 {ok, <<>>, Req2} ->
                     case dispatch(Service, Version, Operation, Interceptor) of
                         200 ->
@@ -196,23 +237,27 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
 preprocess0(Module, Function, undefined) ->
     apply_mfa(Module, Function, []);
 preprocess0(Module, Function, Interceptor) ->
-    case Interceptor:preprocess(Module, Function) of
-        continue ->
-            apply_mfa(Module, Function, [], Interceptor);
-        {stop, Result} ->
-            response(Result)
-    end.
+    run_interceptor(fun() ->
+                            case Interceptor:preprocess(Module, Function) of
+                                continue ->
+                                    apply_mfa(Module, Function, [], Interceptor);
+                                {stop, Result} ->
+                                    safe_response(Result)
+                            end
+                    end).
 
 
 preprocess1(Module, Function, JSON, undefined) ->
     apply_mfa(Module, Function, [JSON]);
 preprocess1(Module, Function, JSON0, Interceptor) ->
-    case Interceptor:preprocess(Module, Function, JSON0) of
-        {continue, JSON1} ->
-            apply_mfa(Module, Function, [JSON1], Interceptor);
-        {stop, Result} ->
-            postprocess(Module, Function, Result, Interceptor)
-    end.
+    run_interceptor(fun() ->
+                            case Interceptor:preprocess(Module, Function, JSON0) of
+                                {continue, JSON1} ->
+                                    apply_mfa(Module, Function, [JSON1], Interceptor);
+                                {stop, Result} ->
+                                    postprocess(Module, Function, Result, Interceptor)
+                            end
+                    end).
 
 
 apply_mfa(Module, Function, Args) ->
@@ -236,8 +281,38 @@ apply_mfa(Module, Function, Args, Interceptor) ->
 
 
 postprocess(Module, Function, Result0, Interceptor) ->
-    Result1 = Interceptor:postprocess(Module, Function, Result0),
-    response(Result1).
+    run_interceptor(fun() ->
+                            Result1 = Interceptor:postprocess(Module, Function, Result0),
+                            safe_response(Result1)
+                    end).
+
+
+run_interceptor(Fun) ->
+    try Fun() of
+        Result ->
+            Result
+    catch
+        _Class:_Reason:_Stack ->
+            handler_exception()
+    end.
+
+
+safe_response(Result) ->
+    try
+        response(Result)
+    catch
+        _Class:_Reason:_Stack ->
+            handler_exception()
+    end.
+
+
+handler_exception() ->
+    {500, #{error_type => <<"HandlerException">>}}.
+
+
+reply_json(StatusCode, JSON, Req) ->
+    RawJSON = jsone:encode(JSON, [skip_undefined]),
+    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req).
 
 
 response({ok, {redirect, Location}}) ->

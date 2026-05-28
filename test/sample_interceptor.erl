@@ -16,12 +16,18 @@ preprocess(spam_user_handler, get_user, #{<<"username">> := <<"Voldemort">>}) ->
     {stop, swidden:failure(<<"He-Who-Must-Not-Be-Named">>)};
 preprocess(spam_user_handler, get_user, #{<<"username">> := <<"Snape">>}) ->
     {stop, swidden:failure(<<"insufficient privilege">>, #{<<"caution">> => <<"Slytherin only">>})};
+preprocess(spam_user_handler, get_user, #{<<"username">> := <<"InterceptCrash">>}) ->
+    error(intercept_crash);
+preprocess(spam_user_handler, get_user, #{<<"username">> := <<"PostprocessCrash">>}) ->
+    {stop, swidden:success(#{<<"crash">> => true})};
 preprocess(_M, _F, JSON) ->
     {continue, JSON}.
 
 
 preprocess(spam_user_handler, redirect) ->
     {stop, swidden:failure(<<"not allowed">>)};
+preprocess(spam_user_handler, get_authenticated_user) ->
+    error(intercept_crash);
 preprocess(_M, _F) ->
     continue.
 
@@ -31,6 +37,8 @@ postprocess(spam_user_handler, get_user, ok) ->
 postprocess(spam_user_handler, get_user, {ok, {redirect, Location}}) ->
     io:format(user, "redirect: ~p~n", [redirect]),
     {ok, {redirect, <<Location/binary, "?foo=bar">>}};
+postprocess(spam_user_handler, get_user, {ok, #{<<"crash">> := true}}) ->
+    error(intercept_crash);
 postprocess(spam_user_handler, get_user, {ok, Result}) ->
     {ok, Result#{<<"good_or_bad">> => <<"good">>}};
 postprocess(spam_user_handler, get_user, {error, Type}) ->

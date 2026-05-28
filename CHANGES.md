@@ -11,6 +11,11 @@
 
 ## develop
 
+- [UPDATE] リクエスト Body の読み取り上限を 8MB に設定する
+  - @voluntas
+- [FIX] Interceptor の preprocess / postprocess 例外を HandlerException として返す
+  - @voluntas
+
 ## 2026.1.0
 
 **リリース日**: 2026-05-28
