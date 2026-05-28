@@ -11,15 +11,15 @@
 
 ## develop
 
-- [UPDATE] リクエスト Body 全体の読み取り上限を 8MB に設定し超過時は 413 PayloadTooLarge を返す
-  - @voluntas
-- [FIX] Interceptor の preprocess / postprocess 例外を HandlerException として返す
-  - @voluntas
 
 ## 2026.1.0
 
 **リリース日**: 2026-05-28
 
+- [UPDATE] リクエスト Body 全体の読み取り上限を 8MB に設定し超過時は 413 PayloadTooLarge を返す
+  - @voluntas
+- [FIX] Interceptor の preprocess / postprocess 例外を HandlerException として返す
+  - @voluntas
 - [FIX] ?REDIRECT_STATUS_CODE を返す部分で Req を Req2 にしていない部分を修正する
   - @voluntas
 
