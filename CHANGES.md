@@ -12,6 +12,23 @@
 ## develop
 
 
+## 2026.1.1
+
+**リリース日**: 2026-06-13
+
+- [UPDATE] gun のバージョンを 2.4.1 に上げる
+  - @voluntas
+- [UPDATE] cowboy のバージョンを 2.16.1 に上げる
+  - @voluntas
+- [UPDATE] cowboy の cowlib 依存バージョンを 2.17.1 に上書きする
+  - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
+  - @voluntas
+
+### misc
+
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.2 / AWS-LC v5.0.0
+  - @voluntas
+
 ## 2026.1.0
 
 **リリース日**: 2026-06-09
