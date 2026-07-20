@@ -10,7 +10,6 @@
               {stop, {error, binary()}} |
               {stop, {error, binary(), map()}}.
 
-
 %% 引数あり API の事前処理
 -callback preprocess(module(), function()) ->
               continue |
@@ -19,7 +18,6 @@
               {stop, {redirect, binary()}} |
               {stop, {error, binary()}} |
               {stop, {error, binary(), map()}}.
-
 
 %% 事後処理
 -callback postprocess(module(),

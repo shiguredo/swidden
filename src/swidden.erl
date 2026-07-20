@@ -14,13 +14,13 @@
 
 -type json_object() :: jsone:json_object().
 
--type start_opt() :: {port, inet:port_number()}
-                   | {app, atom()}
-                   | {header_name, binary()}
-                   | {services, [binary()]}
-                   | {interceptor, module()}
-                   | {ip, inet:ip_address()}
-                   | {middlewares, [module()]}.
+-type start_opt() :: {port, inet:port_number()} |
+                     {app, atom()} |
+                     {header_name, binary()} |
+                     {services, [binary()]} |
+                     {interceptor, module()} |
+                     {ip, inet:ip_address()} |
+                     {middlewares, [module()]}.
 
 -type start_opts() :: [start_opt()].
 

@@ -7,6 +7,35 @@ on:
       - "**.rst"
 
 jobs:
+  efmt_job:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      # gh release download で使用する
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      EFMT_VERSION: "0.21.0"
+    steps:
+      - uses: actions/checkout@v6
+
+      # "Install efmt" の中でパスを追加しても反映されなかったのでステップを分ける
+      - name: Add path
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install efmt
+        run: |
+          gh release download "${EFMT_VERSION}" \
+            -R sile/efmt \
+            -p "efmt-${EFMT_VERSION}.x86_64-unknown-linux-musl" \
+            -D .
+          chmod 755 "efmt-${EFMT_VERSION}.x86_64-unknown-linux-musl"
+          mkdir -p "$HOME/.local/bin"
+          mv "efmt-${EFMT_VERSION}.x86_64-unknown-linux-musl" "$HOME/.local/bin/efmt"
+
+      - name: Verify efmt
+        run: efmt --version
+
+      - run: make efmt-check
+
   ci:
     runs-on: ubuntu-24.04
     container:
@@ -17,6 +46,7 @@ jobs:
 
   slack_notify:
     needs:
+      - efmt_job
       - ci
     runs-on: ubuntu-slim
     if: always()

@@ -11,6 +11,12 @@
 
 ## develop
 
+### misc
+
+- [CHANGE] rebar3_efmt / rebar3_lint / elvis を削除し、スタンドアロンの efmt でフォーマットチェックする
+  - `make efmt-check` を追加する
+  - GitHub Actions で efmt を `gh release download` してチェックする
+  - @voluntas
 
 ## 2026.1.1
 

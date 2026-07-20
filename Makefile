@@ -1,6 +1,6 @@
-.PHONY: all upgrade compile test dialyzer clean github
+.PHONY: all upgrade compile test dialyzer efmt-check fmt clean ci publish
 
-all: clean upgrade compile test dialyzer
+all: clean upgrade efmt-check compile test dialyzer
 
 upgrade:
 	@./rebar3 do update, upgrade --all
@@ -13,6 +13,12 @@ test:
 
 dialyzer:
 	@./rebar3 dialyzer
+
+efmt-check:
+	@RUST_LOG=warn efmt --check --parallel --check-line-length 120
+
+fmt:
+	@efmt -w --parallel
 
 clean:
 	@./rebar3 clean

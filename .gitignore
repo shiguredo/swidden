@@ -12,4 +12,6 @@ erl_crash.dump
 
 _build/*
 
+.efmt/
+
 tag*

@@ -9,9 +9,9 @@
 -type headers() :: [header()].
 -type target() :: binary().
 -type request_result() ::
-          {ok, pos_integer()}
-          | {ok, pos_integer(), term()}
-          | {error, term()}.
+        {ok, pos_integer()} |
+        {ok, pos_integer(), term()} |
+        {error, term()}.
 
 %% Host は 127.0.0.1 固定にする
 

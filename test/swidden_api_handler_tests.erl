@@ -141,7 +141,12 @@ failure() ->
     ?assertEqual(400, no_body_request(Port, <<"Bacon">>, <<"20141101">>, <<"GetUser">>)),
 
     %% PUT メソッドで送る
-    ?assertEqual(400, put_method_request(Port, <<"Bacon">>, <<"20141101">>, <<"GetUser">>, [{username, <<"yakihata">>}])),
+    ?assertEqual(400,
+                 put_method_request(Port,
+                                    <<"Bacon">>,
+                                    <<"20141101">>,
+                                    <<"GetUser">>,
+                                    [{username, <<"yakihata">>}])),
 
     %% x-swd-target ヘッダーなし
     ?assertEqual(400, no_header_request(Port, [{username, <<"yakihata">>}])),
@@ -174,9 +179,19 @@ middlewares() ->
     ?assertEqual(200, request(Port, <<"SpamAdmin">>, <<"20141101">>, <<"GetMetrics">>, [{reset, false}])),
 
     ?assertEqual(200, request(Port, <<"Spam">>, <<"20141101">>, <<"GetAuthenticatedUser">>)),
-    ?assertEqual(200, request(Port, <<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{username, <<"NewName">>}])),
+    ?assertEqual(200,
+                 request(Port,
+                         <<"Spam">>,
+                         <<"20141101">>,
+                         <<"UpdateAuthenticatedUser">>,
+                         [{username, <<"NewName">>}])),
 
-    ?assertEqual(400, request(Port, <<"Spam">>, <<"20141101">>, <<"UpdateAuthenticatedUser">>, [{bad_key, <<"NewName">>}])),
+    ?assertEqual(400,
+                 request(Port,
+                         <<"Spam">>,
+                         <<"20141101">>,
+                         <<"UpdateAuthenticatedUser">>,
+                         [{bad_key, <<"NewName">>}])),
 
     ?assertEqual(ok, swidden:stop(swidden)),
     ok.
@@ -276,10 +291,10 @@ interceptor() ->
     %% postprocess/3 が例外を起こした場合
     ?assertEqual({500, #{<<"error_type">> => <<"HandlerException">>}},
                  request2(Port,
-                           <<"Spam">>,
-                           <<"20141101">>,
-                           <<"GetUser">>,
-                           [{username, <<"PostprocessCrash">>}])),
+                          <<"Spam">>,
+                          <<"20141101">>,
+                          <<"GetUser">>,
+                          [{username, <<"PostprocessCrash">>}])),
     ?assertEqual(ok, swidden:stop(swidden)),
     ok.
 
