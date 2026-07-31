@@ -11,8 +11,18 @@
 
 ## develop
 
+- [UPDATE] gun のバージョンを 2.5.0 に上げる
+  - @voluntas
+- [UPDATE] cowboy のバージョンを 2.18.0 に上げる
+  - @voluntas
+- [UPDATE] cowboy の cowlib 依存バージョンを 2.19.0 に上書きする
+  - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
+  - @voluntas
+
 ### misc
 
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.4 / AWS-LC v5.4.0
+  - @voluntas
 - [CHANGE] rebar3_efmt / rebar3_lint / elvis を削除し、スタンドアロンの efmt でフォーマットチェックする
   - `make efmt-check` を追加する
   - GitHub Actions で efmt を `gh release download` してチェックする
