@@ -1,0 +1,39 @@
+minimum_prek_version = "0.3.9"
+
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace" },
+  { id = "end-of-file-fixer", exclude = "^VERSION$" },
+  { id = "check-merge-conflict" },
+  { id = "check-toml" },
+  { id = "check-yaml" },
+  { id = "check-json" },
+  { id = "detect-private-key" },
+  { id = "mixed-line-ending" },
+]
+
+[[repos]]
+repo = "local"
+hooks = [
+  # efmt バイナリで Erlang ソースをフォーマット (書き込み)
+  # 先に走らせてから後段の make efmt-check で仕上げを確認する
+  {
+    id = "efmt",
+    name = "efmt",
+    language = "system",
+    entry = "efmt -w --parallel",
+    pass_filenames = false,
+    files = { glob = ["**/*.erl", "**/*.hrl", "rebar.config"] },
+    priority = 5,
+  },
+  {
+    id = "efmt-check",
+    name = "make efmt-check",
+    language = "system",
+    entry = "make efmt-check",
+    pass_filenames = false,
+    files = { glob = ["**/*.erl", "**/*.hrl"] },
+    priority = 10,
+  },
+]
