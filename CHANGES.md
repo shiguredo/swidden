@@ -11,6 +11,11 @@
 
 ## develop
 
+
+## 2026.3.0
+
+**リリース日**: 2026-07-31
+
 - [UPDATE] gun のバージョンを 2.5.0 に上げる
   - @voluntas
 - [UPDATE] cowboy のバージョンを 2.18.0 に上げる
@@ -28,7 +33,7 @@
   - GitHub Actions で efmt を `gh release download` してチェックする
   - @voluntas
 
-## 2026.1.1
+## 2026.2.1
 
 **リリース日**: 2026-06-13
 
@@ -45,7 +50,7 @@
 - [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.2 / AWS-LC v5.0.0
   - @voluntas
 
-## 2026.1.0
+## 2026.2.0
 
 **リリース日**: 2026-06-09
 
