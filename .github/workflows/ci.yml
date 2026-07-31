@@ -15,7 +15,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       EFMT_VERSION: "0.21.0"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # "Install efmt" の中でパスを追加しても反映されなかったのでステップを分ける
       - name: Add path
@@ -41,7 +41,7 @@ jobs:
     container:
       image: ghcr.io/shiguredo/erlang:otp-29.0.4-aws-lc-v5.4.0-ubuntu-26.04-x86_64
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: make ci
 
   slack_notify:
