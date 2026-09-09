@@ -23,9 +23,10 @@
 
 - [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.6 / AWS-LC v5.8.0
   - @voluntas
-- [CHANGE] rebar3_efmt / rebar3_lint / elvis を削除し、スタンドアロンの efmt でフォーマットチェックする
-  - `make efmt-check` を追加する
-  - GitHub Actions で efmt を `gh release download` してチェックする
+- [CHANGE] rebar3_efmt / rebar3_lint / elvis を削除し、prek (`prek.toml`) 経由の efmt / elint (`shiguredo/erlang-pre-commit`) に切り替える
+  - `make efmt-check` / `make elint-check` を追加する
+  - GitHub Actions のチェックを `j178/prek-action` に切り替える
+  - elint の指摘 (deep_case_nesting / strict_generator) を解消する
   - @voluntas
 
 ## 2026.1.1

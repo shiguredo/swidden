@@ -1,6 +1,6 @@
-.PHONY: all upgrade compile test dialyzer efmt-check fmt clean ci publish
+.PHONY: all upgrade compile test dialyzer efmt-check elint-check fmt clean ci publish
 
-all: clean upgrade efmt-check compile test dialyzer
+all: clean upgrade efmt-check elint-check compile test dialyzer
 
 upgrade:
 	@./rebar3 do update, upgrade --all
@@ -14,11 +14,15 @@ test:
 dialyzer:
 	@./rebar3 dialyzer
 
+# prek.toml 経由で efmt / elint を実行する
 efmt-check:
-	@RUST_LOG=warn efmt --check --parallel --check-line-length 120
+	@prek run efmt-check --all-files
+
+elint-check:
+	@prek run elint --all-files
 
 fmt:
-	@efmt -w --parallel
+	@prek run efmt --all-files
 
 clean:
 	@./rebar3 clean

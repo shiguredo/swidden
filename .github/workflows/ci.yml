@@ -7,34 +7,14 @@ on:
       - "**.rst"
 
 jobs:
-  efmt_job:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    env:
-      # gh release download で使用する
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      EFMT_VERSION: "0.21.0"
+  # prek.toml のフックをすべて実行する (efmt / efmt-check / elint など)
+  check:
+    runs-on: ubuntu-slim
+    # prek の hook 環境準備 (初回や cache miss) を見込んで余裕を持たせる
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      # "Install efmt" の中でパスを追加しても反映されなかったのでステップを分ける
-      - name: Add path
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Install efmt
-        run: |
-          gh release download "${EFMT_VERSION}" \
-            -R sile/efmt \
-            -p "efmt-${EFMT_VERSION}.x86_64-unknown-linux-musl" \
-            -D .
-          chmod 755 "efmt-${EFMT_VERSION}.x86_64-unknown-linux-musl"
-          mkdir -p "$HOME/.local/bin"
-          mv "efmt-${EFMT_VERSION}.x86_64-unknown-linux-musl" "$HOME/.local/bin/efmt"
-
-      - name: Verify efmt
-        run: efmt --version
-
-      - run: make efmt-check
+      - uses: j178/prek-action@4e14d07f9231acabce116ccfca13b13dd9755ece # v3.0.0
 
   ci:
     runs-on: ubuntu-24.04
@@ -46,7 +26,7 @@ jobs:
 
   slack_notify:
     needs:
-      - efmt_job
+      - check
       - ci
     runs-on: ubuntu-slim
     if: always()
