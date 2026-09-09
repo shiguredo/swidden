@@ -21,7 +21,7 @@
 
 ### misc
 
-- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.4 / AWS-LC v5.4.0
+- [UPDATE] GitHub Actions の docker の OTP を shiguredo 29.0.6 / AWS-LC v5.8.0
   - @voluntas
 - [CHANGE] rebar3_efmt / rebar3_lint / elvis を削除し、スタンドアロンの efmt でフォーマットチェックする
   - `make efmt-check` を追加する
