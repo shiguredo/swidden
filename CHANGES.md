@@ -11,11 +11,11 @@
 
 ## develop
 
-- [UPDATE] gun のバージョンを 2.5.0 に上げる
+- [UPDATE] gun のバージョンを 2.6.0 に上げる
   - @voluntas
-- [UPDATE] cowboy のバージョンを 2.18.0 に上げる
+- [UPDATE] cowboy のバージョンを 2.19.0 に上げる
   - @voluntas
-- [UPDATE] cowboy の cowlib 依存バージョンを 2.19.0 に上書きする
+- [UPDATE] cowboy の cowlib 依存バージョンを 2.20.0 に上書きする
   - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
   - @voluntas
 
