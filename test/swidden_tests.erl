@@ -12,11 +12,11 @@
 
 
 start_apps() ->
-    [ application:ensure_all_started(App) || App <- ?APPS ].
+    [ application:ensure_all_started(App) || App <:- ?APPS ].
 
 
 stop_apps() ->
-    [ application:stop(App) || App <- lists:reverse(?APPS) ].
+    [ application:stop(App) || App <:- lists:reverse(?APPS) ].
 
 
 all_test_() ->

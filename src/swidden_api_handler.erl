@@ -28,47 +28,51 @@ init(Req, Opts) ->
     Interceptor = proplists:get_value(interceptor, Opts),
     case cowboy_req:method(Req) of
         <<"POST">> ->
-            case cowboy_req:header(HeaderName, Req) of
-                undefined ->
-                    %% ヘッダーがみつからない
-                    RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}, [skip_undefined]),
-                    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
-                    {ok, Req2, Opts};
-                HeaderValue ->
-                    %% Service_Version.Operation として分解する
-                    case re:run(HeaderValue, ?REGEXP, [{capture, all_but_first, binary}]) of
-                        {match, [Service, Version, Operation]} ->
-                            case lists:member(Service, Services) of
-                                true ->
-                                    Req2 = handle(Service, Version, Operation, Req, Interceptor),
-                                    {ok, Req2, Opts};
-                                false when Services == [] ->
-                                    Req2 = handle(Service, Version, Operation, Req, Interceptor),
-                                    {ok, Req2, Opts};
-                                false ->
-                                    Req2 = cowboy_req:reply(400,
-                                                            ?DEFAULT_HEADERS,
-                                                            jsone:encode(#{error_type => <<"InvalidTarget">>},
-                                                                         [skip_undefined]),
-                                                            Req),
-                                    {ok, Req2, Opts}
-                            end;
-                        _ ->
-                            %% サービスに対応してなかったよ
-                            Req2 = cowboy_req:reply(400,
-                                                    ?DEFAULT_HEADERS,
-                                                    jsone:encode(#{error_type => <<"MissingService">>},
-                                                                 [skip_undefined]),
-                                                    Req),
-                            {ok, Req2, Opts}
-                    end
-            end;
+            init_post(HeaderName, Services, Req, Opts, Interceptor);
         _Other ->
             %% POST 以外受け付けていないのでエラーメッセージ
             RawJSON = jsone:encode(#{type => <<"UnexpectedMethod">>}, [skip_undefined]),
             Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
             {ok, Req2, Opts}
     end.
+
+
+init_post(HeaderName, Services, Req, Opts, Interceptor) ->
+    case cowboy_req:header(HeaderName, Req) of
+        undefined ->
+            %% ヘッダーがみつからない
+            RawJSON = jsone:encode(#{type => <<"MissingHeaderName">>}, [skip_undefined]),
+            Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
+            {ok, Req2, Opts};
+        HeaderValue ->
+            init_service(HeaderValue, Services, Req, Opts, Interceptor)
+    end.
+
+
+init_service(HeaderValue, Services, Req, Opts, Interceptor) ->
+    %% Service_Version.Operation として分解する
+    case re:run(HeaderValue, ?REGEXP, [{capture, all_but_first, binary}]) of
+        {match, [Service, Version, Operation]} ->
+            case lists:member(Service, Services) of
+                true ->
+                    Req2 = handle(Service, Version, Operation, Req, Interceptor),
+                    {ok, Req2, Opts};
+                false when Services == [] ->
+                    Req2 = handle(Service, Version, Operation, Req, Interceptor),
+                    {ok, Req2, Opts};
+                false ->
+                    reply_init_error(#{error_type => <<"InvalidTarget">>}, Req, Opts)
+            end;
+        _ ->
+            %% サービスに対応してなかったよ
+            reply_init_error(#{error_type => <<"MissingService">>}, Req, Opts)
+    end.
+
+
+reply_init_error(JSON, Req, Opts) ->
+    RawJSON = jsone:encode(JSON, [skip_undefined]),
+    Req2 = cowboy_req:reply(400, ?DEFAULT_HEADERS, RawJSON, Req),
+    {ok, Req2, Opts}.
 
 
 read_body(Req) ->
@@ -113,46 +117,34 @@ read_body(Req, Acc, AccSize) ->
 
 
 handle(Service, Version, Operation, Req, Interceptor) ->
-    %% TODO(v); リファクタリング
     case cowboy_req:has_body(Req) of
         true ->
-            case read_body(Req) of
-                {error, payload_too_large} ->
-                    reply_json(413, #{error_type => <<"PayloadTooLarge">>}, Req);
-                {error, timeout} ->
-                    reply_json(408, #{error_type => <<"RequestTimeout">>}, Req);
-                {ok, <<>>, Req2} ->
-                    case dispatch(Service, Version, Operation, Interceptor) of
-                        200 ->
-                            cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
-                        {?REDIRECT_STATUS_CODE, Location} ->
-                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req2);
-                        {StatusCode, JSON} ->
-                            RawJSON = jsone:encode(JSON, [skip_undefined]),
-                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
-                    end;
-                {ok, Body, Req2} ->
-                    case validate_json(Service, Version, Operation, Body, Interceptor) of
-                        200 ->
-                            cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req2);
-                        {?REDIRECT_STATUS_CODE, Location} ->
-                            cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req2);
-                        {StatusCode, JSON} ->
-                            RawJSON = jsone:encode(JSON, [skip_undefined]),
-                            cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req2)
-                    end
-            end;
+            handle_with_body(Service, Version, Operation, Req, Interceptor);
         false ->
-            case dispatch(Service, Version, Operation, Interceptor) of
-                200 ->
-                    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
-                {?REDIRECT_STATUS_CODE, Location} ->
-                    cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
-                {StatusCode, JSON} ->
-                    RawJSON = jsone:encode(JSON, [skip_undefined]),
-                    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req)
-            end
+            reply_dispatch(dispatch(Service, Version, Operation, Interceptor), Req)
     end.
+
+
+handle_with_body(Service, Version, Operation, Req, Interceptor) ->
+    case read_body(Req) of
+        {error, payload_too_large} ->
+            reply_json(413, #{error_type => <<"PayloadTooLarge">>}, Req);
+        {error, timeout} ->
+            reply_json(408, #{error_type => <<"RequestTimeout">>}, Req);
+        {ok, <<>>, Req2} ->
+            reply_dispatch(dispatch(Service, Version, Operation, Interceptor), Req2);
+        {ok, Body, Req2} ->
+            reply_dispatch(validate_json(Service, Version, Operation, Body, Interceptor), Req2)
+    end.
+
+
+reply_dispatch(200, Req) ->
+    cowboy_req:reply(200, ?DEFAULT_HEADERS, [], Req);
+reply_dispatch({?REDIRECT_STATUS_CODE, Location}, Req) ->
+    cowboy_req:reply(?REDIRECT_STATUS_CODE, #{<<"location">> => Location}, [], Req);
+reply_dispatch({StatusCode, JSON}, Req) ->
+    RawJSON = jsone:encode(JSON, [skip_undefined]),
+    cowboy_req:reply(StatusCode, ?DEFAULT_HEADERS, RawJSON, Req).
 
 
 -spec terminate(term(), cowboy_req:req(), state()) -> ok.
@@ -167,49 +159,54 @@ dispatch(Service, Version, Operation, Interceptor) ->
         not_found ->
             {400, #{error_type => <<"MissingTarget">>}};
         {Module, Function} ->
-            case code:which(Module) of
-                non_existing ->
+            case target_function(Module, Function, 0) of
+                ok ->
+                    preprocess0(Module, Function, Interceptor);
+                {error, missing_module} ->
                     {400, #{error_type => <<"MissingTargetModule">>}};
-                _ ->
-                    case lists:member({Function, 0}, Module:module_info(exports)) of
-                        true ->
-                            preprocess0(Module, Function, Interceptor);
-                        false ->
-                            {400,
-                             #{
-                               error_type => <<"MissingTargetFunction">>,
-                               error_reason => #{
-                                                 service => Service,
-                                                 version => Version,
-                                                 operation => Operation
-                                                }
-                              }}
-                    end
+                {error, missing_function} ->
+                    missing_target_function_error(Service, Version, Operation)
             end
     end.
+
+
+%% モジュールと関数が存在するかを確認する
+target_function(Module, Function, Arity) ->
+    case code:which(Module) of
+        non_existing ->
+            {error, missing_module};
+        _ ->
+            case lists:member({Function, Arity}, Module:module_info(exports)) of
+                true ->
+                    ok;
+                false ->
+                    {error, missing_function}
+            end
+    end.
+
+
+missing_target_function_error(Service, Version, Operation) ->
+    {400,
+     #{
+       error_type => <<"MissingTargetFunction">>,
+       error_reason => #{
+                         service => Service,
+                         version => Version,
+                         operation => Operation
+                        }
+      }}.
 
 
 validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
     case swidden_json_schema:validate_json(Service, Version, Operation, RawJSON) of
         {ok, Module, Function, JSON} ->
-            case code:which(Module) of
-                non_existing ->
+            case target_function(Module, Function, 1) of
+                ok ->
+                    preprocess1(Module, Function, JSON, Interceptor);
+                {error, missing_module} ->
                     {400, #{error_type => <<"MissingTargetModule">>}};
-                _ ->
-                    case lists:member({Function, 1}, Module:module_info(exports)) of
-                        true ->
-                            preprocess1(Module, Function, JSON, Interceptor);
-                        false ->
-                            {400,
-                             #{
-                               error_type => <<"MissingTargetFunction">>,
-                               error_reason => #{
-                                                 service => Service,
-                                                 version => Version,
-                                                 operation => Operation
-                                                }
-                              }}
-                    end
+                {error, missing_function} ->
+                    missing_target_function_error(Service, Version, Operation)
             end;
         {error, {data_error, _Reason}} ->
             {400, #{error_type => <<"MalformedJSON">>}};
