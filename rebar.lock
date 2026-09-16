@@ -1,23 +1,26 @@
 {"1.2.0",
 [{<<"cowboy">>,{pkg,<<"cowboy">>,<<"2.19.0">>},0},
  {<<"cowlib">>,{pkg,<<"cowlib">>,<<"2.20.0">>},1},
+ {<<"eqwalizer_support">>,
+  {git_subdir,"https://github.com/whatsapp/eqwalizer.git",
+              {ref,"c4d1098174cec06bd124855f3a28dfd6eda0a581"},
+              "eqwalizer_support"},
+  1},
  {<<"gun">>,{pkg,<<"gun">>,<<"2.6.0">>},0},
- {<<"jesse">>,{pkg,<<"shiguredo_jesse">>,<<"2025.1.0">>},0},
- {<<"jsone">>,{pkg,<<"shiguredo_jsone">>,<<"2025.1.0">>},0},
+ {<<"jsone">>,
+  {git,"https://github.com/shiguredo/jsone.git",
+       {ref,"4f9d7032e7fe697a1a18dadb9c4475318c5942f3"}},
+  0},
  {<<"ranch">>,{pkg,<<"ranch">>,<<"2.3.0">>},1}]}.
 [
 {pkg_hash,[
  {<<"cowboy">>, <<"78B9D92D25A23E56D7341040B67946C04067CD77DE966E2372865F673A8E6F59">>},
  {<<"cowlib">>, <<"BB525377BA634CD6D68BAC7BFF5D98571F738806139D335DACA827717C5DC172">>},
  {<<"gun">>, <<"4672FE3D2E056D9314A4639DB288B7E9CE0FE6BE8F2F4DD4ADBA7D2B56F7927C">>},
- {<<"jesse">>, <<"E538E3B14546C4A995E47CCDD93B066150508A646AA3E16A107D233822E899DC">>},
- {<<"jsone">>, <<"462E04E388D11541C7E001A05823FDBC31132C85E2524A44CC7CC2EDE778078E">>},
  {<<"ranch">>, <<"7DE7B041A9A6A5091A3AA5898D66C0564BE671D87DB4F9D63B1B5EE775B097DF">>}]},
 {pkg_hash_ext,[
  {<<"cowboy">>, <<"986DAE81F99FCB78EF2D8EFC21D738CEE189410840EEAF32ECA84ADA81DCF6D4">>},
  {<<"cowlib">>, <<"7D41A0DD2C093041FF3779AC5FE8A1585A68EC7CB2DD1DE0536BDD2452FD7BA1">>},
  {<<"gun">>, <<"69BB957F4BD6C475B5714460FD65C26FC7EB85760AA64B74754DE36CE5CCED7D">>},
- {<<"jesse">>, <<"02CBD6A91828229349527B5DEB4AB0BA36E0BFCFC22A8680E4C74E7243E29B3B">>},
- {<<"jsone">>, <<"C7A3C1CAEF5F4F9C7865BBB7CE4EA5B8E46AEB16F6D363A56B462D023D56F607">>},
  {<<"ranch">>, <<"6168EC49409D982F7CFBD83DD083144F6CBE67CAA4036551D2F0A3AD67C9D023">>}]}
 ].

@@ -157,8 +157,8 @@ failure() ->
     %% JSON ですらない値を送った場合
     ?assertEqual(400, raw_payload_request(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, <<"abc">>)),
 
-    %% Body が上限ぴったりの場合は読み取りを通過する（JSON 不正なので InvalidJSON）
-    ?assertMatch({400, #{<<"error_type">> := <<"InvalidJSON">>}},
+    %% Body が上限ぴったりの場合は読み取りを通過する（JSON 不正なので MalformedJSON）
+    ?assertMatch({400, #{<<"error_type">> := <<"MalformedJSON">>}},
                  large_body_request2(Port, <<"Spam">>, <<"20141101">>, <<"GetUser">>, ?MAX_BODY_SIZE)),
     %% Body が大きすぎる場合
     ?assertEqual({413, #{<<"error_type">> => <<"PayloadTooLarge">>}},
