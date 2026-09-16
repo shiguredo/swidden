@@ -109,6 +109,11 @@ to_json(Reasons) ->
     lists:map(fun reason_to_json/1, Reasons).
 
 
+%% エラー理由を応答の形へ変換する
+%%
+%% jsone_schema のエラー理由は kind / value で表すが、応答は昔から
+%% 変わらない invalid / data で返す
+%%
 %% データの検証エラー
 reason_to_json(#{kind := data} = Reason) ->
     #{
