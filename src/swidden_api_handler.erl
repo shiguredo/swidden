@@ -208,9 +208,9 @@ validate_json(Service, Version, Operation, RawJSON, Interceptor) ->
                 {error, missing_function} ->
                     missing_target_function_error(Service, Version, Operation)
             end;
-        {error, {data_error, _Reason}} ->
+        {error, malformed_json} ->
             {400, #{error_type => <<"MalformedJSON">>}};
-        {error, {database_error, _Key, schema_not_found}} ->
+        {error, {schema_not_found, _Key}} ->
             %% TODO(v); この部分は外だしする
             {400,
              #{

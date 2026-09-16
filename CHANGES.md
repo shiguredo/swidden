@@ -11,9 +11,10 @@
 
 ## develop
 
-- [CHANGE] JSON Schema 検証を shiguredo_jesse から jsone の jesse 互換 API に移行する
-  - jsone の JSON Schema draft 6 実装 (`jsone_schema`) を使う
+- [CHANGE] JSON Schema 検証を shiguredo_jesse から jsone の JSON Schema 実装に移行する
+  - `jsone_schema` を直接使う
   - 400 応答の `error_reason` の `schema` から `$id` が消える
+  - JSON として不正な Body の `error_type` が InvalidJSON から MalformedJSON に変わる
   - shiguredo_jesse への依存を削除する
   - @voluntas
 - [UPDATE] gun のバージョンを 2.6.0 に上げる

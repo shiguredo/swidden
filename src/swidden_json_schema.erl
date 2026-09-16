@@ -68,60 +68,67 @@ load_schemas(Path,
     case file:read_file(FilePath) of
         {ok, Binary} ->
             Key = binary_to_list(list_to_binary([Service, $_, Version, $., Operation])),
-            %% jesse 互換 API の add_schema/3 は、JSON として壊れている場合は
-            %% {error, [{schema_error, {parse_error, Reason}}]} を、
-            %% JSON だがスキーマ (object か boolean) でない場合は
-            %% [{Key, undefined, Reason}] を返す
+            %% スキーマのパースエラーもスキーマの内容のエラーも {error, Reason} で返る
             case add_schema(Key, Binary) of
                 ok ->
                     load_schemas(Path, Rest);
-                {error, [{schema_error, {parse_error, Reason}}]} ->
-                    {error, {invalid_json, FileName, Reason}};
-                [{_Key, _Mtime, Reason}] ->
-                    {error, {invalid_schema, FileName, Reason}}
+                {error, Reason} ->
+                    {error, {FilePath, Reason}}
             end;
         {error, Reason} ->
             {error, {FilePath, Reason}}
     end.
 
 
--spec add_schema(string(), binary()) -> ok | jesse_error:error() | [{string(), undefined, term()}].
+-spec add_schema(string(), binary()) -> ok | {error, term()}.
 add_schema(_Key, <<>>) ->
     ok;
 add_schema(Key, RawJSON) ->
-    jesse:add_schema(Key, RawJSON, [{parser_fun, parse_fun()}]).
+    %% スキーマは jsone:decode/1 でパースされ、不正な場合は
+    %% {error, {parse_error, Reason}} か {error, {invalid_schema, Value}} が返る
+    jsone_schema:add_schema(Key, RawJSON, #{}).
 
 
--spec validate(string(), binary()) -> {ok, jesse:json_term()} | jesse_error:error() | jesse_database:error().
+-spec validate(string(), binary()) ->
+          {ok, jsone_schema:json_value()} |
+          {error, malformed_json | {schema_not_found, binary()} | [jsone_schema_error:reason()]}.
 validate(Key, RawJSON) ->
-    jesse:validate(Key, RawJSON, [{parser_fun, parse_fun()}]).
+    try jsone:decode(RawJSON) of
+        JSON ->
+            jsone_schema:validate_key(Key, JSON)
+    catch
+        %% jsone:decode/1 は不正な JSON を error クラスで通知する
+        %% 不正な JSON は呼び出し元で MalformedJSON として扱う
+        error:_Reason ->
+            {error, malformed_json}
+    end.
 
 
--spec parse_fun() -> function().
-parse_fun() ->
-    fun(Binary) -> jsone:decode(Binary) end.
-
-
--spec to_json([term()]) -> [map()].
+-spec to_json([jsone_schema_error:reason()]) -> [map()].
 to_json(Reasons) ->
-    F = fun({data_invalid, Schema, {Error, _}, Data, Path}) ->
-                #{
-                  invalid => data,
-                  schema => Schema,
-                  error => Error,
-                  data => Data,
-                  path => Path
-                 };
-           ({data_invalid, Schema, Error, Data, Path}) ->
-                #{
-                  invalid => data,
-                  schema => Schema,
-                  error => Error,
-                  data => Data,
-                  path => Path
-                 };
-           ({data_error, {parse_error, _}}) ->
-                #{invalid => parse}
+    lists:map(fun reason_to_json/1, Reasons).
 
-        end,
-    lists:map(F, Reasons).
+
+%% データの検証エラー
+reason_to_json(#{kind := data} = Reason) ->
+    #{
+      invalid => data,
+      schema => maps:get(schema, Reason),
+      error => error_name(maps:get(error, Reason)),
+      data => maps:get(value, Reason),
+      path => maps:get(path, Reason)
+     };
+%% スキーマ自体のエラー
+reason_to_json(#{kind := schema} = Reason) ->
+    #{
+      invalid => schema,
+      schema => maps:get(schema, Reason),
+      error => error_name(maps:get(error, Reason))
+     }.
+
+
+%% 詳細を持つエラーは名前だけを応答に載せる
+error_name({Name, _Details}) ->
+    Name;
+error_name(Name) ->
+    Name.
