@@ -52,16 +52,32 @@ jsone の `feature/add-json-schema` ブランチに draft 6 のバリデータ (
 
 ## 動作確認結果
 
-2026-09-16 に `feature/add-json-schema` (017c1bf) を使って確認した。
+2026-09-16 に `feature/add-json-schema` (4f9d703) を使って確認した。
 
 - `rebar.config` の jsone を差し替えて jesse を削除し、`swidden_json_schema.erl` と `swidden_api_handler.erl` を `jsone_schema` 直利用に変更した
   - xref / dialyzer / efmt-check / elint は警告なし
   - eunit は 9 tests, 0 failures (cover 83%)
-  - jsone 側は EUnit 742 tests, 0 failures (JSON-Schema-Test-Suite の draft 6 全ケースを含む)、PropEr 15/15 properties passed
+  - jsone 側は EUnit 744 tests, 0 failures (JSON-Schema-Test-Suite の draft 6 全ケースを含む)、PropEr 15/15 properties passed
 - 実 HTTP サーバに同じリクエストを送り、移行前後で 400 応答を比較した
-  - 差分は次の 2 点だけで、それ以外の 8 ケースは `error_type` / `error` / `data` / `path` / `schema` まで一致した
+  - 差分は次の 2 点だけで、それ以外の 9 ケースは `error_type` / `error` / `data` / `path` / `schema` まで一致した
     - `error_reason` の `schema` から `$id` が消えた (jesse が書き込んでいたサーバの絶対パスが漏れなくなった)
     - JSON として不正な Body の `error_type` が InvalidJSON から MalformedJSON に変わった (`validate_json/5` の分岐が意図どおり機能するようになった)
 - 不正なスキーマファイルは、移行前は case_clause で起動に失敗していたが、`{FilePath, {parse_error, Reason}}` / `{FilePath, {invalid_schema, Value}}` で起動に失敗するようになった
 - swidden が jesse 互換層を使わなくなったため、jsone 側の jesse 互換層は削除した (shiguredo/jsone#2)
-- jsone の `rebar.config` の deps にある `eqwalizer_support` (whatsapp/eqwalizer の git_subdir) が swidden の `rebar.lock` に流入する。リリースされた jsone を依存させるときにも付いてくるため、jsone 側で profile に移すのが望ましい (swidden 側では対応しない)
+- スキーマ間の `$ref` (キー形式) とローカル `$ref` の両方が解決できることを確認した
+- 壊れたスキーマ 20 パターンを与えて挙動を確認した。`schema_invalid` / `wrong_type_items` / `invalid_dependency` / `wrong_multiple_of` などのスキーマのエラーとして返り、クラッシュしたのは正規表現が不正な `pattern` / `patternProperties` の 2 件だけだった
+  - この 2 件は jsone_schema 側で `re:run/3` の例外を捕捉して `schema_invalid` を返すように修正した (移行前の jesse も同じくクラッシュしており、swidden は 500 を返していた。修正後は 400 で `invalid: schema` を返す)
+- 次の項目は jesse と jsone_schema で挙動が一致することを実測で確認した
+  - draft-03 / draft-04 の `$schema` はどちらも `schema_unsupported` で拒否する
+  - 検証エラーはどちらも既定で 1 件までしか返さない
+  - `format` はどちらも `wrong_format` を返す
+- jsone の `rebar.config` の deps にある `eqwalizer_support` は、git 参照で依存している間だけ swidden の `rebar.lock` に流入する。公開済みの hex パッケージ (2025.1.0) の requirements は空のため、hex のバージョン指定に切り替われば流入しなくなる
+
+## 残タスク
+
+- jsone を先にリリースしてから本 issue の変更をマージする
+  1. shiguredo/jsone#2 をマージする
+  2. `## develop` をリリースの節にし、`src/jsone.app.src` の `vsn` を上げる
+  3. タグを打って hex に公開する
+  4. swidden の jsone 依存を git 参照から hex のバージョン指定に切り替える
+  5. `feature/change-replace-jesse-with-jsone` の PR をマージする
