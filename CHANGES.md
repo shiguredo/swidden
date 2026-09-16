@@ -11,12 +11,19 @@
 
 ## develop
 
+- [CHANGE] JSON Schema 検証を shiguredo_jesse から jsone の jesse 互換 API に移行する
+  - jsone の JSON Schema draft 6 実装 (`jsone_schema`) を使う
+  - 400 応答の `error_reason` の `schema` から `$id` が消える
+  - shiguredo_jesse への依存を削除する
+  - @voluntas
 - [UPDATE] gun のバージョンを 2.6.0 に上げる
   - @voluntas
 - [UPDATE] cowboy のバージョンを 2.19.0 に上げる
   - @voluntas
 - [UPDATE] cowboy の cowlib 依存バージョンを 2.20.0 に上書きする
   - <https://github.com/ninenines/cowboy/issues/1670#issuecomment-2670967044>
+  - @voluntas
+- [FIX] 不正なスキーマファイルを読み込んだときに case_clause で起動に失敗するのを修正する
   - @voluntas
 
 ### misc

@@ -68,20 +68,24 @@ load_schemas(Path,
     case file:read_file(FilePath) of
         {ok, Binary} ->
             Key = binary_to_list(list_to_binary([Service, $_, Version, $., Operation])),
+            %% jesse 互換 API の add_schema/3 は、JSON として壊れている場合は
+            %% {error, [{schema_error, {parse_error, Reason}}]} を、
+            %% JSON だがスキーマ (object か boolean) でない場合は
+            %% [{Key, undefined, Reason}] を返す
             case add_schema(Key, Binary) of
                 ok ->
                     load_schemas(Path, Rest);
-                [{[], [], []}] ->
-                    load_schemas(Path, Rest);
-                [{_, _, {error, invalid_json, LineNumber}}] ->
-                    {error, {invalid_json, FileName, LineNumber}}
+                {error, [{schema_error, {parse_error, Reason}}]} ->
+                    {error, {invalid_json, FileName, Reason}};
+                [{_Key, _Mtime, Reason}] ->
+                    {error, {invalid_schema, FileName, Reason}}
             end;
         {error, Reason} ->
             {error, {FilePath, Reason}}
     end.
 
 
--spec add_schema(string(), binary()) -> ok | jesse_error:error().
+-spec add_schema(string(), binary()) -> ok | jesse_error:error() | [{string(), undefined, term()}].
 add_schema(_Key, <<>>) ->
     ok;
 add_schema(Key, RawJSON) ->
