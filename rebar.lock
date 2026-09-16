@@ -9,7 +9,7 @@
  {<<"gun">>,{pkg,<<"gun">>,<<"2.6.0">>},0},
  {<<"jsone">>,
   {git,"https://github.com/shiguredo/jsone.git",
-       {ref,"9b4f8595c7fe96321754d7e9e6fba175ebbd4643"}},
+       {ref,"4f9d7032e7fe697a1a18dadb9c4475318c5942f3"}},
   0},
  {<<"ranch">>,{pkg,<<"ranch">>,<<"2.3.0">>},1}]}.
 [
